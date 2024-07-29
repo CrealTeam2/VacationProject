@@ -11,9 +11,9 @@ public class PlayerEquipments_Unarmed_Punching : State<PlayerEquipments>
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        origin.anim.SetBool("PunchRight", !origin.anim.GetBool("PunchRight"));
         origin.anim.SetTrigger("Attack");
         origin.acting = true;
-        origin.canSwap = false;
     }
     public override void OnStateUpdate()
     {
@@ -22,10 +22,5 @@ public class PlayerEquipments_Unarmed_Punching : State<PlayerEquipments>
         {
             parentLayer.ChangeState("Idle");
         }
-    }
-    public override void OnStateExit()
-    {
-        base.OnStateExit();
-        origin.canSwap = true;
     }
 }
