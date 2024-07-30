@@ -15,4 +15,9 @@ public class PlayerEquipments_Unarmed : Layer<PlayerEquipments>
         base.OnStateEnter();
         origin.anim.SetInteger("ArmedState", 0);
     }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.switching = true;
+    }
 }

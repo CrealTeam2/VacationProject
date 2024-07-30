@@ -11,10 +11,20 @@ public class PlayerEquipments_Unarmed_Idle : State<PlayerEquipments>
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();
-        Debug.Log("EAWE");
         if (Input.GetMouseButtonDown(0))
         {
             parentLayer.ChangeState("Punching");
+        }
+        else
+        {
+            if(Input.GetKeyDown(KeyCode.Alpha1) && origin.hasPistol)
+            {
+                parentLayer.parentLayer.ChangeState("Pistol");
+            }
+            else if(Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
+            {
+                parentLayer.parentLayer.ChangeState("Knife");
+            }
         }
     }
 }

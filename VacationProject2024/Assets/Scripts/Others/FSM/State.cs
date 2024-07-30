@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class State<T>
 {
     protected T origin;
-    protected Layer<T> parentLayer;
+    public Layer<T> parentLayer { get; private set; }
     public State(T origin, Layer<T> parent)
     {
         this.origin = origin;
