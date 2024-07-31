@@ -8,25 +8,40 @@ public class PlayerEquipments_Unarmed_Idle : PlayerEquipments_WeaponIdleState
     {
 
     }
+    bool punchedRight = false;
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.anim.Play("Unarmed_Idle");
+    }
     public override void OnStateUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            parentLayer.ChangeState("Punching");
+            if (punchedRight)
+            {
+                punchedRight = false;
+                parentLayer.ChangeState("Punching_Left");
+                return;
+            }
+            else
+            {
+                punchedRight = true;
+                parentLayer.ChangeState("Punching_Right");
+                return;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1) && origin.hasPistol)
+        {
+            origin.switchingTo = 1;
+            parentLayer.ChangeState("Exit");
             return;
         }
-        else
+        if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
         {
-            if(Input.GetKeyDown(KeyCode.Alpha1) && origin.hasPistol)
-            {
-                parentLayer.parentLayer.ChangeState("Pistol");
-                return;
-            }
-            else if(Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
-            {
-                parentLayer.parentLayer.ChangeState("Knife");
-                return;
-            }
+            origin.switchingTo = 2;
+            parentLayer.ChangeState("Exit");
+            return;
         }
         base.OnStateUpdate();
     }

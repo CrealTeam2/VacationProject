@@ -6,9 +6,11 @@ public class PlayerEquipments_Unarmed : Layer<PlayerEquipments>
 {
     public PlayerEquipments_Unarmed(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
     {
-        defaultState = new PlayerEquipments_AnimationState(origin, this, "Unarmed_Enter", "Idle");
-        AddState("Entering", defaultState);
+        defaultState = new PlayerEquipments_Unarmed_Enter(origin, this);
+        AddState("Enter", defaultState);
         AddState("Idle", new PlayerEquipments_Unarmed_Idle(origin, this));
-        AddState("Punching", new PlayerEquipments_AnimationState(origin, this, "Unarmed_Punch", "Idle"));
+        AddState("Punching_Right", new PlayerEquipments_Unarmed_PunchRight(origin, this));
+        AddState("Punching_Left", new PlayerEquipments_Unarmed_PunchLeft(origin, this));
+        AddState("Exit", new PlayerEquipments_Unarmed_Exit(origin, this));
     }
 }

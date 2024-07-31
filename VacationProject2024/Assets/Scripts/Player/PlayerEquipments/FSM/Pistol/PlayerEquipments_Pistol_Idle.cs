@@ -12,6 +12,7 @@ public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        origin.anim.Play("Pistol_Idle");
         counter = 0.0f;
     }
     public override void OnStateUpdate()
@@ -21,34 +22,32 @@ public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
         {
             if (Input.GetMouseButton(0) && origin.pistolMag > 0)
             {
-                origin.anim.SetTrigger("Attack");
                 counter -= origin.pistolFireRate;
                 origin.pistolMag--;
                 Fire();
             }
-            else if(Input.GetKeyDown(KeyCode.R) && origin.pistolMag < origin.pistolMagSize && origin.bullets > 0)
-            {
-                parentLayer.ChangeState("Reloading");
-                return;
-            }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    parentLayer.parentLayer.ChangeState("Unarmed");
-                    return;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
-                {
-                    parentLayer.parentLayer.ChangeState("Knife");
-                    return;
-                }
-            }
+        }
+        if (Input.GetKeyDown(KeyCode.R) && origin.pistolMag < origin.pistolMagSize && origin.bullets > 0)
+        {
+            parentLayer.ChangeState("Reloading");
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            origin.switchingTo = 0;
+            parentLayer.ChangeState("Exit");
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
+        {
+            origin.switchingTo = 2;
+            parentLayer.ChangeState("Exit");
+            return;
         }
         base.OnStateUpdate();
     }
     void Fire()
     {
-        Debug.Log("fired");
+        origin.anim.Play("Pistol_Fire");
     }
 }

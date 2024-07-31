@@ -1,14 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerEquipments_AnimationState : State<PlayerEquipments>
 {
-    string clipName, endStateName;
-    public PlayerEquipments_AnimationState(PlayerEquipments origin, Layer<PlayerEquipments> parent, string clipName, string endStateName) : base(origin, parent)
+    string clipName;
+    public PlayerEquipments_AnimationState(PlayerEquipments origin, Layer<PlayerEquipments> parent, string clipName) : base(origin, parent)
     {
         this.clipName = clipName;
-        this.endStateName = endStateName;
     }
     public override void OnStateEnter()
     {
@@ -16,9 +16,9 @@ public class PlayerEquipments_AnimationState : State<PlayerEquipments>
         origin.anim.Play(clipName);
         origin.onClipFinish += ClipFinish;
     }
-    void ClipFinish()
+    protected virtual void ClipFinish()
     {
-        parentLayer.ChangeState(endStateName);
+        
     }
     public override void OnStateExit()
     {
