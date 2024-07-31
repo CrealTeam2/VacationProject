@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,15 @@ public class PlayerEquipments : MonoBehaviour
     [Header("Knife")]
     public bool hasKnife = false;
 
+    [Header("Items")]
+    public int flashGrenades = 0;
+    public int bandages = 0;
+    public int medicines = 0;
+    public int usingItemNum = 0;
+
+    [Header("FSMVals")]
+    public int switchingTo = 0;
+
     TopLayer<PlayerEquipments> topLayer;
     private void Awake()
     {
@@ -45,6 +55,10 @@ public class PlayerEquipments : MonoBehaviour
         pistolMag = pistolMagSize;
         bullets = pistolMagSize * 5;
     }
-    public void StopAction() => acting = false;
-    public void EndSwitching() => switching = false;
+    public Action onClipFinish;
+    public void ClipFinish() => onClipFinish.Invoke();
+    public Action onFlashGrenadeUse, onBandageUse, onMedicineUse;
+    public void UseFlashGrenade() => onFlashGrenadeUse.Invoke();
+    public void UseBandages() => onBandageUse.Invoke();
+    public void UseMedicine() => onMedicineUse.Invoke();
 }

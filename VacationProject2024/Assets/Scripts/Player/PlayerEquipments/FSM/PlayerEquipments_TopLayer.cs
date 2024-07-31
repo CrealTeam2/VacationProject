@@ -9,10 +9,7 @@ public class PlayerEquipments_TopLayer : TopLayer<PlayerEquipments>
         defaultState = new PlayerEquipments_Unarmed(origin, this);
         AddState("Unarmed", defaultState);
         AddState("Pistol", new PlayerEquipments_Pistol(origin, this));
-    }
-    public override void OnStateUpdate()
-    {
-        if (origin.switching) return;
-        base.OnStateUpdate();
+        AddState("Knife", new PlayerEquipments_Knife(origin, this));
+        AddState("UsingItem", new PlayerEquipments_UsingItem(origin, this));
     }
 }

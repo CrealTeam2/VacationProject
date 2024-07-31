@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEquipments_Pistol_Idle : State<PlayerEquipments>
+public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
 {
     public PlayerEquipments_Pistol_Idle(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
     {
@@ -16,7 +16,6 @@ public class PlayerEquipments_Pistol_Idle : State<PlayerEquipments>
     }
     public override void OnStateUpdate()
     {
-        base.OnStateUpdate();
         if (counter < origin.pistolFireRate) counter += Time.deltaTime;
         else
         {
@@ -30,19 +29,23 @@ public class PlayerEquipments_Pistol_Idle : State<PlayerEquipments>
             else if(Input.GetKeyDown(KeyCode.R) && origin.pistolMag < origin.pistolMagSize && origin.bullets > 0)
             {
                 parentLayer.ChangeState("Reloading");
+                return;
             }
             else
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
                     parentLayer.parentLayer.ChangeState("Unarmed");
+                    return;
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
                 {
                     parentLayer.parentLayer.ChangeState("Knife");
+                    return;
                 }
             }
         }
+        base.OnStateUpdate();
     }
     void Fire()
     {
