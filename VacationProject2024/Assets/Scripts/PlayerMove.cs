@@ -7,8 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] public float Stamina = 100;
     [SerializeField] private float lookSensitivity;
-
-    [SerializeField] private float cameraRotationLimit;
+    public float lowerCameraRotationLimit = 60f;
+    public float upperCameraRotationLimit = -60f;
+    private bool canMove = true;
+    private bool onStair = false;
     private float currentCameraRotationX = 0f;
 
     [SerializeField]
@@ -29,47 +31,95 @@ public class Player : MonoBehaviour
         Debug.Log(Stamina);
     }
 
+
     private void Move()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina>0)
-        {
-            walkSpeed = 120;
-            Stamina -= Time.deltaTime * 20;
-        }
-        else
-        {
-            walkSpeed = 50;
-            if (Stamina <= 100) 
-            {
-                Stamina += Time.deltaTime *10 ;
-            }
-        }
         float _moveDirX = Input.GetAxisRaw("Horizontal");
         float _moveDirZ = Input.GetAxisRaw("Vertical");
 
-        Vector3 _moveHorizontal = transform.right * _moveDirX;
-        Vector3 _moveVertical = transform.forward * _moveDirZ;
+        // 이동 입력이 있는지 확인
+        canMove = _moveDirX != 0 || _moveDirZ != 0;
 
-        Vector3 _velocity = ( _moveHorizontal + _moveVertical ).normalized * walkSpeed;
+        if (canMove)
+        {
+            if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0)
+            {
+                walkSpeed = 120;
+                Stamina -= Time.deltaTime * 20;
+            }
+            else
+            {
+                walkSpeed = 50;
+                if (Stamina <= 100)
+                {
+                    Stamina += Time.deltaTime * 10;
+                }
+            }
 
-        rb.MovePosition(transform.position + _velocity * Time.deltaTime);
+            Vector3 _moveHorizontal = transform.right * _moveDirX;
+            Vector3 _moveVertical = transform.forward * _moveDirZ;
+
+            Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
+
+            rb.MovePosition(transform.position + _velocity * Time.deltaTime);
+
+            rb.useGravity = true;
+        }
+        else
+        {
+            if (onStair)
+            {
+                rb.useGravity = false;
+                rb.velocity = Vector3.zero;
+            }
+            else
+            {
+                rb.useGravity = true;
+            }
+        }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Stair"))
+        {
+            onStair = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Stair"))
+        {
+            onStair = false;
+        }
+    }
+
+
+
     private void CameraRotation()
-    
     {
         float _xRotation = Input.GetAxisRaw("Mouse Y");
         float _cameraRotationX = _xRotation * lookSensitivity;
         currentCameraRotationX -= _cameraRotationX;
-        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
+
+        if (currentCameraRotationX > upperCameraRotationLimit)
+        {
+            currentCameraRotationX = upperCameraRotationLimit;
+        }
+        else if (currentCameraRotationX < lowerCameraRotationLimit)
+        {
+            currentCameraRotationX = lowerCameraRotationLimit;
+        }
 
         Camera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
+
+
     private void CharacterRotation()
     {
         float _yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 _characrerRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(_characrerRotationY));
-
+        Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(_characterRotationY ));
     }
 }
