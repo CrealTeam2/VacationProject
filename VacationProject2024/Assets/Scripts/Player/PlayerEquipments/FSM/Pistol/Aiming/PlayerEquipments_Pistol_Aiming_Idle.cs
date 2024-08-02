@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
+public class PlayerEquipments_Pistol_Aiming_Idle : State<PlayerEquipments>
 {
-    public PlayerEquipments_Pistol_Idle(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
+    public PlayerEquipments_Pistol_Aiming_Idle(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
     {
 
     }
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        origin.anim.Play("Pistol_Idle");
-        origin.pistolCounter = 0.0f;
+        origin.anim.Play("Pistol_Aiming_Idle");
+        origin.crosshair.SetActive(true);
     }
     public override void OnStateUpdate()
     {
+        base.OnStateUpdate();
         if (origin.pistolCounter < origin.pistolFireRate) origin.pistolCounter += Time.deltaTime;
         else
         {
@@ -26,32 +27,25 @@ public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
                 Fire();
             }
         }
-        if (Input.GetKeyDown(KeyCode.R) && origin.pistolMag < origin.pistolMagSize && origin.bullets > 0)
+        if(Input.GetMouseButton(1) == false)
         {
-            parentLayer.ChangeState("Reloading");
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            origin.switchingTo = 0;
             parentLayer.ChangeState("Exit");
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            origin.switchingTo = 2;
+            origin.reloadQueued = true;
             parentLayer.ChangeState("Exit");
             return;
         }
-        if(Input.GetMouseButton(1) == true)
-        {
-            parentLayer.ChangeState("Aiming");
-            return;
-        }
-        base.OnStateUpdate();
     }
     void Fire()
     {
         origin.anim.SetTrigger("Fire");
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.crosshair.SetActive(false);
     }
 }

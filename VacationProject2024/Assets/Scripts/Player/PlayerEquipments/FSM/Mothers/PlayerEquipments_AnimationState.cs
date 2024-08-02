@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEquipments_AnimationState : State<PlayerEquipments>
+public abstract class PlayerEquipments_AnimationState : State<PlayerEquipments>
 {
     string clipName;
     public PlayerEquipments_AnimationState(PlayerEquipments origin, Layer<PlayerEquipments> parent, string clipName) : base(origin, parent)

@@ -10,6 +10,7 @@ public class PlayerEquipments_TopLayer : TopLayer<PlayerEquipments>
         AddState("Unarmed", defaultState);
         AddState("Pistol", new PlayerEquipments_Pistol(origin, this));
         AddState("Knife", new PlayerEquipments_Knife(origin, this));
-        AddState("UsingItem", new PlayerEquipments_UsingItem(origin, this));
+        AddState("UsingBandage", new PlayerEquipments_UsingBandage(origin, this));
+        AddState("UsingMedicine", new PlayerEquipments_UsingMedicine(origin, this));
     }
 }

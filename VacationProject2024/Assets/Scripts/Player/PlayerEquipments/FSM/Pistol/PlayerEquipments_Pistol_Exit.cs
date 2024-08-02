@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEquipments_Pistol_Exit : PlayerEquipments_AnimationState
+public class PlayerEquipments_Pistol_Exit : PlayerEquipments_WeaponExitState
 {
     public PlayerEquipments_Pistol_Exit(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent, "Pistol_Exit")
     {
@@ -10,7 +10,6 @@ public class PlayerEquipments_Pistol_Exit : PlayerEquipments_AnimationState
     }
     protected override void ClipFinish()
     {
-        base.ClipFinish();
         if (origin.switchingTo == 0)
         {
             parentLayer.parentLayer.ChangeState("Unarmed");
@@ -21,5 +20,6 @@ public class PlayerEquipments_Pistol_Exit : PlayerEquipments_AnimationState
             parentLayer.parentLayer.ChangeState("Knife");
             return;
         }
+        base.ClipFinish();
     }
 }

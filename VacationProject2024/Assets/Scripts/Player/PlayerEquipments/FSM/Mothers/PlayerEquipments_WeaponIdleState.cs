@@ -11,14 +11,19 @@ public class PlayerEquipments_WeaponIdleState : State<PlayerEquipments>
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();
-        for(int i = 0; i < 3; i++)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if(Input.GetKeyDown(KeyCode.Alpha3 + i))
-            {
-                origin.usingItemNum = i;
-                parentLayer.parentLayer.ChangeState("UsingItem");
-                return;
-            }
+            parentLayer.ChangeState("Exit");
+            origin.useItem = true;
+            origin.itemNum = 0;
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            parentLayer.ChangeState("Exit");
+            origin.useItem = true;
+            origin.itemNum = 1;
+            return;
         }
     }
 }

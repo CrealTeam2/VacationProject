@@ -14,11 +14,16 @@ public class PlayerEquipments : MonoBehaviour
     [Header("Pistol")]
     public bool hasPistol = false;
     [SerializeField] float m_pistolFireRate;
+    public float pistolCounter = 0.0f;
     [SerializeField] int m_pistolMagSize;
     public float pistolFireRate { get { return m_pistolFireRate; } }
     public int pistolMagSize { get { return m_pistolMagSize; } }
-    public int pistolMag = 0;
-    public int bullets = 0;
+    public Action onBulletInfoChange;
+    [SerializeField] int m_pistolMag, m_bullets;
+    public int pistolMag { get { return m_pistolMag; } set { m_pistolMag = value; onBulletInfoChange?.Invoke(); } }
+    public int bullets { get { return m_bullets; } set { m_bullets = value; onBulletInfoChange?.Invoke(); } }
+    [SerializeField] GameObject m_crosshair;
+    public GameObject crosshair { get { return m_crosshair; } }
 
     [Header("Knife")]
     public bool hasKnife = false;
@@ -31,6 +36,9 @@ public class PlayerEquipments : MonoBehaviour
 
     [Header("FSMVals")]
     public int switchingTo = 0;
+    public bool useItem = false;
+    public int itemNum = 0;
+    public bool reloadQueued = false;
 
     TopLayer<PlayerEquipments> topLayer;
     private void Awake()
@@ -40,6 +48,7 @@ public class PlayerEquipments : MonoBehaviour
         topLayer.OnStateEnter();
         FSMPath = topLayer.GetCurrentFSM();
         UnlockPistol();
+        UnlockKnife();
     }
     private void Update()
     {
