@@ -20,21 +20,6 @@ public class IconManager : Singleton<IconManager>
             iconDictionary.Add(key, CreateIcon(key));
         
     }
-    Icon icon;
-    private void Start()
-    {
-        icon = GetIcon(KeyCode.F, 80);
-        icon.Enable();
-
-        icon.style.top = 500;
-        icon.style.left = 500;
-
-        Invoke("A", 4);
-    }
-    void A()
-    {
-        RetrunIcon(ref icon);
-    }
 
     Icon CreateIcon(KeyCode key)
     {

@@ -23,5 +23,11 @@ public class Icon : Label
     {
         style.display = DisplayStyle.None;
     }
+
+    public void SetPosition(float x, float y)
+    {
+        style.left = x - (resolvedStyle.width / 2);
+        style.top = y - (resolvedStyle.height / 2);
+    }
 }
 
