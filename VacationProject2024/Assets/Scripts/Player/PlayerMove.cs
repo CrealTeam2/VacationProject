@@ -16,13 +16,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Camera Camera;
     private Rigidbody rb;
+    private bool isGrounded;
+    private float slopeLimit = 45f;
+
     void Start()
     {
         Camera = FindObjectOfType<Camera>();
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -31,71 +33,35 @@ public class Player : MonoBehaviour
         Debug.Log(Stamina);
     }
 
-
     private void Move()
     {
         float _moveDirX = Input.GetAxisRaw("Horizontal");
         float _moveDirZ = Input.GetAxisRaw("Vertical");
 
-        // 이동 입력이 있는지 확인
-        canMove = _moveDirX != 0 || _moveDirZ != 0;
-
-        if (canMove)
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0)
-            {
-                walkSpeed = 120;
-                Stamina -= Time.deltaTime * 20;
-            }
-            else
-            {
-                walkSpeed = 50;
-                if (Stamina <= 100)
-                {
-                    Stamina += Time.deltaTime * 10;
-                }
-            }
-
-            Vector3 _moveHorizontal = transform.right * _moveDirX;
-            Vector3 _moveVertical = transform.forward * _moveDirZ;
-
-            Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
-
-            rb.MovePosition(transform.position + _velocity * Time.deltaTime);
-
-            rb.useGravity = true;
+            walkSpeed = 120;
+            Stamina -= Time.deltaTime * 20;
         }
         else
         {
-            if (onStair)
+            walkSpeed = 50;
+            if (Stamina <= 100)
             {
-                rb.useGravity = false;
-                rb.velocity = Vector3.zero;
-            }
-            else
-            {
-                rb.useGravity = true;
+                Stamina += Time.deltaTime * 10;
             }
         }
-    }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Stair"))
+        Vector3 _moveHorizontal = transform.right * _moveDirX;
+        Vector3 _moveVertical = transform.forward * _moveDirZ;
+
+        Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
+
+        if (isGrounded)
         {
-            onStair = true;
+            rb.MovePosition(transform.position + _velocity * Time.deltaTime);
         }
     }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Stair"))
-        {
-            onStair = false;
-        }
-    }
-
-
 
     private void CameraRotation()
     {
@@ -115,11 +81,28 @@ public class Player : MonoBehaviour
         Camera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
-
     private void CharacterRotation()
     {
         float _yRotation = Input.GetAxisRaw("Mouse X");
         Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(_characterRotationY ));
+        rb.MoveRotation(rb.rotation * Quaternion.Euler(_characterRotationY));
+    }
+
+    private void FixedUpdate()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f);
+
+        if (isGrounded)
+        {
+            float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+            if (slopeAngle <= slopeLimit)
+            {
+                rb.useGravity = true;
+            }
+            else
+            {
+                rb.useGravity = false;
+            }
+        }
     }
 }
