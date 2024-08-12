@@ -2,50 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEquipments_Pistol_Idle : State<PlayerEquipments>
+public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
 {
     public PlayerEquipments_Pistol_Idle(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
     {
 
     }
-    float counter = 0.0f;
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        counter = 0.0f;
+        origin.anim.Play("Pistol_Idle");
+        origin.pistolCounter = 0.0f;
     }
     public override void OnStateUpdate()
     {
-        base.OnStateUpdate();
-        if (counter < origin.pistolFireRate) counter += Time.deltaTime;
+        if (origin.pistolCounter < origin.pistolFireRate) origin.pistolCounter += Time.deltaTime;
         else
         {
-            if (Input.GetMouseButton(0) && origin.pistolMag > 0)
+            if (Input.GetMouseButtonDown(0) && origin.pistolMag > 0)
             {
-                origin.anim.SetTrigger("Attack");
-                counter -= origin.pistolFireRate;
+                origin.pistolCounter -= origin.pistolFireRate;
                 origin.pistolMag--;
                 Fire();
             }
-            else if(Input.GetKeyDown(KeyCode.R) && origin.pistolMag < origin.pistolMagSize && origin.bullets > 0)
-            {
-                parentLayer.ChangeState("Reloading");
-            }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    parentLayer.parentLayer.ChangeState("Unarmed");
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
-                {
-                    parentLayer.parentLayer.ChangeState("Knife");
-                }
-            }
         }
+        if (Input.GetKeyDown(KeyCode.R) && origin.pistolMag < origin.pistolMagSize && origin.bullets > 0)
+        {
+            parentLayer.ChangeState("Reloading");
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            origin.switchingTo = 0;
+            parentLayer.ChangeState("Exit");
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
+        {
+            origin.switchingTo = 2;
+            parentLayer.ChangeState("Exit");
+            return;
+        }
+        if(Input.GetMouseButton(1) == true)
+        {
+            parentLayer.ChangeState("Aiming");
+            return;
+        }
+        base.OnStateUpdate();
     }
     void Fire()
     {
-        Debug.Log("fired");
+        origin.anim.SetTrigger("Fire");
+        RaycastHit hit;
+        if (Physics.Raycast(origin.firePoint.position, origin.firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
+        {
+            hit.transform.GetComponent<EnemyTest>().GetDamage(origin.pistolDamage);
+        }
     }
 }

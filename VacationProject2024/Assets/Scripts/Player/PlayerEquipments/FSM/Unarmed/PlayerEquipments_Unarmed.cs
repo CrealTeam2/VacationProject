@@ -6,18 +6,12 @@ public class PlayerEquipments_Unarmed : Layer<PlayerEquipments>
 {
     public PlayerEquipments_Unarmed(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
     {
-        defaultState = new PlayerEquipments_Unarmed_Idle(origin, this);
-        AddState("Idle", defaultState);
-        AddState("Punching", new PlayerEquipments_Unarmed_Punching(origin, this));
-    }
-    public override void OnStateEnter()
-    {
-        base.OnStateEnter();
-        origin.anim.SetInteger("ArmedState", 0);
-    }
-    public override void OnStateExit()
-    {
-        base.OnStateExit();
-        origin.switching = true;
+        defaultState = new PlayerEquipments_Unarmed_Enter(origin, this);
+        AddState("Enter", defaultState);
+        AddState("Idle", new PlayerEquipments_Unarmed_Idle(origin, this));
+        AddState("Punching_Right", new PlayerEquipments_Unarmed_PunchRight(origin, this));
+        AddState("Punching_Left", new PlayerEquipments_Unarmed_PunchLeft(origin, this));
+        AddState("Stance", new PlayerEquipments_Unarmed_Stance(origin, this));
+        AddState("Exit", new PlayerEquipments_Unarmed_Exit(origin, this));
     }
 }

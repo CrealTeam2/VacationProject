@@ -2,29 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEquipments_Unarmed_Idle : State<PlayerEquipments>
+public class PlayerEquipments_Unarmed_Idle : PlayerEquipments_WeaponIdleState
 {
     public PlayerEquipments_Unarmed_Idle(PlayerEquipments origin, Layer<PlayerEquipments> parent) : base(origin, parent)
     {
 
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.anim.Play("Unarmed_Idle");
+    }
     public override void OnStateUpdate()
     {
-        base.OnStateUpdate();
         if (Input.GetMouseButtonDown(0))
         {
-            parentLayer.ChangeState("Punching");
+            if (origin.punchedRight)
+            {
+                origin.punchedRight = false;
+                parentLayer.ChangeState("Punching_Left");
+                return;
+            }
+            else
+            {
+                origin.punchedRight = true;
+                parentLayer.ChangeState("Punching_Right");
+                return;
+            }
         }
-        else
+        if (Input.GetKeyDown(KeyCode.Alpha1) && origin.hasPistol)
         {
-            if(Input.GetKeyDown(KeyCode.Alpha1) && origin.hasPistol)
-            {
-                parentLayer.parentLayer.ChangeState("Pistol");
-            }
-            else if(Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
-            {
-                parentLayer.parentLayer.ChangeState("Knife");
-            }
+            origin.switchingTo = 1;
+            parentLayer.ChangeState("Exit");
+            return;
         }
+        if (Input.GetKeyDown(KeyCode.Alpha2) && origin.hasKnife)
+        {
+            origin.switchingTo = 2;
+            parentLayer.ChangeState("Exit");
+            return;
+        }
+        if (Input.GetMouseButton(1) == true)
+        {
+            parentLayer.ChangeState("Stance");
+            return;
+        }
+        base.OnStateUpdate();
     }
 }
