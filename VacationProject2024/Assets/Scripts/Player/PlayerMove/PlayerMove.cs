@@ -57,11 +57,17 @@ public class Player : MonoBehaviour
 
         Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
 
-        if (isGrounded)
+        if (_velocity.magnitude > 0 && isGrounded)
         {
             rb.MovePosition(transform.position + _velocity * Time.deltaTime);
+
+            // 플레이어가 이동 중일 때 효과음 재생
+            // Player 스크립트 내에서 걷기 사운드 재생
+            //SoundManager.Instance.PlayWalkEffect(walkSoundClip); // walkSoundClip은 AudioClip이어야 합니다.
+
         }
     }
+
 
     private void CameraRotation()
     {
