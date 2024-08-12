@@ -13,6 +13,8 @@ public class PlayerEquipments : MonoBehaviour
 
     [Header("Pistol")]
     public bool hasPistol = false;
+    [SerializeField] float m_pistolDamage;
+    public float pistolDamage { get { return m_pistolDamage; } }
     [SerializeField] float m_pistolFireRate;
     public float pistolCounter = 0.0f;
     [SerializeField] int m_pistolMagSize;
@@ -22,6 +24,8 @@ public class PlayerEquipments : MonoBehaviour
     [SerializeField] int m_pistolMag, m_bullets;
     public int pistolMag { get { return m_pistolMag; } set { m_pistolMag = value; onBulletInfoChange?.Invoke(); } }
     public int bullets { get { return m_bullets; } set { m_bullets = value; onBulletInfoChange?.Invoke(); } }
+    [SerializeField] Transform m_firePoint;
+    public Transform firePoint { get { return m_firePoint; } }
     [SerializeField] GameObject m_crosshair;
     public GameObject crosshair { get { return m_crosshair; } }
 
@@ -35,6 +39,7 @@ public class PlayerEquipments : MonoBehaviour
     public int usingItemNum = 0;
 
     [Header("FSMVals")]
+    public bool punchedRight = false;
     public int switchingTo = 0;
     public bool useItem = false;
     public int itemNum = 0;

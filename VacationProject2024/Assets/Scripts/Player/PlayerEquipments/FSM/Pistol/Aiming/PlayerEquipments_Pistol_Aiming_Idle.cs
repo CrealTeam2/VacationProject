@@ -11,6 +11,7 @@ public class PlayerEquipments_Pistol_Aiming_Idle : State<PlayerEquipments>
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        origin.reloadQueued = false;
         origin.anim.Play("Pistol_Aiming_Idle");
         origin.crosshair.SetActive(true);
     }
@@ -42,6 +43,11 @@ public class PlayerEquipments_Pistol_Aiming_Idle : State<PlayerEquipments>
     void Fire()
     {
         origin.anim.SetTrigger("Fire");
+        RaycastHit hit;
+        if (Physics.Raycast(origin.firePoint.position, origin.firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
+        {
+            hit.transform.GetComponent<EnemyTest>().GetDamage(origin.pistolDamage);
+        }
     }
     public override void OnStateExit()
     {

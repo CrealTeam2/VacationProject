@@ -32,6 +32,11 @@ public class PlayerEquipments_Knife_Idle : PlayerEquipments_WeaponIdleState
             parentLayer.ChangeState("Exit");
             return;
         }
+        if (Input.GetMouseButton(1))
+        {
+            parentLayer.ChangeState("Stance");
+            return;
+        }
         base.OnStateUpdate();
     }
 }

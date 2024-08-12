@@ -10,6 +10,7 @@ public class PlayerEquipments_Knife : Layer<PlayerEquipments>
         AddState("Enter", defaultState);
         AddState("Idle", new PlayerEquipments_Knife_Idle(origin, this));
         AddState("Slash", new PlayerEquipments_Knife_Slash(origin, this));
+        AddState("Stance", new PlayerEquipments_Knife_Stance(origin, this));
         AddState("Exit", new PlayerEquipments_Knife_Exit(origin, this));
     }
     public override void OnStateEnter()

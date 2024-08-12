@@ -8,6 +8,7 @@ public class PlayerEquipments_Pistol_Aiming_Exit : PlayerEquipments_AnimationSta
     {
 
     }
+    bool reloadQueued = false;
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();
