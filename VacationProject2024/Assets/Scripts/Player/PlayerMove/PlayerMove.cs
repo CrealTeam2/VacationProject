@@ -85,8 +85,13 @@ public class Player : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
+<<<<<<< Updated upstream
         Debug.Log(Stamina);
         topLayer.OnStateUpdate();
+=======
+        //Debug.Log(Stamina);
+        //topLayer.OnStateUpdate();
+>>>>>>> Stashed changes
     }
 
     private void Move()
@@ -116,11 +121,19 @@ public class Player : MonoBehaviour
         if (_velocity.magnitude > 0 && isGrounded)
         {
             rb.MovePosition(transform.position + _velocity * Time.deltaTime);
-
-            // 플레이어가 이동 중일 때 효과음 재생
-            // Player 스크립트 내에서 걷기 사운드 재생
-            //SoundManager.Instance.PlayWalkEffect(walkSoundClip); // walkSoundClip은 AudioClip이어야 합니다.
-
+            if (!canMove)
+            {
+                SoundManager.Instance.PlaySound("Walk",SoundManager.Instance.MasterVolume, 0); // 무한 반복 재생
+                canMove = true;
+            }
+        }
+        else
+        {
+            if (canMove)
+            {
+                SoundManager.Instance.StopSound("Walk");
+                canMove = false;
+            }
         }
     }
 
