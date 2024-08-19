@@ -8,6 +8,11 @@ public class PlayerEquipments_Knife_Stance_Exit : PlayerEquipments_AnimationStat
     {
 
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.canSprint = true;
+    }
     protected override void ClipFinish()
     {
         base.ClipFinish();

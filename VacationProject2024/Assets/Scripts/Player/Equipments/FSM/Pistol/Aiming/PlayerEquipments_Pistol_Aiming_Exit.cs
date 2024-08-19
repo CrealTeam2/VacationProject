@@ -9,6 +9,11 @@ public class PlayerEquipments_Pistol_Aiming_Exit : PlayerEquipments_AnimationSta
 
     }
     bool reloadQueued = false;
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.canSprint = true;
+    }
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();

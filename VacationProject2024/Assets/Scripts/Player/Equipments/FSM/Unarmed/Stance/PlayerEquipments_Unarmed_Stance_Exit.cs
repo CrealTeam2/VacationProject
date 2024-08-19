@@ -8,6 +8,11 @@ public class PlayerEquipments_Unarmed_Stance_Exit : PlayerEquipments_AnimationSt
     {
 
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.canSprint = true;
+    }
     protected override void ClipFinish()
     {
         base.ClipFinish();

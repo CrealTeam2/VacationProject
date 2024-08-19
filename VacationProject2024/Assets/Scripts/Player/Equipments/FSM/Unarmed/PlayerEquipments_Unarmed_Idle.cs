@@ -42,7 +42,7 @@ public class PlayerEquipments_Unarmed_Idle : PlayerEquipments_WeaponIdleState
             parentLayer.ChangeState("Exit");
             return;
         }
-        if (Input.GetMouseButton(1) == true)
+        if (Input.GetMouseButton(1) == true && origin.canFocus)
         {
             parentLayer.ChangeState("Stance");
             return;

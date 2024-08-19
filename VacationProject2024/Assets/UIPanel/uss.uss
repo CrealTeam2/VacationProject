@@ -1,0 +1,111 @@
+.ExitButton-Active {
+    width: 226px;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(195, 193, 193);
+    border-right-color: rgb(195, 193, 193);
+    border-top-color: rgb(195, 193, 193);
+    border-bottom-color: rgb(195, 193, 193);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    -unity-font-style: bold;
+    top: 8px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    height: 83px;
+    left: 16px;
+    font-size: 24px;
+}
+
+.ExitButton-Active:hover {
+    color: rgb(190, 190, 190);
+    background-color: rgb(116, 116, 116);
+}
+
+.SceneButton-Active {
+    width: 265px;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(195, 193, 193);
+    border-right-color: rgb(195, 193, 193);
+    border-top-color: rgb(195, 193, 193);
+    border-bottom-color: rgb(195, 193, 193);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    -unity-font-style: bold;
+    top: 34px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    left: 31px;
+    height: 82px;
+    font-size: 36px;
+}
+
+.SceneButton-Active:hover {
+    color: rgb(168, 168, 168);
+    background-color: rgb(49, 49, 49);
+}
+
+.ControlButton-Active {
+    width: 265px;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(195, 193, 193);
+    border-right-color: rgb(195, 193, 193);
+    border-top-color: rgb(195, 193, 193);
+    border-bottom-color: rgb(195, 193, 193);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    -unity-font-style: normal;
+    top: 84px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    left: 31px;
+    height: 82px;
+    font-size: 22px;
+    -unity-font: resource('font/Pretendard-ExtraBold');
+}
+
+.ControlButton-Active:hover {
+    background-color: rgb(49, 49, 49);
+}
+
+.SoundButton-Active {
+    width: 265px;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+    border-left-color: rgb(195, 193, 193);
+    border-right-color: rgb(195, 193, 193);
+    border-top-color: rgb(195, 193, 193);
+    border-bottom-color: rgb(195, 193, 193);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    -unity-font-style: normal;
+    top: 153px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    left: 31px;
+    height: 82px;
+    font-size: 22px;
+    -unity-font: resource('font/Pretendard-ExtraBold');
+}
+
+.SoundButton-Active:hover {
+    background-color: rgb(49, 49, 49);
+}
