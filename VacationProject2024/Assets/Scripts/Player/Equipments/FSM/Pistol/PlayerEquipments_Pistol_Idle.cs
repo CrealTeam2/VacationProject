@@ -43,7 +43,7 @@ public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
             parentLayer.ChangeState("Exit");
             return;
         }
-        if(Input.GetMouseButton(1) == true)
+        if(Input.GetMouseButton(1) == true && origin.canFocus)
         {
             parentLayer.ChangeState("Aiming");
             return;
@@ -56,7 +56,7 @@ public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
         RaycastHit hit;
         if (Physics.Raycast(origin.firePoint.position, origin.firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
         {
-            hit.transform.GetComponent<EnemyTest>().GetDamage(origin.pistolDamage);
+            hit.transform.GetComponent<EnemyTest>()?.GetDamage(origin.pistolDamage);
         }
     }
 }

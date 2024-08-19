@@ -49,7 +49,7 @@ public class IconManager : Singleton<IconManager>
         return label;
     }
 
-    public Icon GetIcon(KeyCode key, int size) //¾ÆÀÌÄÜÀ» »ç¿ë
+    public Icon GetIcon(KeyCode key, int size) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     {
         iconDictionary.TryGetValue(key, out Icon icon);
         if (icon == null)
@@ -69,7 +69,7 @@ public class IconManager : Singleton<IconManager>
         return icon;
     }
 
-    public void RetrunIcon(ref Icon icon) //»ç¿ëÇÑ ¾ÆÀÌÄÜÀ» ¹Ý³³
+    public void RetrunIcon(ref Icon icon) //ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý³ï¿½
     {
         icon.isUsing = false;
         icon.Disable();

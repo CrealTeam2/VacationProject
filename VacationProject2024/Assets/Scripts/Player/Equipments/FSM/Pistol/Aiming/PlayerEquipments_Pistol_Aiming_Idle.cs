@@ -46,7 +46,7 @@ public class PlayerEquipments_Pistol_Aiming_Idle : State<Player>
         RaycastHit hit;
         if (Physics.Raycast(origin.firePoint.position, origin.firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
         {
-            hit.transform.GetComponent<EnemyTest>().GetDamage(origin.pistolDamage);
+            hit.transform.GetComponent<EnemyTest>()?.GetDamage(origin.pistolDamage);
         }
     }
     public override void OnStateExit()
