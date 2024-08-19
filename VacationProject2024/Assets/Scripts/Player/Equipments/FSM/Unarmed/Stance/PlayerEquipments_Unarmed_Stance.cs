@@ -13,4 +13,20 @@ public class PlayerEquipments_Unarmed_Stance : Layer<Player>
         AddState("Punching_Left", new PlayerEquipments_Unarmed_Stance_PunchLeft(origin, this));
         AddState("Exit", new PlayerEquipments_Unarmed_Stance_Exit(origin, this));
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.speedMultiplier *= Player.focusSlowScale;
+        origin.canSprint = false;
+    }
+    public override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        if (!origin.canFocus) ChangeState("Exit");
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.speedMultiplier /= Player.focusSlowScale;
+    }
 }

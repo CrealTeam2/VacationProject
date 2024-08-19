@@ -12,5 +12,6 @@ public class PlayerEquipments_TopLayer : TopLayer<Player>
         AddState("Knife", new PlayerEquipments_Knife(origin, this));
         AddState("UsingBandage", new PlayerEquipments_UsingBandage(origin, this));
         AddState("UsingMedicine", new PlayerEquipments_UsingMedicine(origin, this));
+        AddState("Disabled", new PlayerEquipments_Disabled(origin, this));
     }
 }

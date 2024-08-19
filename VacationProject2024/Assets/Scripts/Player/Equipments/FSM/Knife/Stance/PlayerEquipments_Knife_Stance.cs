@@ -12,4 +12,20 @@ public class PlayerEquipments_Knife_Stance : Layer<Player>
         AddState("Slash", new PlayerEquipments_Knife_Stance_Slash(origin, this));
         AddState("Exit", new PlayerEquipments_Knife_Stance_Exit(origin, this));
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.speedMultiplier *= Player.focusSlowScale;
+        origin.canSprint = false;
+    }
+    public override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        if (!origin.canFocus) ChangeState("Exit");
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.speedMultiplier /= Player.focusSlowScale;
+    }
 }

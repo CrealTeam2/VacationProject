@@ -11,4 +11,20 @@ public class PlayerEquipments_Pistol_Aiming : Layer<Player>
         AddState("Idle", new PlayerEquipments_Pistol_Aiming_Idle(origin, this));
         AddState("Exit", new PlayerEquipments_Pistol_Aiming_Exit(origin, this));
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.speedMultiplier *= Player.focusSlowScale;
+        origin.canSprint = false;
+    }
+    public override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        if (!origin.canFocus) ChangeState("Exit");
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.speedMultiplier /= Player.focusSlowScale;
+    }
 }
