@@ -1758,6 +1758,7 @@ GameObject:
   - component: {fileID: 1627982971}
   - component: {fileID: 1627982972}
   - component: {fileID: 1627982973}
+  - component: {fileID: 1627982974}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Player
@@ -1847,7 +1848,7 @@ Transform:
   m_GameObject: {fileID: 1627982965}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.68, y: 3.72, z: 15.94}
+  m_LocalPosition: {x: -1.91, y: 3.72, z: 15.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1899,6 +1900,30 @@ MonoBehaviour:
   lowerCameraRotationLimit: -80
   upperCameraRotationLimit: 80
   Camera: {fileID: 0}
+  FSMPath: 
+  m_anim: {fileID: 1627982974}
+  disabled: 1
+  acting: 0
+  switching: 0
+  hasPistol: 0
+  m_pistolDamage: 0
+  m_pistolFireRate: 0
+  pistolCounter: 0
+  m_pistolMagSize: 0
+  m_pistolMag: 0
+  m_bullets: 0
+  m_firePoint: {fileID: 0}
+  m_crosshair: {fileID: 0}
+  hasKnife: 0
+  flashGrenades: 0
+  bandages: 0
+  medicines: 0
+  usingItemNum: 0
+  punchedRight: 0
+  switchingTo: 0
+  useItem: 0
+  itemNum: 0
+  reloadQueued: 0
 --- !u!81 &1627982973
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1907,6 +1932,27 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627982965}
   m_Enabled: 1
+--- !u!95 &1627982974
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627982965}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1722485660
 GameObject:
   m_ObjectHideFlags: 0
@@ -2041,13 +2087,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05006c115764e4649b0b14d99ba191c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgSound: {fileID: 452877932}
-  efSound: {fileID: 1304802383}
-  sceneAudioClips:
-  - sceneName: MoveScene
-    audioClip: {fileID: 8300000, guid: bb34d6789fbe593478482fd119f1ed1a, type: 3}
-  - sceneName: MoveScene
-    audioClip: {fileID: 8300000, guid: bb34d6789fbe593478482fd119f1ed1a, type: 3}
+  MasterVolume: 1
+  SFXVolume: 1
+  BGMVolume: 1
 --- !u!4 &2030653665
 Transform:
   m_ObjectHideFlags: 0

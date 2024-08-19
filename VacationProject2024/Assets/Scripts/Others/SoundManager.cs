@@ -7,14 +7,18 @@ public class SoundManager : MonoBehaviour
     // Singleton 인스턴스
     public static SoundManager Instance;
 
-
-    // 효과음을 저장할 딕셔너리 (이름으로 접근)
+    // 효과음과 BGM을 저장할 딕셔너리 (이름으로 접근)
     private Dictionary<string, AudioClip> soundEffects;
     private Dictionary<string, AudioSource> activeSounds;
+    private Dictionary<string, AudioClip> bgmClips;
+    private AudioSource bgmSource;
 
     [Range(0f, 1f)]
     public float MasterVolume = 1.0f;  // 전체 볼륨
-
+    [Range(0f, 1f)]
+    public float SFXVolume = 1.0f;  // 효과음 볼륨
+    [Range(0f, 1f)]
+    public float BGMVolume = 1.0f;  // BGM 볼륨
 
     private void Awake()
     {
@@ -29,6 +33,11 @@ public class SoundManager : MonoBehaviour
 
             // 재생 중인 사운드를 관리하기 위한 딕셔너리 초기화
             activeSounds = new Dictionary<string, AudioSource>();
+
+            // BGM을 재생할 AudioSource 생성
+            bgmSource = gameObject.AddComponent<AudioSource>();
+            bgmSource.loop = true;
+            bgmSource.volume = BGMVolume * MasterVolume;
         }
         else
         {
@@ -40,29 +49,70 @@ public class SoundManager : MonoBehaviour
     private void LoadAllSoundsFromResources()
     {
         soundEffects = new Dictionary<string, AudioClip>();
+        bgmClips = new Dictionary<string, AudioClip>();
 
         // Resources/Audio 폴더 안의 모든 AudioClip을 불러옴
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Audio");
 
         foreach (var clip in clips)
         {
-            soundEffects[clip.name] = clip;  // 사운드 이름을 키로 딕셔너리에 저장
+            // 파일 이름에 "BGM"이 포함된 경우 BGM으로 구분
+            if (clip.name.Contains("BGM"))
+            {
+                bgmClips[clip.name] = clip;
+            }
+            else
+            {
+                soundEffects[clip.name] = clip;  // 사운드 이름을 키로 딕셔너리에 저장
+            }
         }
 
-        Debug.Log("Loaded " + soundEffects.Count + " sound effects.");
+        Debug.Log("Loaded " + soundEffects.Count + " sound effects and " + bgmClips.Count + " BGM clips.");
     }
 
-    // 특정 사운드를 재생하는 메서드
+    // 특정 사운드를 재생하는 메서드 (BGM과 SFX를 구분하여 처리)
     public void PlaySound(string soundName, float volume, int repeatCount)
     {
-        if (soundEffects.TryGetValue(soundName, out AudioClip clip))
+        // BGM인지 효과음인지 구분
+        if (bgmClips.ContainsKey(soundName))
         {
-            if (!activeSounds.ContainsKey(soundName))
+            // BGM 재생
+            PlayBGM(soundName, volume, repeatCount);
+        }
+        else if (soundEffects.ContainsKey(soundName))
+        {
+            // 효과음 재생
+            PlaySFX(soundName, volume, repeatCount);
+        }
+        else
+        {
+            Debug.LogWarning($"Sound '{soundName}' not found!");
+        }
+    }
+
+    // BGM 재생 메서드
+    private void PlayBGM(string bgmName, float volume, int repeatCount)
+    {
+        if (bgmClips.TryGetValue(bgmName, out AudioClip clip))
+        {
+            bgmSource.clip = clip;
+            bgmSource.volume = volume * BGMVolume * MasterVolume;
+            bgmSource.loop = (repeatCount == 0);
+            bgmSource.Play();
+        }
+    }
+
+    // 효과음 재생 메서드
+    private void PlaySFX(string sfxName, float volume, int repeatCount)
+    {
+        if (!activeSounds.ContainsKey(sfxName))
+        {
+            if (soundEffects.TryGetValue(sfxName, out AudioClip clip))
             {
-                // 새로운 AudioSource를 생성하여 사운드 재생
+                // 새로운 AudioSource를 생성하여 효과음 재생
                 AudioSource newSource = gameObject.AddComponent<AudioSource>();
                 newSource.clip = clip;
-                newSource.volume = volume;
+                newSource.volume = volume * SFXVolume * MasterVolume;
                 newSource.loop = (repeatCount == 0);
                 newSource.Play();
 
@@ -73,16 +123,12 @@ public class SoundManager : MonoBehaviour
                 }
 
                 // 재생 중인 사운드를 딕셔너리에 추가
-                activeSounds[soundName] = newSource;
+                activeSounds[sfxName] = newSource;
             }
-        }
-        else
-        {
-            Debug.LogWarning($"Sound '{soundName}' not found!");
         }
     }
 
-    // 특정 사운드를 인덱스로 멈추는 메서드
+    // 특정 사운드를 멈추는 메서드
     public void StopSound(string soundName)
     {
         if (activeSounds.TryGetValue(soundName, out AudioSource source))
@@ -91,17 +137,13 @@ public class SoundManager : MonoBehaviour
             Destroy(source); // 사용한 AudioSource 제거
             activeSounds.Remove(soundName); // 딕셔너리에서 제거
         }
-        else
-        {
-            Debug.LogWarning($"No active sound found with name '{soundName}' to stop.");
-        }
     }
 
     private IEnumerator PlaySoundRepeatedly(AudioSource source, AudioClip clip, float volume, int repeatCount)
     {
         for (int i = 0; i < repeatCount; i++)
         {
-            source.PlayOneShot(clip, volume);
+            source.PlayOneShot(clip, volume * SFXVolume * MasterVolume);
             yield return new WaitForSeconds(clip.length);
         }
 
@@ -115,17 +157,43 @@ public class SoundManager : MonoBehaviour
         MasterVolume = volume;
         UpdateAllVolumes();
     }
+
+    public void SetSFXVolume(float volume)
+    {
+        SFXVolume = volume;
+        UpdateAllVolumes();
+    }
+
+    public void SetBGMVolume(float volume)
+    {
+        BGMVolume = volume;
+        bgmSource.volume = BGMVolume * MasterVolume;
+    }
+
     private void UpdateAllVolumes()
     {
         foreach (var source in activeSounds.Values)
         {
-            source.volume = MasterVolume;  // 현재 모든 AudioSource의 볼륨을 MasterVolume으로 조정
+            source.volume = SFXVolume * MasterVolume;  // 현재 모든 AudioSource의 볼륨을 SFXVolume과 MasterVolume으로 조정
         }
+
+        // BGM의 볼륨도 갱신
+        bgmSource.volume = BGMVolume * MasterVolume;
     }
 
     // 슬라이더가 변경될 때 호출될 메서드
-    public void OnSliderValueChanged(float value)
+    public void OnMasterVolumeChanged(float value)
     {
         SetMasterVolume(value);
+    }
+
+    public void OnSFXVolumeChanged(float value)
+    {
+        SetSFXVolume(value);
+    }
+
+    public void OnBGMVolumeChanged(float value)
+    {
+        SetBGMVolume(value);
     }
 }
