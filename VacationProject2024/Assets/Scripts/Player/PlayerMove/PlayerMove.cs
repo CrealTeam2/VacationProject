@@ -85,13 +85,9 @@ public class Player : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
-<<<<<<< Updated upstream
+
         Debug.Log(Stamina);
         topLayer.OnStateUpdate();
-=======
-        //Debug.Log(Stamina);
-        //topLayer.OnStateUpdate();
->>>>>>> Stashed changes
     }
 
     private void Move()
