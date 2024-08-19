@@ -18,7 +18,7 @@ public class DataManager : Singleton<DataManager>
     Database data = new Database();
     public List<ISavable> savableObjects = new List<ISavable>();
 
-    private void Start()
+    private void Awake()
     {
         fileDataHandler = new(Application.persistentDataPath, fileName);
         savableObjects = FindAllSavableObjects();
@@ -38,6 +38,7 @@ public class DataManager : Singleton<DataManager>
         }
 
         fileDataHandler.Save(data);
+        print("Save");
     }
 
     public void LoadGame() 
@@ -54,12 +55,11 @@ public class DataManager : Singleton<DataManager>
         {
             savableObject.LoadData(data);
         }
-        print(data.count);
     }
 
     private void OnApplicationQuit()
     {
-        SaveGame();
+/*        SaveGame();*/
     }
 
     private List<ISavable> FindAllSavableObjects()

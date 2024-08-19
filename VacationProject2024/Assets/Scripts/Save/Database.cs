@@ -7,8 +7,8 @@ using System;
 [Serializable]
 public class Database
 {
-    public int count;
-    public TestClass testClass;
+    public SerializableDIctionary<Vector3, bool> savePointsDict;
+    public Vector3 savePoint;
 
     public SerializableDIctionary<string, SaveZombieData> zombieData;
 
@@ -20,7 +20,8 @@ public class Database
 
     public Database()
     {
-        count = 0;
+        savePointsDict = new SerializableDIctionary<Vector3, bool>();
+        savePoint = new Vector3();
         zombieData = new();
     }
 }

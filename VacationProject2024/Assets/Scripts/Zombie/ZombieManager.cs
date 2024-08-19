@@ -26,13 +26,26 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
 
     public void LoadData(Database data)
     {
+        List<string> removeZomdataId = new();
         foreach (KeyValuePair<string, SaveZombieData> item in data.zombieData)
         {
-            var zombie = zombieDict[item.Key];
+            Zombie zombie;
+            zombieDict.TryGetValue(item.Key, out zombie);
+            if (zombie == null)
+            {
+                removeZomdataId.Add(item.Key);
+                continue;
+            }
             zombie.transform.position = new Vector3(item.Value.x, item.Value.y, item.Value.z);
             zombie.Health = item.Value.health;
             zombie.Activation = item.Value.activation;
             zombie.IsEnabled = item.Value.isEnabled;
+        }
+
+        while(removeZomdataId.Count > 0)
+        {
+            data.zombieData.Remove(removeZomdataId[0]);
+            removeZomdataId.RemoveAt(0);
         }
     }
 
