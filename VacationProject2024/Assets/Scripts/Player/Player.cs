@@ -108,6 +108,9 @@ public class Player : MonoBehaviour
     {
         Camera = FindObjectOfType<Camera>();
         rb = GetComponent<Rigidbody>();
+
+        SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
+
     }
 
     void Update()
