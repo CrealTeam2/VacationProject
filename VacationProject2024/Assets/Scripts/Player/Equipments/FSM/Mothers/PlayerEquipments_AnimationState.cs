@@ -10,11 +10,29 @@ public abstract class PlayerEquipments_AnimationState : State<Player>
     {
         this.clipName = clipName;
     }
+    float clipLength, counter = 0.0f;
+    bool set = false;
     public override void OnStateEnter()
     {
         base.OnStateEnter();
         origin.anim.Play(clipName);
-        origin.onClipFinish += ClipFinish;
+        counter = 0.0f;
+        set = false;
+    }
+    public override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        if (!set)
+        {
+            set = true;
+            clipLength = origin.anim.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+            Debug.Log(clipLength);
+        }
+        if (counter < clipLength) counter += Time.deltaTime;
+        else
+        {
+            ClipFinish();
+        }
     }
     protected virtual void ClipFinish()
     {
@@ -23,6 +41,5 @@ public abstract class PlayerEquipments_AnimationState : State<Player>
     public override void OnStateExit()
     {
         base.OnStateExit();
-        origin.onClipFinish -= ClipFinish;
     }
 }

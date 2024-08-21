@@ -196,7 +196,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.6f);
 
         if (isGrounded)
         {
@@ -222,7 +222,7 @@ public class Player : MonoBehaviour
         bullets = pistolMagSize * 5;
     }
     public Action onClipFinish;
-    public void ClipFinish() => onClipFinish.Invoke();
+    public void ClipFinish() => onClipFinish?.Invoke();
     public Action onFlashGrenadeUse, onBandageUse, onMedicineUse;
     public void UseFlashGrenade() => onFlashGrenadeUse.Invoke();
     public void UseBandages() => onBandageUse.Invoke();

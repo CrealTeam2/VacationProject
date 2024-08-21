@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class EnemyDetector : MonoBehaviour
 {
     public Action<EnemyTest> onHit;
-    List<EnemyTest> hit = new();
+    List<Collider> hit = new();
     Collider m_collider;
     Collider _collider { get { if (m_collider == null) m_collider = GetComponent<Collider>(); return m_collider; } }
     private void OnEnable()
@@ -19,15 +20,15 @@ public class EnemyDetector : MonoBehaviour
     {
         _collider.enabled = false;
     }
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerStay(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (!hit.Contains(collision))
         {
-            EnemyTest tmp = collision.GetComponent<EnemyTest>();
-            if (!hit.Contains(tmp))
+            hit.Add(collision);
+            if (collision.gameObject.CompareTag("Enemy"))
             {
+                EnemyTest tmp = collision.GetComponent<EnemyTest>();
                 onHit.Invoke(tmp);
-                hit.Add(tmp);
             }
         }
     }
