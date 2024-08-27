@@ -14,7 +14,29 @@ public abstract class PlayerEquipments_AnimationState : State<Player>
     {
         base.OnStateEnter();
         origin.anim.Play(clipName);
-        origin.onClipFinish += ClipFinish;
+        origin.StartCoroutine(WaitClip());
+    }
+    IEnumerator WaitClip()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(origin.anim.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+        ClipFinish();
+    }
+    public override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        /*if (!set)
+        {
+            set = true;
+            clipLength = origin.anim.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+            Debug.Log(clipLength);
+        }
+        if (counter < clipLength) counter += Time.deltaTime;
+        else
+        {
+            ClipFinish();
+        }*/
     }
     protected virtual void ClipFinish()
     {
@@ -23,6 +45,5 @@ public abstract class PlayerEquipments_AnimationState : State<Player>
     public override void OnStateExit()
     {
         base.OnStateExit();
-        origin.onClipFinish -= ClipFinish;
     }
 }

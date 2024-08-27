@@ -14,9 +14,10 @@ public class Player : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] Transform rotator;
-    [SerializeField] private float walkSpeed;
+    [SerializeField] private float baseSpeed;
     [SerializeField] public float Stamina = 100;
     [SerializeField] private float lookSensitivity;
+    private float walkSpeed;
     public float lowerCameraRotationLimit = 60f;
     public float upperCameraRotationLimit = -60f;
     private bool canMove = true;
@@ -109,7 +110,7 @@ public class Player : MonoBehaviour
         Camera = FindObjectOfType<Camera>();
         rb = GetComponent<Rigidbody>();
 
-        SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
+        //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
 
     }
 
@@ -135,12 +136,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && canSprint)
         {
-            walkSpeed = 50;
+            walkSpeed = baseSpeed * 12;
             Stamina -= Time.deltaTime * 20;
         }
         else
         {
-            walkSpeed = 10;
+            walkSpeed = baseSpeed * 5;
             if (Stamina <= 100)
             {
                 Stamina += Time.deltaTime * 10;
@@ -157,7 +158,7 @@ public class Player : MonoBehaviour
             rb.MovePosition(transform.position + _velocity * Time.deltaTime * speedMultiplier);
             if (!canMove)
             {
-                SoundManager.Instance.PlaySound("Walk",SoundManager.Instance.MasterVolume, 0); // 무한 반복 재생
+                //SoundManager.Instance.PlaySound("Walk",SoundManager.Instance.MasterVolume, 0); // 무한 반복 재생
                 canMove = true;
             }
         }
@@ -165,7 +166,7 @@ public class Player : MonoBehaviour
         {
             if (canMove)
             {
-                SoundManager.Instance.StopSound("Walk");
+                //SoundManager.Instance.StopSound("Walk");
                 canMove = false;
             }
         }
@@ -199,7 +200,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.6f);
 
         if (isGrounded)
         {
@@ -225,7 +226,7 @@ public class Player : MonoBehaviour
         bullets = pistolMagSize * 5;
     }
     public Action onClipFinish;
-    public void ClipFinish() => onClipFinish.Invoke();
+    public void ClipFinish() => onClipFinish?.Invoke();
     public Action onFlashGrenadeUse, onBandageUse, onMedicineUse;
     public void UseFlashGrenade() => onFlashGrenadeUse.Invoke();
     public void UseBandages() => onBandageUse.Invoke();
