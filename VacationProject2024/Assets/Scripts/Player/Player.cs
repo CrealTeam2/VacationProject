@@ -98,9 +98,9 @@ public class Player : MonoBehaviour
         topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
         topLayer.OnStateEnter();
         FSMPath = topLayer.GetCurrentFSM();
-        rightFistHitbox.onHit += (EnemyTest enemy) => { onFistHit?.Invoke(enemy); enemy.GetDamage(fistDamage); };
-        leftFistHitbox.onHit += (EnemyTest enemy) => { onFistHit?.Invoke(enemy); enemy.GetDamage(fistDamage); };
-        knifeHitbox.onHit += (EnemyTest enemy) => { onKnifeHit?.Invoke(enemy); enemy.GetDamage(knifeDamage); };
+        //rightFistHitbox.onHit += (EnemyTest enemy) => { onFistHit?.Invoke(enemy); enemy.GetDamage(fistDamage); };
+        //leftFistHitbox.onHit += (EnemyTest enemy) => { onFistHit?.Invoke(enemy); enemy.GetDamage(fistDamage); };
+        //knifeHitbox.onHit += (EnemyTest enemy) => { onKnifeHit?.Invoke(enemy); enemy.GetDamage(knifeDamage); };
         UnlockPistol();
         UnlockKnife();
     }
@@ -135,12 +135,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && canSprint)
         {
-            walkSpeed = 120;
+            walkSpeed = 50;
             Stamina -= Time.deltaTime * 20;
         }
         else
         {
-            walkSpeed = 50;
+            walkSpeed = 10;
             if (Stamina <= 100)
             {
                 Stamina += Time.deltaTime * 10;
@@ -187,7 +187,7 @@ public class Player : MonoBehaviour
             currentCameraRotationX = lowerCameraRotationLimit;
         }
 
-        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        //rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
