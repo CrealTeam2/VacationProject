@@ -11,7 +11,6 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
     List<InteractionAgent> nearInteractions;
     GameObject player;
     Dictionary<KeyCode, Icon> iconDict;
-    public float interactionDistance;
 
     InteractionAgent enabledInteraction;
 
