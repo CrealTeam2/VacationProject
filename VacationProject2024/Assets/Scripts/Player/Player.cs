@@ -219,7 +219,7 @@ public class Player : MonoBehaviour, ISavable
             currentCameraRotationX = lowerCameraRotationLimit;
         }
 
-        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        //rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
