@@ -13,9 +13,4 @@ public class PlayerEquipments_Knife : Layer<Player>
         AddState("Stance", new PlayerEquipments_Knife_Stance(origin, this));
         AddState("Exit", new PlayerEquipments_Knife_Exit(origin, this));
     }
-    public override void OnStateEnter()
-    {
-        base.OnStateEnter();
-        origin.anim.SetInteger("ArmedState", 2);
-    }
 }

@@ -7,6 +7,13 @@ TagManager:
   - Enemy
   - Stair
   - Wall
+  - Wood
+  - Metal
+  - Paper
+  - Floor
+  - StartPosition
+  - EndPosition
+  - SavePoints
   layers:
   - Default
   - TransparentFX
@@ -15,8 +22,8 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
+  - PostProcessing
+  - NoShadow
   - 
   - Wall
   - 

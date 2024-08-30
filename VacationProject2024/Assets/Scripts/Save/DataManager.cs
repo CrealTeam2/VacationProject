@@ -16,16 +16,16 @@ public class DataManager : Singleton<DataManager>
 
 
     Database data = new Database();
-    public List<ISavable> savableObjects = new List<ISavable>();
+    public List<ISavable> savableObjects;
 
-    private void Awake()
+    private void Start()
     {
         fileDataHandler = new(Application.persistentDataPath, fileName);
         savableObjects = FindAllSavableObjects();
         LoadGame();
     }
 
-    public void InitGame()
+    public void InitDatabase()
     {
         data = new Database();
     }
@@ -48,7 +48,7 @@ public class DataManager : Singleton<DataManager>
         if (data == null)
         {
             Debug.Log("No Data Initialized. Initialzing the data");
-            InitGame();
+            InitDatabase();
         }
 
         foreach (ISavable savableObject in savableObjects)

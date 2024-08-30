@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class SerializableDIctionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver {
+public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver {
     [SerializeField] private List<TKey> keys = new();
     [SerializeField] private List<TValue> values = new();
 

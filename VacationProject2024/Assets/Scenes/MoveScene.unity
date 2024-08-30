@@ -1286,6 +1286,89 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1001 &1290979793
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 9.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783164122, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906783259386, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_Name
+      value: Outer_Door_brown
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906785457208, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5061589906785457208, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 92f28398363556c4ebf6781fab89f13f, type: 2}
+    - target: {fileID: 5061589906785457208, guid: 89ec4e8001e7c284ca7ce29dc820cd76,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 92f28398363556c4ebf6781fab89f13f, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 89ec4e8001e7c284ca7ce29dc820cd76, type: 3}
 --- !u!1 &1304802382
 GameObject:
   m_ObjectHideFlags: 0
@@ -1894,17 +1977,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9461ba4ce25a8fb45b5f5c962f40cd7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_maxHp: 0
+  m_hp: 0
+  rotator: {fileID: 0}
   walkSpeed: 0
   Stamina: 100
   lookSensitivity: 5
   lowerCameraRotationLimit: -80
   upperCameraRotationLimit: 80
   Camera: {fileID: 0}
+  speedMultiplier: 1
   FSMPath: 
   m_anim: {fileID: 1627982974}
   disabled: 1
   acting: 0
   switching: 0
+  fistDamage: 0
+  rightFistHitbox: {fileID: 0}
+  leftFistHitbox: {fileID: 0}
   hasPistol: 0
   m_pistolDamage: 0
   m_pistolFireRate: 0
@@ -1914,6 +2004,8 @@ MonoBehaviour:
   m_bullets: 0
   m_firePoint: {fileID: 0}
   m_crosshair: {fileID: 0}
+  knifeDamage: 0
+  knifeHitbox: {fileID: 0}
   hasKnife: 0
   flashGrenades: 0
   bandages: 0
@@ -2379,3 +2471,4 @@ SceneRoots:
   - {fileID: 452877933}
   - {fileID: 2030653665}
   - {fileID: 1304802384}
+  - {fileID: 1290979793}

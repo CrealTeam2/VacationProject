@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Grabbed : Debuff
 {
-    public readonly EnemyTest grabber;
+    public readonly Zombie grabber;
     const float slowScale = 0.1f;
-    public Grabbed(float duration, EnemyTest grabber) : base(duration)
+    public Grabbed(float duration, Zombie grabber) : base(duration)
     {
         this.grabber = grabber;
     }
@@ -28,6 +28,7 @@ public class Grabbed : Debuff
         debuffed.canFocus = false;
         debuffed.canSprint = false;
         debuffed.onFistHit += Check;
+        grabber.onDeath += EndDebuff;
     }
     void Check(EnemyTest enemy)
     {
@@ -43,5 +44,6 @@ public class Grabbed : Debuff
         debuffed.onFistHit -= Check;
         debuffed.canFocus = true;
         debuffed.canSprint = true;
+        grabber.onDeath -= EndDebuff;
     }
 }

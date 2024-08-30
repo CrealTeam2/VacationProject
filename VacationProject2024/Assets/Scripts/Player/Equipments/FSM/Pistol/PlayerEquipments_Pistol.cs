@@ -13,9 +13,4 @@ public class PlayerEquipments_Pistol : Layer<Player>
         AddState("Aiming", new PlayerEquipments_Pistol_Aiming(origin, this));
         AddState("Exit", new PlayerEquipments_Pistol_Exit(origin, this));
     }
-    public override void OnStateEnter()
-    {
-        base.OnStateEnter();
-        origin.anim.SetInteger("ArmedState", 1);
-    }
 }

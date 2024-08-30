@@ -8,9 +8,19 @@ public class PlayerEquipments_Knife_Slash : PlayerEquipments_AnimationState
     {
 
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.knifeHitbox.onHit += origin.KnifeHit;
+    }
     protected override void ClipFinish()
     {
         base.ClipFinish();
         parentLayer.ChangeState("Idle");
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.knifeHitbox.onHit -= origin.KnifeHit;
     }
 }
