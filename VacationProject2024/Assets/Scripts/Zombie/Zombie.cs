@@ -46,7 +46,7 @@ public class Zombie : MonoBehaviour
     {
 
 
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         topLayer = new ZombieTopLayer(this);
         topLayer.OnStateEnter();
 
