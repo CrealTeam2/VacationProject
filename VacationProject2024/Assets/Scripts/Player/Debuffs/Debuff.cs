@@ -29,10 +29,14 @@ public abstract class Debuff
         if (counter > 0) counter -= Time.deltaTime;
         else
         {
-            EndDebuff();
+            OnDebuffTimerEnd();
         }
     }
-    bool ended = false;
+    public bool ended { get; private set; } = false;
+    protected virtual void OnDebuffTimerEnd()
+    {
+        EndDebuff();
+    }
     public void EndDebuff()
     {
         if (ended) return;

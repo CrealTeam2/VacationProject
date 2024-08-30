@@ -14,11 +14,12 @@ public class Zombie : MonoBehaviour
     [SerializeField] internal float currentPersuitTime;
     internal float attackCurTime;
     internal NavMeshAgent navMeshAgent;
-    internal GameObject player;
+    internal Player player;
     public string id;
 
 
     private ZombieTopLayer topLayer;
+    public Action onDeath;
 
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
@@ -35,7 +36,7 @@ public class Zombie : MonoBehaviour
         currentPersuitTime = 0;
         attackCurTime = 0;
 
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         topLayer = new ZombieTopLayer(this);
         topLayer.OnStateEnter();
 
@@ -141,24 +142,24 @@ class ZombieAttack : State<Zombie>
         this.zombie = zombie;
         previousHealth = origin.Health;
     }
-
+    Grabbed grab = null;
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        Debug.Log("EnterAttackState");
+        grab = new Grabbed(10.0f, origin);
+        origin.player.AddDebuff(grab);
         count = 0;
     }
     public override void OnStateFixedUpdate()
     {
         count += Time.fixedDeltaTime;
-        if(origin.Health < previousHealth)
-        {
-            parentLayer.ChangeState("Idle");
-        }
         if(count >= 3)
         {
-            if((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
+            if(grab.ended == false)
+            {
                 Debug.Log("DamagePlayer, " + GetDamage());
+                grab.EndDebuff();
+            }
             parentLayer.ChangeState("Idle");
         }
 
@@ -166,6 +167,8 @@ class ZombieAttack : State<Zombie>
     public override void OnStateExit()
     {
         base.OnStateExit();
+        if (!grab.ended) grab.EndDebuff();
+        grab = null;
     }
 
     float GetDamage()
@@ -184,6 +187,7 @@ class ZombieDead : State<Zombie>
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        origin.onDeath.Invoke();
     }
     public override void OnStateFixedUpdate()
     {

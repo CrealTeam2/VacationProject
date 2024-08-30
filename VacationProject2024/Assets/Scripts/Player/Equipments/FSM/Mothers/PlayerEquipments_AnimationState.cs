@@ -20,7 +20,10 @@ public abstract class PlayerEquipments_AnimationState : State<Player>
     {
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
-        yield return new WaitForSeconds(origin.anim.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+        if (origin.anim.GetCurrentAnimatorClipInfo(0)[0].clip != null)
+        {
+            yield return new WaitForSeconds(origin.anim.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+        }
         ClipFinish();
     }
     public override void OnStateUpdate()

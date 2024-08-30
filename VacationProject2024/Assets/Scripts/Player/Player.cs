@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using static UnityEngine.UI.Image;
 
 public class Player : MonoBehaviour
 {
@@ -13,24 +14,30 @@ public class Player : MonoBehaviour
     public float hp { get { return m_hp; } private set { m_hp = value; } }
 
     [Header("Movement")]
+    [SerializeField] string MovementFSMPath;
     [SerializeField] Transform rotator;
-    [SerializeField] private float baseSpeed;
     [SerializeField] public float Stamina = 100;
     [SerializeField] private float lookSensitivity;
-    private float walkSpeed;
+    //private float walkSpeed;
     public float lowerCameraRotationLimit = 60f;
     public float upperCameraRotationLimit = -60f;
     private bool canMove = true;
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
 
+    [SerializeField] float m_walkSpeed, m_runSpeed, m_maxStamina;
+    public float walkSpeed { get { return m_walkSpeed; } }
+    public float runSpeed { get { return m_runSpeed; } }
+    public float maxStamina { get { return m_maxStamina; } }
+
     [SerializeField]
     private Camera Camera;
     private Rigidbody rb;
-    private bool isGrounded;
+    public bool isGrounded { get; private set; }
     private float slopeLimit = 45f;
 
     public float speedMultiplier = 1.0f;
+    TopLayer<Player> movementTopLayer;
 
     #region equipments
     [Header("Equipments")]
@@ -42,23 +49,26 @@ public class Player : MonoBehaviour
 
     [Header("Unarmed")]
     [SerializeField] float fistDamage;
-    [SerializeField] EnemyDetector rightFistHitbox;
-    [SerializeField] EnemyDetector leftFistHitbox;
+    [SerializeField] EnemyDetector m_rightFistHitbox;
+    [SerializeField] EnemyDetector m_leftFistHitbox;
+    public EnemyDetector rightFistHitbox { get { return m_rightFistHitbox; } }
+    public EnemyDetector leftFistHitbox { get { return m_leftFistHitbox; } }
     public Action<EnemyTest> onFistHit;
 
     [Header("Pistol")]
-    public bool hasPistol = false;
     [SerializeField] float m_pistolDamage;
     public float pistolDamage { get { return m_pistolDamage; } }
-    [SerializeField] float m_pistolFireRate;
+    [SerializeField] float m_pistolFireRate, m_pistolFocusFireRate;
     public float pistolCounter = 0.0f;
     [SerializeField] int m_pistolMagSize;
     public float pistolFireRate { get { return m_pistolFireRate; } }
+    public float pistolFocusFireRate { get { return m_pistolFocusFireRate; } }
     public int pistolMagSize { get { return m_pistolMagSize; } }
     public Action onBulletInfoChange;
     [SerializeField] int m_pistolMag, m_bullets;
     public int pistolMag { get { return m_pistolMag; } set { m_pistolMag = value; onBulletInfoChange?.Invoke(); } }
     public int bullets { get { return m_bullets; } set { m_bullets = value; onBulletInfoChange?.Invoke(); } }
+    public bool hasPistol { get; private set; } = false;
     [SerializeField] Transform m_firePoint;
     public Transform firePoint { get { return m_firePoint; } }
     [SerializeField] GameObject m_crosshair;
@@ -66,9 +76,10 @@ public class Player : MonoBehaviour
 
     [Header("Knife")]
     [SerializeField] float knifeDamage;
-    [SerializeField] EnemyDetector knifeHitbox;
-    public bool hasKnife = false;
+    [SerializeField] EnemyDetector m_knifeHitbox;
+    public EnemyDetector knifeHitbox { get { return m_knifeHitbox; } }
     public Action<EnemyTest> onKnifeHit;
+    public bool hasKnife { get; private set; } = false;
 
     [Header("Items")]
     public int flashGrenades = 0;
@@ -98,10 +109,12 @@ public class Player : MonoBehaviour
         topLayer = new PlayerEquipments_TopLayer(this);
         topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
         topLayer.OnStateEnter();
+        movementTopLayer = new PlayerMovements_TopLayer(this);
+        movementTopLayer.onFSMChange += () => { MovementFSMPath = movementTopLayer.GetCurrentFSM(); };
+        movementTopLayer.OnStateEnter();
         FSMPath = topLayer.GetCurrentFSM();
-        rightFistHitbox.onHit += (EnemyTest enemy) => { onFistHit?.Invoke(enemy); enemy.GetDamage(fistDamage); };
-        leftFistHitbox.onHit += (EnemyTest enemy) => { onFistHit?.Invoke(enemy); enemy.GetDamage(fistDamage); };
-        knifeHitbox.onHit += (EnemyTest enemy) => { onKnifeHit?.Invoke(enemy); enemy.GetDamage(knifeDamage); };
+        rightFistHitbox.onHit += FistHit;
+        leftFistHitbox.onHit += FistHit;
         UnlockPistol();
         UnlockKnife();
     }
@@ -119,8 +132,8 @@ public class Player : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
-        Debug.Log(Stamina);
-        topLayer.OnStateUpdate();
+        //topLayer.OnStateUpdate();
+        pistolCounter += Time.deltaTime;
         foreach (var i in debuffs) i.OnUpdate();
         if(removeQueue.Count > 0)
         {
@@ -131,16 +144,30 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        float _moveDirX = Input.GetAxisRaw("Horizontal");
+        movementTopLayer.OnStateUpdate();
+        /*float _moveDirX = Input.GetAxisRaw("Horizontal");
         float _moveDirZ = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && canSprint)
+        if(_moveDirX != 0 || _moveDirZ != 0)
         {
+            anim.SetBool("Moving", true);
+        }
+        else
+        {
+            anim.SetBool("Moving", false);
+        }
+        anim.SetFloat("MoveX", _moveDirX);
+        anim.SetFloat("MoveY", _moveDirZ);
+        anim.SetBool("Moving", _moveDirX == 0 && _moveDirZ == 0);
+
+        if ((_moveDirX != 0 || _moveDirZ != 0) && Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && canSprint)
+        {
+            anim.SetBool("Running", true);
             walkSpeed = baseSpeed * 12;
             Stamina -= Time.deltaTime * 20;
         }
         else
         {
+            anim.SetBool("Running", false);
             walkSpeed = baseSpeed * 5;
             if (Stamina <= 100)
             {
@@ -169,9 +196,13 @@ public class Player : MonoBehaviour
                 //SoundManager.Instance.StopSound("Walk");
                 canMove = false;
             }
-        }
+        }*/
     }
 
+    public void MovePos(Vector3 translation)
+    {
+        rb.MovePosition(transform.position + translation * speedMultiplier);
+    }
 
     private void CameraRotation()
     {
@@ -200,8 +231,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.6f);
-
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 2.0f, Vector3.down, out RaycastHit hit, 2.3f);
         if (isGrounded)
         {
             float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
@@ -231,6 +261,14 @@ public class Player : MonoBehaviour
     public void UseFlashGrenade() => onFlashGrenadeUse.Invoke();
     public void UseBandages() => onBandageUse.Invoke();
     public void UseMedicine() => onMedicineUse.Invoke();
+    public void FirePistol()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
+        {
+            hit.transform.GetComponent<EnemyTest>()?.GetDamage(pistolDamage);
+        }
+    }
 
     public Action onDamage;
     public void GetDamage(float damage)
@@ -241,6 +279,16 @@ public class Player : MonoBehaviour
         {
             //gameover
         }
+    }
+    public void FistHit(EnemyTest enemy)
+    {
+        onFistHit?.Invoke(enemy);
+        enemy.GetDamage(fistDamage);
+    }
+    public void KnifeHit(EnemyTest enemy)
+    {
+        onKnifeHit?.Invoke(enemy);
+        enemy.GetDamage(knifeDamage);
     }
 
     public void AddDebuff(Debuff debuff)

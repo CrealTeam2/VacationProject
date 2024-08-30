@@ -8,9 +8,21 @@ public class PlayerEquipments_Unarmed_PunchLeft : PlayerEquipments_AnimationStat
     {
 
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.leftFistHitbox.enabled = true;
+        origin.leftFistHitbox.onHit += origin.FistHit;
+    }
     protected override void ClipFinish()
     {
         base.ClipFinish();
         parentLayer.ChangeState("Idle");
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.leftFistHitbox.enabled = false;
+        origin.leftFistHitbox.onHit -= origin.FistHit;
     }
 }
