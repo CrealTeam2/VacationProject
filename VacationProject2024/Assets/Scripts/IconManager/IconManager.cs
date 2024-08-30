@@ -15,6 +15,7 @@ public class IconManager : Singleton<IconManager>
 
     private void Awake()
     {
+        iconDictionary.Clear();
         rootVisualElement = document.rootVisualElement;
         foreach (var key in keysForIcon)
             iconDictionary.Add(key, CreateIcon(key));
@@ -31,19 +32,12 @@ public class IconManager : Singleton<IconManager>
         label.style.minWidth = 80;
         label.style.height = 80;
         label.style.position = Position.Absolute;
-        label.style.backgroundColor = new Color(1, 1, 1, 0.2f);
-        label.style.borderBottomColor = Color.black;
-        label.style.borderTopColor = Color.black;
-        label.style.borderLeftColor = Color.black;
-        label.style.borderRightColor = Color.black;
-        label.style.borderTopWidth = 5;
-        label.style.borderBottomWidth = 5;
-        label.style.borderLeftWidth = 5;
-        label.style.borderRightWidth = 5;
-        label.style.borderBottomLeftRadius = 10;
-        label.style.borderBottomRightRadius = 10;
-        label.style.borderTopLeftRadius = 10;
-        label.style.borderTopRightRadius = 10;
+        label.style.color = Color.white;    
+        label.style.backgroundColor = new Color(0, 0, 0, 0);
+        label.style.borderBottomColor = new Color(0, 0, 0, 0);
+        label.style.borderTopColor = new Color(0, 0, 0, 0);
+        label.style.borderLeftColor = new Color(0, 0, 0, 0);
+        label.style.borderRightColor = new Color(0,0,0,0);
         label.style.display = DisplayStyle.None;
 
         return label;

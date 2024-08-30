@@ -29,5 +29,9 @@ public class Icon : Label
         style.left = x - (resolvedStyle.width / 2);
         style.bottom = y - (resolvedStyle.height / 2);
     }
+    public void SetText(string str)
+    {
+        text = str;
+    }
 }
 

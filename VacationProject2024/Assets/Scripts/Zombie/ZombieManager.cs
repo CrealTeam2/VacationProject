@@ -2,11 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ZombieManager : Singleton<ZombieManager>, ISavable
 {
     [SerializeField] Dictionary<string, Zombie> zombieDict = new();
     public Dictionary<string, Zombie> ZombieDict => zombieDict;
+    private void Awake()
+    {
+/*        zombieDict = new Dictionary<string, Zombie>();*/
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +26,8 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
 
     public void RegisterZombie(string id, Zombie zombie)
     {
-        zombieDict.Add(id, zombie);
+        zombieDict[id] = zombie;
     }
-
     public void LoadData(Database data)
     {
         List<string> removeZomdataId = new();
@@ -36,10 +40,10 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
                 removeZomdataId.Add(item.Key);
                 continue;
             }
-            zombie.transform.position = new Vector3(item.Value.x, item.Value.y, item.Value.z);
+            zombie.GetComponent<NavMeshAgent>().Warp(new Vector3(item.Value.x, item.Value.y, item.Value.z));
             zombie.Health = item.Value.health;
             zombie.Activation = item.Value.activation;
-            zombie.IsEnabled = item.Value.isEnabled;
+            zombie.gameObject.SetActive(item.Value.isEnabled);
         }
 
         while(removeZomdataId.Count > 0)
@@ -60,7 +64,7 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
                 z = item.Value.transform.position.z,
                 health = item.Value.Health,
                 activation = item.Value.Activation,
-                isEnabled = item.Value.IsEnabled,
+                isEnabled = item.Value.gameObject.activeSelf,
             };
         }
     }

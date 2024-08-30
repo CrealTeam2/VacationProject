@@ -4,13 +4,13 @@ using System.Linq;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
-public class InteractionManager : Singleton<InteractionManager>
+public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
 {
-    List<List<InteractionAgent>> interactionTypeList = new();
-    List<InteractionAgent> allInteractions = new();
-    List<InteractionAgent> nearInteractions = new();
+    List<List<InteractionAgent>> interactionTypeList;
+    List<InteractionAgent> allInteractions;
+    List<InteractionAgent> nearInteractions;
     GameObject player;
-    Icon fIcon;
+    Dictionary<KeyCode, Icon> iconDict;
     public float interactionDistance;
 
     InteractionAgent enabledInteraction;
@@ -18,20 +18,36 @@ public class InteractionManager : Singleton<InteractionManager>
     public void RegisterInteraction(InteractionAgent agent)
     {
         allInteractions.Add(agent);
+        if (!iconDict.ContainsKey(agent.key))
+        {
+            iconDict.Add(agent.key, IconManager.Instance.GetIcon(agent.key, 40));
+        }
     }
 
-    private void Start()
+    void Init()
+    {
+        interactionTypeList = new();
+        allInteractions = new();
+        nearInteractions = new();
+        iconDict = new();
+    }
+
+    private void Awake()
+    {
+        Init();
+        
+    }
+
+    public void IStart()
     {
         player = GameObject.FindWithTag("Player");
-        fIcon = IconManager.Instance.GetIcon(KeyCode.F, 80);
-        fIcon.Disable();
     }
 
     public void Update()
     {
         for(int i = 0; i < nearInteractions.Count;)
         {
-            if ((nearInteractions[i].FeedbackTransform.position - player.transform.position).magnitude > interactionDistance
+            if ((nearInteractions[i].FeedbackTransform.position - player.transform.position).magnitude > nearInteractions[i].detectDistance
                 || nearInteractions[i].AllowInteraction == false)
             {
                 nearInteractions.RemoveAt(i);
@@ -40,12 +56,24 @@ public class InteractionManager : Singleton<InteractionManager>
             i++;
         }
 
-        foreach(InteractionAgent agent in allInteractions) 
+        List<InteractionAgent> removed = new();
+        foreach (InteractionAgent agent in allInteractions) 
         {
-            if((agent.FeedbackTransform.position - player.transform.position).magnitude < interactionDistance
+            if (agent == null)
+            {
+                removed.Add(agent);
+                continue;
+            }
+            if((agent.FeedbackTransform.position - player.transform.position).magnitude < agent.detectDistance
                 && !nearInteractions.Find(inter => inter == agent)
                 && agent.AllowInteraction)
                 nearInteractions.Add(agent);
+        }
+
+        while (removed.Count > 0)
+        {
+            allInteractions.Remove(removed[0]);
+            removed.RemoveAt(0);
         }
 
 
@@ -60,20 +88,24 @@ public class InteractionManager : Singleton<InteractionManager>
         if (nearestInteraction == null 
             || ((Vector3)screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
         {
-            fIcon.Disable();
+            foreach (var ui in iconDict.Values)
+            {
+                ui.Disable();
+            }
             return;
         }
 
         if (nearestInteraction != enabledInteraction)
         {
             enabledInteraction = nearestInteraction;
-        } 
+        }
 
-        fIcon.Enable();
-        fIcon.SetPosition(screenPosition.x, screenPosition.y);
+        iconDict[enabledInteraction.key].Enable();
+        iconDict[enabledInteraction.key].SetPosition(screenPosition.x, screenPosition.y);
+        iconDict[enabledInteraction.key].SetText("[" + enabledInteraction.key.ToString() + enabledInteraction.feedbackText + "]");
 
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(enabledInteraction.key))
         {
             enabledInteraction.OnInteraction();
         }
