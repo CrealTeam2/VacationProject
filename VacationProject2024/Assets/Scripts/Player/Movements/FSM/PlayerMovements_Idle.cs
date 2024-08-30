@@ -8,11 +8,6 @@ public class PlayerMovements_Idle : State<Player>
     {
         
     }
-    public override void OnStateEnter()
-    {
-        base.OnStateEnter();
-        origin.anim.Play("Idle", 1);
-    }
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();

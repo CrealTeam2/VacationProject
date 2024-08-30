@@ -8,11 +8,6 @@ public class PlayerMovements_Moving_Walking : State<Player>
     {
         
     }
-    public override void OnStateEnter()
-    {
-        base.OnStateEnter();
-        origin.anim.Play("Walking", 1);
-    }
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();
