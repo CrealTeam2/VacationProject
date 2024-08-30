@@ -56,23 +56,25 @@ public class Player : MonoBehaviour
     public Action<EnemyTest> onFistHit;
 
     [Header("Pistol")]
+    [SerializeField] GameObject m_pistolModel;
     [SerializeField] float m_pistolDamage;
-    public float pistolDamage { get { return m_pistolDamage; } }
     [SerializeField] float m_pistolFireRate, m_pistolFocusFireRate;
-    public float pistolCounter = 0.0f;
     [SerializeField] int m_pistolMagSize;
+    [SerializeField] int m_pistolMag, m_bullets;
+    [SerializeField] Transform m_firePoint;
+    [SerializeField] GameObject m_crosshair;
+    public Action onBulletInfoChange;
+    public float pistolCounter = 0.0f;
+    public float pistolDamage { get { return m_pistolDamage; } }
     public float pistolFireRate { get { return m_pistolFireRate; } }
     public float pistolFocusFireRate { get { return m_pistolFocusFireRate; } }
     public int pistolMagSize { get { return m_pistolMagSize; } }
-    public Action onBulletInfoChange;
-    [SerializeField] int m_pistolMag, m_bullets;
     public int pistolMag { get { return m_pistolMag; } set { m_pistolMag = value; onBulletInfoChange?.Invoke(); } }
     public int bullets { get { return m_bullets; } set { m_bullets = value; onBulletInfoChange?.Invoke(); } }
     public bool hasPistol { get; private set; } = false;
-    [SerializeField] Transform m_firePoint;
     public Transform firePoint { get { return m_firePoint; } }
-    [SerializeField] GameObject m_crosshair;
     public GameObject crosshair { get { return m_crosshair; } }
+    public GameObject pistolModel { get { return m_pistolModel; } }
 
     [Header("Knife")]
     [SerializeField] float knifeDamage;
@@ -106,13 +108,13 @@ public class Player : MonoBehaviour
     void Awake()
     {
         hp = maxHp;
-        topLayer = new PlayerEquipments_TopLayer(this);
-        topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
-        topLayer.OnStateEnter();
+        //topLayer = new PlayerEquipments_TopLayer(this);
+        //topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
+        //topLayer.OnStateEnter();
         movementTopLayer = new PlayerMovements_TopLayer(this);
         movementTopLayer.onFSMChange += () => { MovementFSMPath = movementTopLayer.GetCurrentFSM(); };
         movementTopLayer.OnStateEnter();
-        FSMPath = topLayer.GetCurrentFSM();
+        //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
         UnlockPistol();
