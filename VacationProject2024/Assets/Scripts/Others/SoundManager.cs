@@ -1,17 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
-    // Singleton 인스턴스
-    public static SoundManager Instance;
-
     // 효과음과 BGM을 저장할 딕셔너리 (이름으로 접근)
     private Dictionary<string, AudioClip> soundEffects;
-    private Dictionary<string, AudioSource> activeSounds;
+    private List<(GameObject, AudioSource, int)> activeSounds;
     private Dictionary<string, AudioClip> bgmClips;
     private AudioSource bgmSource;
+    private GameObject channelPrefab;
+    private Player player;
 
     [Range(0f, 1f)]
     public float MasterVolume = 1.0f;  // 전체 볼륨
@@ -22,27 +23,19 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton 패턴 적용
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+        activeSounds = new();
+        LoadAllSoundsFromResources();
+        channelPrefab = Resources.Load("Prefab/AudioChannel") as GameObject;
+    }
 
-            // 리소스 폴더에서 사운드를 불러와 딕셔너리에 저장
-            LoadAllSoundsFromResources();
+    private void Start()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+    }
 
-            // 재생 중인 사운드를 관리하기 위한 딕셔너리 초기화
-            activeSounds = new Dictionary<string, AudioSource>();
-
-            // BGM을 재생할 AudioSource 생성
-            bgmSource = gameObject.AddComponent<AudioSource>();
-            bgmSource.loop = true;
-            bgmSource.volume = BGMVolume * MasterVolume;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+    private void Update()
+    {
+        ManageActiveSound();
     }
 
     // Resources/Audio 폴더의 모든 오디오 파일을 불러와서 딕셔너리에 저장
@@ -71,7 +64,7 @@ public class SoundManager : MonoBehaviour
     }
 
     // 특정 사운드를 재생하는 메서드 (BGM과 SFX를 구분하여 처리)
-    public void PlaySound(string soundName, float volume, int repeatCount)
+    public void PlaySound(GameObject soundObject, string soundName, float volume, int repeatCount)
     {
         // BGM인지 효과음인지 구분
         if (bgmClips.ContainsKey(soundName))
@@ -82,7 +75,7 @@ public class SoundManager : MonoBehaviour
         else if (soundEffects.ContainsKey(soundName))
         {
             // 효과음 재생
-            PlaySFX(soundName, volume, repeatCount);
+            PlaySFX(soundObject, soundName, volume, repeatCount);
         }
         else
         {
@@ -103,43 +96,89 @@ public class SoundManager : MonoBehaviour
     }
 
     // 효과음 재생 메서드
-    private void PlaySFX(string sfxName, float volume, int repeatCount)
+    private void PlaySFX(GameObject soundObject, string sfxName, float volume, int repeatCount)
     {
-        if (!activeSounds.ContainsKey(sfxName))
+        if (soundEffects.TryGetValue(sfxName, out AudioClip clip))
         {
-            if (soundEffects.TryGetValue(sfxName, out AudioClip clip))
+            var channel = GetAvaliableChannel(soundObject);
+            // 새로운 AudioSource를 생성하여 효과음 재생
+            channel.clip = clip;
+            channel.volume = volume * SFXVolume * MasterVolume;
+            channel.loop = true;
+            channel.spatialBlend = 1;
+            channel.maxDistance = channel.volume * 30;
+            channel.rolloffMode = AudioRolloffMode.Custom;
+            channel.Play();
+
+            // 재생 중인 사운드를 딕셔너리에 추가
+            activeSounds.Add((soundObject, channel, repeatCount));
+        }
+    }
+
+    private AudioSource GetAvaliableChannel(GameObject obj)
+    {
+        AudioSource channel;
+        for (int i = 0; i < obj.transform.childCount; i++)
+        {
+            channel = obj.transform.GetChild(i).GetComponent<AudioSource>();
+            if (channel && channel.gameObject.activeSelf)
             {
-                // 새로운 AudioSource를 생성하여 효과음 재생
-                AudioSource newSource = gameObject.AddComponent<AudioSource>();
-                newSource.clip = clip;
-                newSource.volume = volume * SFXVolume * MasterVolume;
-                newSource.loop = (repeatCount == 0);
-                newSource.Play();
+                channel.gameObject.SetActive(true);
+                channel.transform.localPosition = Vector3.zero;
+                return channel;
+            }
+        }
 
-                // 반복 재생이 필요하다면 코루틴을 통해 반복 재생
-                if (repeatCount > 0)
-                {
-                    StartCoroutine(PlaySoundRepeatedly(newSource, clip, volume, repeatCount));
-                }
+        channel = Instantiate(channelPrefab).GetComponent<AudioSource>();
+        channel.transform.parent = obj.transform;
+        channel.transform.localPosition = Vector3.zero;
+        channel.gameObject.SetActive(true);
+        return channel;
+    }
 
-                // 재생 중인 사운드를 딕셔너리에 추가
-                activeSounds[sfxName] = newSource;
+    private void UnableChannel(AudioSource source)
+    {
+        source.Stop();
+        source.gameObject.SetActive(false);
+        source.transform.parent = transform;
+    }
+
+    // 특정 사운드를 멈추는 메서드
+    public void StopSound(GameObject soundObject, string soundName)
+    {
+        var sounds = activeSounds.FindAll(tuple => tuple.Item1 == soundObject && tuple.Item2.clip.name == soundName);
+        if (sounds.Count > 0)
+        {
+            foreach (var sound in sounds)
+            {
+                sound.Item2.Stop();
+                UnableChannel(sound.Item2);
+                activeSounds.Remove(sound);
             }
         }
     }
 
-    // 특정 사운드를 멈추는 메서드
-    public void StopSound(string soundName)
+    private void ManageActiveSound()
     {
-        if (activeSounds.TryGetValue(soundName, out AudioSource source))
+        print(activeSounds.Count);
+        for(int i = 0; i < activeSounds.Count;)
         {
-            source.Stop();
-            Destroy(source); // 사용한 AudioSource 제거
-            activeSounds.Remove(soundName); // 딕셔너리에서 제거
+            var sound = activeSounds[i];
+            if (!sound.Item2.isPlaying)
+            {
+                if (sound.Item3 - 1 <= 0)
+                {
+                    UnableChannel(sound.Item2);
+                    activeSounds.RemoveAt(i);
+                    continue;
+                }
+                activeSounds[i] = (sound.Item1, sound.Item2, sound.Item3 - 1);
+            }
+            i++;
         }
     }
 
-    private IEnumerator PlaySoundRepeatedly(AudioSource source, AudioClip clip, float volume, int repeatCount)
+/*    private IEnumerator PlaySoundRepeatedly(AudioSource source, AudioClip clip, float volume, int repeatCount)
     {
         for (int i = 0; i < repeatCount; i++)
         {
@@ -148,9 +187,9 @@ public class SoundManager : MonoBehaviour
         }
 
         // 반복 재생이 끝나면 AudioSource를 제거하고 딕셔너리에서 제거
-        activeSounds.Remove(clip.name);
+        activeSounds.Remove((source.gameObject, clip.name));
         Destroy(source);
-    }
+    }*/
 
     public void SetMasterVolume(float volume)
     {
@@ -172,9 +211,14 @@ public class SoundManager : MonoBehaviour
 
     private void UpdateAllVolumes()
     {
-        foreach (var source in activeSounds.Values)
+        foreach (var source in activeSounds)
         {
-            source.volume = SFXVolume * MasterVolume;  // 현재 모든 AudioSource의 볼륨을 SFXVolume과 MasterVolume으로 조정
+            source.Item2.volume = SFXVolume * MasterVolume;  // 현재 모든 AudioSource의 볼륨을 SFXVolume과 MasterVolume으로 조정
+
+            if (DetectPlayer(source.Item1.transform))
+            {
+/*                source.Item2.volume */
+            }
         }
 
         // BGM의 볼륨도 갱신
@@ -195,5 +239,13 @@ public class SoundManager : MonoBehaviour
     public void OnBGMVolumeChanged(float value)
     {
         SetBGMVolume(value);
+    }
+    public bool DetectPlayer(Transform rayOrigin)
+    {
+        Ray ray = new Ray(rayOrigin.position, player.transform.position - transform.position);
+        Debug.DrawRay(rayOrigin.position, player.transform.position - rayOrigin.position);
+        RaycastHit[] hits = Physics.RaycastAll(ray, (player.transform.position - rayOrigin.position).magnitude, layerMask: LayerMask.GetMask("Wall"));
+        if (hits.Length > 0) return false;
+        return true;
     }
 }

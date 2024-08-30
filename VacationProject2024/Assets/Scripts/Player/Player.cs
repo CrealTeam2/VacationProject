@@ -5,7 +5,7 @@ using UnityEditor;
 using System;
 using static UnityEngine.UI.Image;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISavable
 {
     [Header("Hp")]
     [SerializeField] float m_maxHp;
@@ -299,6 +299,16 @@ public class Player : MonoBehaviour
     public void RemoveDebuff(Debuff debuff)
     {
         removeQueue.Add(debuff);
+    }
+
+    public void LoadData(Database data)
+    {
+        transform.position = data.savePoint;
+    }
+
+    public void SaveData(ref Database data)
+    {
+
     }
 }
 [CustomEditor(typeof(Player))]

@@ -6,6 +6,8 @@ using UnityEngine;
 public class NavmeshBaker : Singleton<NavmeshBaker>
 {
     NavMeshSurface surface;
+    private float curTime = 0;
+    [SerializeField] float coolTime;
 
     private void Awake()
     {
@@ -13,8 +15,13 @@ public class NavmeshBaker : Singleton<NavmeshBaker>
         surface.BuildNavMesh();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-/*        surface.BuildNavMesh();*/
+        curTime += Time.deltaTime;
+        if(curTime > coolTime)
+        {
+            surface.BuildNavMesh();
+            curTime = 0;
+        }
     }
 }

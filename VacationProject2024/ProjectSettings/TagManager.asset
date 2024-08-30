@@ -11,6 +11,9 @@ TagManager:
   - Metal
   - Paper
   - Floor
+  - StartPosition
+  - EndPosition
+  - SavePoints
   layers:
   - Default
   - TransparentFX

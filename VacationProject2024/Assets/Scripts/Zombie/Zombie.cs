@@ -10,7 +10,7 @@ public class Zombie : MonoBehaviour
 
     [SerializeField] float activation;
     [SerializeField] float health;
-    [SerializeField] bool isEnabled = true;
+    [SerializeField] bool isEnabled;
     [SerializeField] internal float currentPersuitTime;
     internal float attackCurTime;
     internal NavMeshAgent navMeshAgent;
@@ -24,8 +24,7 @@ public class Zombie : MonoBehaviour
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
     public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("ZombieDead"); } }
-    public bool IsEnabled { get => enabled; set => enabled = value; }
-
+    public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
     private void Awake()
     {
         id = CreateId();
@@ -35,15 +34,23 @@ public class Zombie : MonoBehaviour
         activation = 0;
         currentPersuitTime = 0;
         attackCurTime = 0;
-
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        topLayer = new ZombieTopLayer(this);
-        topLayer.OnStateEnter();
+        isEnabled = true;
 
         navMeshAgent = transform.AddComponent<NavMeshAgent>();
         navMeshAgent.speed = Data.maxSpeed;
         navMeshAgent.acceleration = Data.acceleration;
         navMeshAgent.angularSpeed = Data.angularSpeed;
+    }
+
+    private void Start()
+    {
+
+
+        player = GameObject.FindWithTag("Player");
+        topLayer = new ZombieTopLayer(this);
+        topLayer.OnStateEnter();
+
+
 
     }
     // Update is called once per frame
@@ -78,7 +85,6 @@ public class Zombie : MonoBehaviour
         Ray ray = new Ray(transform.position, player.transform.position - transform.position);
         Debug.DrawRay(transform.position, player.transform.position - transform.position);
         RaycastHit[] hits = Physics.RaycastAll(ray, (player.transform.position - transform.position).magnitude, layerMask: LayerMask.GetMask("Wall"));
-        //Array.Sort(hits, (a, b) => (a.collider.transform.position - transform.position).magnitude.CompareTo((b.collider.transform.position - transform.position).magnitude));
         if (hits.Length > 0) return false;
         return true;
     }
@@ -105,7 +111,7 @@ class ZombieIdle : State<Zombie>
 
     public override void OnStateEnter()
     {
-
+        SoundManager.Instance.PlaySound(origin.gameObject, "ZombieIdle", 0.5f, 1);
     }
     public override void OnStateFixedUpdate()
     {
@@ -128,7 +134,7 @@ class ZombieIdle : State<Zombie>
     }
     public override void OnStateExit()
     {
-        
+        SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
     }
 }
 

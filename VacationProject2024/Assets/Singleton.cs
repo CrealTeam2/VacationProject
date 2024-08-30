@@ -19,12 +19,18 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                     instance = obj.GetComponent<T>();
                 }
             }
+
             return instance;
         }
     }
 
     private void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         if(transform.parent != null && transform.root != null)
         {
             DontDestroyOnLoad(this.transform.root.gameObject);
