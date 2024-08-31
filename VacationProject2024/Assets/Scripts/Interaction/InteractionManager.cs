@@ -75,17 +75,28 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
             removed.RemoveAt(0);
         }
 
-
+        for (int i = 0; i < nearInteractions.Count;)
+        {
+            if (Camera.main.WorldToScreenPoint(nearInteractions[i].FeedbackTransform.position).z > 0)
+            {
+                i++;
+                continue;
+            }
+            nearInteractions.Remove(nearInteractions[i]);
+        }
 
         var nearestInteraction = nearInteractions.OrderBy
             (interplay => (Camera.main.WorldToScreenPoint(interplay.FeedbackTransform.position) 
             - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude).FirstOrDefault();
-        Vector2 screenPosition = Vector2.zero;
+
+
+
+        Vector3 screenPosition = Vector3.zero;
         if (nearestInteraction)
             screenPosition = Camera.main.WorldToScreenPoint(nearestInteraction.FeedbackTransform.position);
-
+        
         if (nearestInteraction == null 
-            || ((Vector3)screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
+            || (screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
         {
             foreach (var ui in iconDict.Values)
             {
