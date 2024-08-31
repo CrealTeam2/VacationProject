@@ -6,7 +6,7 @@ using static Unity.VisualScripting.Member;
 
 public class SoundManager : Singleton<SoundManager>
 {
-    // È¿°úÀ½°ú BGMÀ» ÀúÀåÇÒ µñ¼Å³Ê¸® (ÀÌ¸§À¸·Î Á¢±Ù)
+    // È¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ BGMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ (ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     private Dictionary<string, AudioClip> soundEffects;
     private List<(GameObject, AudioSource, int)> activeSounds;
     private Dictionary<string, AudioClip> bgmClips;
@@ -15,11 +15,11 @@ public class SoundManager : Singleton<SoundManager>
     private Player player;
 
     [Range(0f, 1f)]
-    public float MasterVolume = 1.0f;  // ÀüÃ¼ º¼·ý
+    public float MasterVolume = 1.0f;  // ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
     [Range(0f, 1f)]
-    public float SFXVolume = 1.0f;  // È¿°úÀ½ º¼·ý
+    public float SFXVolume = 1.0f;  // È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Range(0f, 1f)]
-    public float BGMVolume = 1.0f;  // BGM º¼·ý
+    public float BGMVolume = 1.0f;  // BGM ï¿½ï¿½ï¿½ï¿½
 
     private void Awake()
     {
@@ -38,43 +38,43 @@ public class SoundManager : Singleton<SoundManager>
         ManageActiveSound();
     }
 
-    // Resources/Audio Æú´õÀÇ ¸ðµç ¿Àµð¿À ÆÄÀÏÀ» ºÒ·¯¿Í¼­ µñ¼Å³Ê¸®¿¡ ÀúÀå
+    // Resources/Audio ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void LoadAllSoundsFromResources()
     {
         soundEffects = new Dictionary<string, AudioClip>();
         bgmClips = new Dictionary<string, AudioClip>();
 
-        // Resources/Audio Æú´õ ¾ÈÀÇ ¸ðµç AudioClipÀ» ºÒ·¯¿È
+        // Resources/Audio ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ AudioClipï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Audio");
 
         foreach (var clip in clips)
         {
-            // ÆÄÀÏ ÀÌ¸§¿¡ "BGM"ÀÌ Æ÷ÇÔµÈ °æ¿ì BGMÀ¸·Î ±¸ºÐ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ "BGM"ï¿½ï¿½ ï¿½ï¿½ï¿½Ôµï¿½ ï¿½ï¿½ï¿½ BGMï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (clip.name.Contains("BGM"))
             {
                 bgmClips[clip.name] = clip;
             }
             else
             {
-                soundEffects[clip.name] = clip;  // »ç¿îµå ÀÌ¸§À» Å°·Î µñ¼Å³Ê¸®¿¡ ÀúÀå
+                soundEffects[clip.name] = clip;  // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
         }
 
         Debug.Log("Loaded " + soundEffects.Count + " sound effects and " + bgmClips.Count + " BGM clips.");
     }
 
-    // Æ¯Á¤ »ç¿îµå¸¦ Àç»ýÇÏ´Â ¸Þ¼­µå (BGM°ú SFX¸¦ ±¸ºÐÇÏ¿© Ã³¸®)
+    // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ (BGMï¿½ï¿½ SFXï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ Ã³ï¿½ï¿½)
     public void PlaySound(GameObject soundObject, string soundName, float volume, int repeatCount)
     {
-        // BGMÀÎÁö È¿°úÀ½ÀÎÁö ±¸ºÐ
+        // BGMï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (bgmClips.ContainsKey(soundName))
         {
-            // BGM Àç»ý
+            // BGM ï¿½ï¿½ï¿½
             PlayBGM(soundName, volume, repeatCount);
         }
         else if (soundEffects.ContainsKey(soundName))
         {
-            // È¿°úÀ½ Àç»ý
+            // È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             PlaySFX(soundObject, soundName, volume, repeatCount);
         }
         else
@@ -83,7 +83,7 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-    // BGM Àç»ý ¸Þ¼­µå
+    // BGM ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     private void PlayBGM(string bgmName, float volume, int repeatCount)
     {
         if (bgmClips.TryGetValue(bgmName, out AudioClip clip))
@@ -95,13 +95,13 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-    // È¿°úÀ½ Àç»ý ¸Þ¼­µå
+    // È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     private void PlaySFX(GameObject soundObject, string sfxName, float volume, int repeatCount)
     {
         if (soundEffects.TryGetValue(sfxName, out AudioClip clip))
         {
             var channel = GetAvaliableChannel(soundObject);
-            // »õ·Î¿î AudioSource¸¦ »ý¼ºÇÏ¿© È¿°úÀ½ Àç»ý
+            // ï¿½ï¿½ï¿½Î¿ï¿½ AudioSourceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             channel.clip = clip;
             channel.volume = volume * SFXVolume * MasterVolume;
             channel.loop = true;
@@ -110,7 +110,7 @@ public class SoundManager : Singleton<SoundManager>
             channel.rolloffMode = AudioRolloffMode.Custom;
             channel.Play();
 
-            // Àç»ý ÁßÀÎ »ç¿îµå¸¦ µñ¼Å³Ê¸®¿¡ Ãß°¡
+            // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
             activeSounds.Add((soundObject, channel, repeatCount));
         }
     }
@@ -143,7 +143,7 @@ public class SoundManager : Singleton<SoundManager>
         source.transform.parent = transform;
     }
 
-    // Æ¯Á¤ »ç¿îµå¸¦ ¸ØÃß´Â ¸Þ¼­µå
+    // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ß´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void StopSound(GameObject soundObject, string soundName)
     {
         var sounds = activeSounds.FindAll(tuple => tuple.Item1 == soundObject && tuple.Item2.clip.name == soundName);
@@ -160,7 +160,6 @@ public class SoundManager : Singleton<SoundManager>
 
     private void ManageActiveSound()
     {
-        print(activeSounds.Count);
         for(int i = 0; i < activeSounds.Count;)
         {
             var sound = activeSounds[i];
@@ -186,7 +185,7 @@ public class SoundManager : Singleton<SoundManager>
             yield return new WaitForSeconds(clip.length);
         }
 
-        // ¹Ýº¹ Àç»ýÀÌ ³¡³ª¸é AudioSource¸¦ Á¦°ÅÇÏ°í µñ¼Å³Ê¸®¿¡¼­ Á¦°Å
+        // ï¿½Ýºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ AudioSourceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         activeSounds.Remove((source.gameObject, clip.name));
         Destroy(source);
     }*/
@@ -213,7 +212,7 @@ public class SoundManager : Singleton<SoundManager>
     {
         foreach (var source in activeSounds)
         {
-            source.Item2.volume = SFXVolume * MasterVolume;  // ÇöÀç ¸ðµç AudioSourceÀÇ º¼·ýÀ» SFXVolume°ú MasterVolumeÀ¸·Î Á¶Á¤
+            source.Item2.volume = SFXVolume * MasterVolume;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ AudioSourceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ SFXVolumeï¿½ï¿½ MasterVolumeï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             if (DetectPlayer(source.Item1.transform))
             {
@@ -221,11 +220,11 @@ public class SoundManager : Singleton<SoundManager>
             }
         }
 
-        // BGMÀÇ º¼·ýµµ °»½Å
+        // BGMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         bgmSource.volume = BGMVolume * MasterVolume;
     }
 
-    // ½½¶óÀÌ´õ°¡ º¯°æµÉ ¶§ È£ÃâµÉ ¸Þ¼­µå
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void OnMasterVolumeChanged(float value)
     {
         SetMasterVolume(value);

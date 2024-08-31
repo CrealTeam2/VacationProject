@@ -117,8 +117,8 @@ public class Player : MonoBehaviour, ISavable
         //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
-        UnlockPistol();
-        UnlockKnife();
+/*        UnlockPistol();
+        UnlockKnife();*/
     }
     void Start()
     {
@@ -129,9 +129,11 @@ public class Player : MonoBehaviour, ISavable
 
     }
 
+    Vector3 prevPos = Vector3.zero;
     void Update()
     {
-        Move();
+        Debug.Log(Vector3.Distance(prevPos, transform.position));
+        prevPos = transform.position;
         CameraRotation();
         CharacterRotation();
         //topLayer.OnStateUpdate();
@@ -146,7 +148,7 @@ public class Player : MonoBehaviour, ISavable
 
     private void Move()
     {
-        movementTopLayer.OnStateUpdate();
+        movementTopLayer.OnStateFixedUpdate();
     }
 
     public void MovePos(Vector3 translation)
@@ -194,6 +196,7 @@ public class Player : MonoBehaviour, ISavable
                 rb.useGravity = false;
             }
         }
+        Move();
     }
     public void UnlockKnife()
     {
