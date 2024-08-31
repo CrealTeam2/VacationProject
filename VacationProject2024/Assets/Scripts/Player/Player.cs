@@ -147,58 +147,6 @@ public class Player : MonoBehaviour, ISavable
     private void Move()
     {
         movementTopLayer.OnStateUpdate();
-        /*float _moveDirX = Input.GetAxisRaw("Horizontal");
-        float _moveDirZ = Input.GetAxisRaw("Vertical");
-        if(_moveDirX != 0 || _moveDirZ != 0)
-        {
-            anim.SetBool("Moving", true);
-        }
-        else
-        {
-            anim.SetBool("Moving", false);
-        }
-        anim.SetFloat("MoveX", _moveDirX);
-        anim.SetFloat("MoveY", _moveDirZ);
-        anim.SetBool("Moving", _moveDirX == 0 && _moveDirZ == 0);
-
-        if ((_moveDirX != 0 || _moveDirZ != 0) && Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && canSprint)
-        {
-            anim.SetBool("Running", true);
-            walkSpeed = baseSpeed * 12;
-            Stamina -= Time.deltaTime * 20;
-        }
-        else
-        {
-            anim.SetBool("Running", false);
-            walkSpeed = baseSpeed * 5;
-            if (Stamina <= 100)
-            {
-                Stamina += Time.deltaTime * 10;
-            }
-        }
-
-        Vector3 _moveHorizontal = transform.right * _moveDirX;
-        Vector3 _moveVertical = transform.forward * _moveDirZ;
-
-        Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
-
-        if (_velocity.magnitude > 0 && isGrounded)
-        {
-            rb.MovePosition(transform.position + _velocity * Time.deltaTime * speedMultiplier);
-            if (!canMove)
-            {
-                //SoundManager.Instance.PlaySound("Walk",SoundManager.Instance.MasterVolume, 0); // 무한 반복 재생
-                canMove = true;
-            }
-        }
-        else
-        {
-            if (canMove)
-            {
-                //SoundManager.Instance.StopSound("Walk");
-                canMove = false;
-            }
-        }*/
     }
 
     public void MovePos(Vector3 translation)
@@ -221,7 +169,7 @@ public class Player : MonoBehaviour, ISavable
             currentCameraRotationX = lowerCameraRotationLimit;
         }
 
-        //rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
