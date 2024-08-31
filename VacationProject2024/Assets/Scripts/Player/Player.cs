@@ -117,8 +117,8 @@ public class Player : MonoBehaviour, ISavable
         //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
-        UnlockPistol();
-        UnlockKnife();
+/*        UnlockPistol();
+        UnlockKnife();*/
     }
     void Start()
     {
@@ -221,7 +221,7 @@ public class Player : MonoBehaviour, ISavable
             currentCameraRotationX = lowerCameraRotationLimit;
         }
 
-        //rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
