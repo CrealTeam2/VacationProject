@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06291e9f2622674590effcd7e63a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 0.4
+  triggerTime: 0.3
   triggerName: Attack
 --- !u!1102 &-8264305483483518508
 AnimatorState:
@@ -979,7 +979,8 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 6117981329581909216}
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
@@ -1029,9 +1030,9 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 4921671046960254261}
-    second: []
   - first: {fileID: -8330031322946813321}
+    second: []
+  - first: {fileID: 4921671046960254261}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
@@ -1199,7 +1200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06291e9f2622674590effcd7e63a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 0.4
+  triggerTime: 0.3
   triggerName: Attack
 --- !u!114 &-3188235791976213822
 MonoBehaviour:
@@ -2733,6 +2734,18 @@ AnimatorTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 1
+--- !u!114 &6117981329581909216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac8454ae828174f45bebeea618959f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1101 &6218363001518681920
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

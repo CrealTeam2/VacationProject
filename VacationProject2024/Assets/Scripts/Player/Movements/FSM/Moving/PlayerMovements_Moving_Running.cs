@@ -8,11 +8,6 @@ public class PlayerMovements_Moving_Running : State<Player>
     {
         
     }
-    public override void OnStateEnter()
-    {
-        base.OnStateEnter();
-        origin.anim.Play("Running", 1);
-    }
     public override void OnStateUpdate()
     {
         base.OnStateUpdate();
