@@ -8,10 +8,10 @@ public class PlayerMovements_Idle : State<Player>
     {
         
     }
-    public override void OnStateUpdate()
+    public override void OnStateFixedUpdate()
     {
-        base.OnStateUpdate();
-        origin.Stamina = Mathf.Min(origin.maxStamina, origin.Stamina + 10.0f * Time.deltaTime);
+        base.OnStateFixedUpdate();
+        origin.Stamina = Mathf.Min(origin.maxStamina, origin.Stamina + 10.0f * Time.fixedDeltaTime);
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
             parentLayer.ChangeState("Moving");
