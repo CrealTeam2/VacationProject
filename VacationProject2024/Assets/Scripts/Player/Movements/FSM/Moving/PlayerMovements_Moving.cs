@@ -21,9 +21,9 @@ public class PlayerMovements_Moving : Layer<Player>
         }
         currentState.OnStateEnter();
     }
-    public override void OnStateUpdate()
+    public override void OnStateFixedUpdate()
     {
-        base.OnStateUpdate();
+        base.OnStateFixedUpdate();
         if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
             parentLayer.ChangeState("Idle");
