@@ -253,7 +253,8 @@ public class Player : MonoBehaviour, ISavable
 
     public void LoadData(Database data)
     {
-        transform.position = data.savePoint;
+        if(data.savePoint != Vector3.zero) 
+            transform.position = data.savePoint;
     }
 
     public void SaveData(ref Database data)
