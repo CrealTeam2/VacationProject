@@ -17,6 +17,18 @@ public class PillObject : InteractionAgent
     {
         
     }
+
+    public override void UpdateUnitFromVariable(ref DataUnit du)
+    {
+        du.Bool["Enabled"] = gameObject.activeSelf;
+    }
+
+    public override void UpdateVariableFromUnit(DataUnit du)
+    {
+        bool enable;
+        if (!du.Bool.TryGetValue("Enabled", out enable)) enable = true;
+        gameObject.SetActive(enable);
+    }
     public override void OnInteraction()
     {
         base.OnInteraction();

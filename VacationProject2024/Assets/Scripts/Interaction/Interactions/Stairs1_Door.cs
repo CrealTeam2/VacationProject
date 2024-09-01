@@ -6,11 +6,15 @@ public class Stairs1_Door : InteractionAgent
 {
     bool isOpened = false;
     Animation anim;
-    
+
+    private void Awake()
+    {
+        anim = GetComponent<Animation>();
+    }
+
     protected void Start()
     {
         base.Start();
-        anim = GetComponent<Animation>();
     }
 
     // Update is called once per frame
@@ -36,6 +40,17 @@ public class Stairs1_Door : InteractionAgent
             feedbackText = "¹® ´Ý±â";
         }
         Invoke("ReEnableInteraction", 0.2f);
+    }
+
+    public override void UpdateUnitFromVariable(ref DataUnit unit)
+    {
+        unit.Bool["IsOpened"] = isOpened;
+    }
+
+    public override void UpdateVariableFromUnit(DataUnit unit)
+    {
+        isOpened = unit.Bool["IsOpened"];
+        if (isOpened) anim.Play("Stairs1_Door_Open");
     }
 
     void ReEnableInteraction()

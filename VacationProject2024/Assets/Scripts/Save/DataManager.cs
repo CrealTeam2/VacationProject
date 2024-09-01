@@ -59,7 +59,7 @@ public class DataManager : Singleton<DataManager>
 
     private void OnApplicationQuit()
     {
-/*        SaveGame();*/
+        SaveGame();
     }
 
     private List<ISavable> FindAllSavableObjects()
