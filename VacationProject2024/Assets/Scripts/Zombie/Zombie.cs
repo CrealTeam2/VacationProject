@@ -25,7 +25,12 @@ public class Zombie : MonoBehaviour
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
     
     public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("ZombieDead"); } }
-    public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
+    public bool IsEnabled { get => isEnabled; set
+        {
+            isEnabled = value;
+            navMeshAgent.enabled = isEnabled;
+        }
+    }
     private void Awake()
     {
         id = CreateId();
@@ -41,6 +46,7 @@ public class Zombie : MonoBehaviour
         navMeshAgent.speed = Data.maxSpeed;
         navMeshAgent.acceleration = Data.acceleration;
         navMeshAgent.angularSpeed = Data.angularSpeed;
+        navMeshAgent.enabled = IsEnabled;
     }
 
     private void Start()
@@ -80,7 +86,7 @@ public class Zombie : MonoBehaviour
     {
         topLayer.OnStateFixedUpdate();
     }
-    float detectRange { get => data.baseDetectRange * (1.0f + Mathf.Min(2.0f, activation / 20.0f)); }
+    float detectRange { get => data.baseDetectRange * (1.0f + Mathf.Min(2.0f, activation / 25.0f)); }
     public bool DetectPlayer()
     {
         Ray ray = new Ray(transform.position, player.transform.position - transform.position);
@@ -104,9 +110,9 @@ class ZombieTopLayer : TopLayer<Zombie>
     {
         defaultState = new ZombieIdle(zombie, this);
         AddState("Idle", defaultState);
+        AddState("Pursuit", new ZombiePursuit(zombie, this));
         AddState("Attack", new ZombieAttack(zombie, this));
         AddState("Dead", new ZombieDead(zombie, this));
-
     }
 }
 
@@ -123,26 +129,54 @@ class ZombieIdle : State<Zombie>
     }
     public override void OnStateFixedUpdate()
     {
-        if (origin.DetectPlayer() || origin.Activation >= 50)
-            origin.currentPersuitTime = origin.Data.pursuitTime;
-        origin.currentPersuitTime -= Time.fixedDeltaTime;
-
-        if (origin.currentPersuitTime > 0)
+        if ((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
         {
-            origin.navMeshAgent.isStopped = false;
-            origin.navMeshAgent.SetDestination(origin.player.transform.position);
-        }
-        else origin.navMeshAgent.isStopped = true;
-
-        if((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
-        {
-            origin.navMeshAgent.isStopped = true;
             parentLayer.ChangeState("Attack");
+        }
+        else if (origin.DetectPlayer() || origin.Activation >= 50)
+        {
+            parentLayer.ChangeState("Pursuit");
         }
     }
     public override void OnStateExit()
     {
         SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
+    }
+}
+class ZombiePursuit : State<Zombie>
+{
+    public ZombiePursuit(Zombie origin, Layer<Zombie> parent) : base(origin, parent)
+    {
+
+    }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        origin.currentPersuitTime = origin.Data.pursuitTime;
+        origin.navMeshAgent.isStopped = false;
+    }
+    public override void OnStateFixedUpdate()
+    {
+        base.OnStateFixedUpdate();
+        if ((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
+        {
+            parentLayer.ChangeState("Attack");
+        }
+        else if (origin.currentPersuitTime > 0)
+        {
+            origin.currentPersuitTime -= Time.fixedDeltaTime;
+            origin.navMeshAgent.SetDestination(origin.player.transform.position);
+        }
+        else
+        {
+            origin.currentPersuitTime = 0;
+            parentLayer.ChangeState("Idle");
+        }
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        origin.navMeshAgent.isStopped = true;
     }
 }
 

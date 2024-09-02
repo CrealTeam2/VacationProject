@@ -43,6 +43,7 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
             zombie.GetComponent<NavMeshAgent>().Warp(new Vector3(item.Value.x, item.Value.y, item.Value.z));
             zombie.Health = item.Value.health;
             zombie.Activation = item.Value.activation;
+            zombie.IsEnabled = item.Value.isEnabled;
             zombie.gameObject.SetActive(item.Value.isEnabled);
         }
 
@@ -64,7 +65,7 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
                 z = item.Value.transform.position.z,
                 health = item.Value.Health,
                 activation = item.Value.Activation,
-                isEnabled = item.Value.gameObject.activeSelf,
+                isEnabled = item.Value.IsEnabled
             };
         }
     }
