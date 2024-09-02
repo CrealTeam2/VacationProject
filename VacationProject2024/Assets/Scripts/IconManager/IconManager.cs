@@ -19,7 +19,9 @@ public class IconManager : Singleton<IconManager>
         rootVisualElement = document.rootVisualElement;
         foreach (var key in keysForIcon)
             iconDictionary.Add(key, CreateIcon(key));
-        
+
+        DontDestroyOnLoad(document);
+
     }
 
     Icon CreateIcon(KeyCode key)

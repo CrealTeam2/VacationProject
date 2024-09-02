@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
-using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
 
 public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 {
@@ -20,6 +16,8 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     private void Awake()
     {
         Init();
+        Application.targetFrameRate = 60;
+
     }
     void Init()
     {
@@ -78,7 +76,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
                 && Mathf.Abs(player.transform.position.y - endTransform.position.y) < 5)
         {
             DataManager.Instance.InitDatabase();
-            SceneManager.LoadScene("NewRyuScene");
+            SceneManager.LoadScene("RyuScene2");
         }
     }
 

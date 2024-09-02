@@ -12,8 +12,7 @@ public class InteractionAgent : MonoBehaviour
         id = System.Guid.NewGuid().ToString();
     }
 
-    [SerializeField] private Transform feedbackTransform;
-    public Vector3 feedbackPosition;
+    public Transform feedbackTransform;
     public string feedbackText;
     public string id;
 
@@ -30,17 +29,12 @@ public class InteractionAgent : MonoBehaviour
     public virtual void UpdateUnitFromVariable(ref DataUnit du) { }
     public virtual void UpdateVariableFromUnit(DataUnit du) { }
 
-
-    private void Awake()
+    protected virtual void Awake()
     {
         InteractionManager.Instance.RegisterInteraction(this);
     }
     protected void Start()
     {
-
-
-        if (feedbackTransform == null) feedbackPosition = transform.position;
-        else feedbackPosition = feedbackTransform.position;
         AllowInteraction = true;
     }
 }
