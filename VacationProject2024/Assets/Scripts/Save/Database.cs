@@ -14,7 +14,7 @@ public class Database
     
     public SerializableDictionary<string, DataUnit> interactionDatas;
 
-
+    public SerializableDictionary<string, bool> activatedDatas;
 
 
 

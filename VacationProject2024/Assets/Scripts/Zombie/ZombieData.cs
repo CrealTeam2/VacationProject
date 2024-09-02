@@ -10,6 +10,7 @@ public class ZombieData : ScriptableObject
     public float maxSpeed;
     public float angularSpeed;
     public float acceleration;
+    public float baseDetectRange;
     public float attackrange;
     public float possibleAttackAngle;
     public float minDamage;

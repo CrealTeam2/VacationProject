@@ -16,6 +16,7 @@ MonoBehaviour:
   maxSpeed: 3
   angularSpeed: 100
   acceleration: 3
+  baseDetectRange: 8
   attackrange: 1.5
   possibleAttackAngle: 0
   minDamage: 10

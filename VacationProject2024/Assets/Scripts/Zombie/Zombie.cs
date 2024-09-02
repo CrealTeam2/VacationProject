@@ -23,6 +23,7 @@ public class Zombie : MonoBehaviour
 
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
+    
     public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("ZombieDead"); } }
     public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
     private void Awake()
@@ -34,7 +35,7 @@ public class Zombie : MonoBehaviour
         activation = 0;
         currentPersuitTime = 0;
         attackCurTime = 0;
-        isEnabled = true;
+        //isEnabled = true;
 
         navMeshAgent = transform.AddComponent<NavMeshAgent>();
         navMeshAgent.speed = Data.maxSpeed;
@@ -56,7 +57,7 @@ public class Zombie : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        topLayer.OnStateUpdate();
+        if(IsEnabled) topLayer.OnStateUpdate();
     }
 
     string CreateId()
@@ -79,14 +80,21 @@ public class Zombie : MonoBehaviour
     {
         topLayer.OnStateFixedUpdate();
     }
-
+    float detectRange { get => data.baseDetectRange * (1.0f + Mathf.Min(2.0f, activation / 20.0f)); }
     public bool DetectPlayer()
     {
         Ray ray = new Ray(transform.position, player.transform.position - transform.position);
         Debug.DrawRay(transform.position, player.transform.position - transform.position);
         RaycastHit[] hits = Physics.RaycastAll(ray, (player.transform.position - transform.position).magnitude, layerMask: LayerMask.GetMask("Wall"));
         if (hits.Length > 0) return false;
+        if (Vector3.Distance(player.transform.position, transform.position) > detectRange) return false;
         return true;
+    }
+    public Action onEnable;
+    public void Enable()
+    {
+        IsEnabled = true;
+        onEnable.Invoke();
     }
 }
 

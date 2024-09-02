@@ -43,7 +43,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
 
     public void Update()
     {
-        //±ÙÁ¢ »óÈ£ÀÛ¿ëÁß ¸Ö¾îÁø °ÍÀÌ ÀÖ´ÂÁö È®ÀÎ
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         List<string> removed = new();
         foreach (var agentId in nearInteractions.Keys) { 
             if ((nearInteractions[agentId].feedbackPosition - player.transform.position).magnitude > nearInteractions[agentId].detectDistance
@@ -60,7 +60,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         }
 
         
-        //¸ğµç »óÈ£ÀÛ¿ëµé Áß ±ÙÁ¢ÇÑ »óÈ£ÀÛ¿ëÀÌ µÉ ¼ö ÀÖ´Â°ÍÀÌ ÀÖ´ÂÁö
+        //ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Â°ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½
         foreach (var agentId in allInteractions.Keys) 
         {
             if (allInteractions.ContainsKey(agentId) == false)
@@ -81,7 +81,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         }
 
 
-        //»óÈ£ÀÛ¿ëÀÌ È­¸é»ó¿¡ ÀÖ´ÂÁö
+        //ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½
 /*        for (int i = 0; i < nearInteractions.Count;)
         {
             if (Camera.main.WorldToScreenPoint(nearInteractions[i].feedbackPosition).z > 0)
