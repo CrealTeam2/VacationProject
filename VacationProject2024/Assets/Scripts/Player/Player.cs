@@ -132,7 +132,7 @@ public class Player : MonoBehaviour, ISavable
     Vector3 prevPos = Vector3.zero;
     void Update()
     {
-        Debug.Log(Vector3.Distance(prevPos, transform.position));
+        //Debug.Log(Vector3.Distance(prevPos, transform.position));
         prevPos = transform.position;
         CameraRotation();
         CharacterRotation();
@@ -265,7 +265,7 @@ public class Player : MonoBehaviour, ISavable
 
     }
 }
-[CustomEditor(typeof(Player))]
+/*[CustomEditor(typeof(Player))]
 public class Player_Editor : Editor
 {
     public override void OnInspectorGUI()
@@ -274,4 +274,4 @@ public class Player_Editor : Editor
         if (GUILayout.Button("Give Rotting Debuff")) (target as Player).AddDebuff(new Rotting());
         if (GUILayout.Button("Give Injured Debuff")) (target as Player).AddDebuff(new Injured(10.0f));
     }
-}
+}*/

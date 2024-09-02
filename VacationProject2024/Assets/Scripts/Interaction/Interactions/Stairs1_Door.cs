@@ -7,8 +7,9 @@ public class Stairs1_Door : InteractionAgent
     bool isOpened = false;
     Animation anim;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         anim = GetComponent<Animation>();
     }
 
@@ -20,7 +21,7 @@ public class Stairs1_Door : InteractionAgent
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     public override void OnInteraction()
     {

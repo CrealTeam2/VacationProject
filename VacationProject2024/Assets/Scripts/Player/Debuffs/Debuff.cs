@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public abstract class Debuff

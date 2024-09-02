@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using TMPro;
-
 public class EnemyTest : MonoBehaviour
 {
     [SerializeField] float m_maxHp;
@@ -29,7 +27,7 @@ public class EnemyTest : MonoBehaviour
         //tmp.AddDebuff(new Grabbed(10.0f, this));
     }
 }
-[CustomEditor(typeof(EnemyTest))]
+/*[CustomEditor(typeof(EnemyTest))]
 public class EnemyTest_Editor : Editor
 {
     public override void OnInspectorGUI()
@@ -40,4 +38,4 @@ public class EnemyTest_Editor : Editor
             (target as EnemyTest).GiveDebuff();
         }
     }
-}
+}*/

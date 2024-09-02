@@ -14,7 +14,7 @@ public class Icon : Label
         isUsing = false;
     }
 
-    public void Enable()
+    public void Enable()    
     {
         style.display = DisplayStyle.Flex;
     }

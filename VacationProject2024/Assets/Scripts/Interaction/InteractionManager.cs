@@ -46,7 +46,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         //근접 상호작용중 멀어진 것이 있는지 확인
         List<string> removed = new();
         foreach (var agentId in nearInteractions.Keys) { 
-            if ((nearInteractions[agentId].feedbackPosition - player.transform.position).magnitude > nearInteractions[agentId].detectDistance
+            if ((nearInteractions[agentId].feedbackTransform.position - player.transform.position).magnitude > nearInteractions[agentId].detectDistance
                 || nearInteractions[agentId].AllowInteraction == false)
             {
                 removed.Add(agentId);
@@ -68,7 +68,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
                 removed.Add(agentId);
                 continue;
             }
-            if ((allInteractions[agentId].feedbackPosition - player.transform.position).magnitude < allInteractions[agentId].detectDistance
+            if ((allInteractions[agentId].feedbackTransform.position - player.transform.position).magnitude < allInteractions[agentId].detectDistance
                 && !nearInteractions.ContainsKey(agentId)
                 && allInteractions[agentId].AllowInteraction)
                 nearInteractions[agentId] = allInteractions[agentId];
@@ -95,7 +95,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         removed.Clear();
         foreach(var agentId in nearInteractions.Keys)
         {
-            if (Camera.main.WorldToScreenPoint(nearInteractions[agentId].feedbackPosition).z <= 0)
+            if (Camera.main.WorldToScreenPoint(nearInteractions[agentId].feedbackTransform.position).z <= 0)
             {
                 removed.Add((agentId));
             }
@@ -108,14 +108,14 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         }
 
         var nearestInteraction = nearInteractions.OrderBy
-            (interplay => (Camera.main.WorldToScreenPoint(interplay.Value.feedbackPosition) 
+            (interplay => (Camera.main.WorldToScreenPoint(interplay.Value.feedbackTransform.position) 
             - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude).FirstOrDefault();
 
 
 
         Vector3 screenPosition = Vector3.zero;
         if (nearestInteraction.Key != null)
-            screenPosition = Camera.main.WorldToScreenPoint(nearestInteraction.Value.feedbackPosition);
+            screenPosition = Camera.main.WorldToScreenPoint(nearestInteraction.Value.feedbackTransform.position);
         
         if (nearestInteraction.Key == null 
             || (screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
