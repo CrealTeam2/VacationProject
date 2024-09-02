@@ -412,9 +412,10 @@ GameObject:
   - component: {fileID: 392915198}
   - component: {fileID: 392915197}
   - component: {fileID: 392915196}
+  - component: {fileID: 392915201}
   m_Layer: 0
   m_Name: Zombie
-  m_TagString: Untagged
+  m_TagString: Zombie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -436,7 +437,9 @@ MonoBehaviour:
   health: 0
   isEnabled: 1
   currentPersuitTime: 0
+  activationDecreaseRate: 1
   id: 
+  isDead: 0
 --- !u!136 &392915197
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -525,6 +528,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &392915201
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392915195}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &403244003
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,9 +1008,10 @@ GameObject:
   - component: {fileID: 744958091}
   - component: {fileID: 744958090}
   - component: {fileID: 744958089}
+  - component: {fileID: 744958094}
   m_Layer: 0
   m_Name: Zombie (2)
-  m_TagString: Untagged
+  m_TagString: Zombie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1002,7 +1033,9 @@ MonoBehaviour:
   health: 0
   isEnabled: 1
   currentPersuitTime: 0
+  activationDecreaseRate: 1
   id: 
+  isDead: 0
 --- !u!136 &744958090
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1091,6 +1124,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &744958094
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744958088}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &876257811
 GameObject:
   m_ObjectHideFlags: 0
@@ -2098,9 +2158,10 @@ GameObject:
   - component: {fileID: 1606588691}
   - component: {fileID: 1606588689}
   - component: {fileID: 1606588695}
+  - component: {fileID: 1606588696}
   m_Layer: 0
   m_Name: Zombie (1)
-  m_TagString: Untagged
+  m_TagString: Zombie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2122,7 +2183,9 @@ MonoBehaviour:
   health: 0
   isEnabled: 0
   currentPersuitTime: 0
+  activationDecreaseRate: 1
   id: 
+  isDead: 0
 --- !u!136 &1606588691
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2232,6 +2295,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &1606588696
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606588688}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1679598278
 GameObject:
   m_ObjectHideFlags: 0
@@ -2353,7 +2443,7 @@ MonoBehaviour:
   lowerCameraRotationLimit: -80
   upperCameraRotationLimit: 80
   m_runSoundRange: {fileID: 1778565301}
-  m_runActivationRate: 2
+  m_runActivationRate: 3
   m_walkSpeed: 5
   m_runSpeed: 12
   m_maxStamina: 100
@@ -2377,7 +2467,7 @@ MonoBehaviour:
   m_firePoint: {fileID: 1741730506}
   m_crosshair: {fileID: 0}
   m_pistolSoundRange: {fileID: 734755235}
-  m_pistolActivation: 0
+  m_pistolActivation: 15
   pistolCounter: 0
   knifeDamage: 0
   m_knifeHitbox: {fileID: 0}

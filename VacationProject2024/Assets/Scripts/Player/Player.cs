@@ -125,8 +125,8 @@ public class Player : MonoBehaviour, ISavable
         //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
-/*        UnlockPistol();
-        UnlockKnife();*/
+        UnlockPistol();
+        /*UnlockKnife();*/
     }
     void Start()
     {

@@ -12,14 +12,15 @@ public class Zombie : MonoBehaviour
     [SerializeField] float health;
     [SerializeField] bool isEnabled;
     [SerializeField] internal float currentPersuitTime;
+    [SerializeField] internal float activationDecreaseRate = 1.0f;
     internal float attackCurTime;
     internal NavMeshAgent navMeshAgent;
     internal Player player;
     public string id;
 
-
     private ZombieTopLayer topLayer;
     public Action onDeath;
+    public bool isDead = false;
 
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
@@ -100,7 +101,21 @@ public class Zombie : MonoBehaviour
     public void Enable()
     {
         IsEnabled = true;
-        onEnable.Invoke();
+        onEnable?.Invoke();
+    }
+    public void GetDamage(float damage)
+    {
+        if (isDead) return;
+        health = Mathf.Max(health - damage, 0);
+        if(health <= 0)
+        {
+            Die();
+        }
+    }
+    public void Die()
+    {
+        isDead = true;
+        onDeath?.Invoke();
     }
 }
 
@@ -113,6 +128,16 @@ class ZombieTopLayer : TopLayer<Zombie>
         AddState("Pursuit", new ZombiePursuit(zombie, this));
         AddState("Attack", new ZombieAttack(zombie, this));
         AddState("Dead", new ZombieDead(zombie, this));
+        zombie.onDeath += () => { ChangeState("Dead"); };
+    }
+    public override void OnStateFixedUpdate()
+    {
+        if (origin.Activation > 0)
+        {
+            if(origin.DetectPlayer()) origin.Activation = Mathf.Max(0, origin.Activation - origin.activationDecreaseRate * Time.fixedDeltaTime);
+            else origin.Activation = Mathf.Max(0, origin.Activation - origin.activationDecreaseRate * Time.fixedDeltaTime * 2.0f);
+        }
+        base.OnStateFixedUpdate();
     }
 }
 
@@ -164,7 +189,7 @@ class ZombiePursuit : State<Zombie>
         }
         else if (origin.currentPersuitTime > 0)
         {
-            origin.currentPersuitTime -= Time.fixedDeltaTime;
+            if(origin.Activation <= 50.0f) origin.currentPersuitTime -= Time.fixedDeltaTime;
             origin.navMeshAgent.SetDestination(origin.player.transform.position);
         }
         else
@@ -235,7 +260,6 @@ class ZombieDead : State<Zombie>
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        origin.onDeath.Invoke();
     }
     public override void OnStateFixedUpdate()
     {

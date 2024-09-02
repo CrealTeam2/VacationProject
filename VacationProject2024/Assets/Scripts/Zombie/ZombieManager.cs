@@ -44,6 +44,7 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
             zombie.Health = item.Value.health;
             zombie.Activation = item.Value.activation;
             zombie.IsEnabled = item.Value.isEnabled;
+            if (item.Value.isDead) zombie.Die();
             zombie.gameObject.SetActive(item.Value.isEnabled);
         }
 
@@ -65,7 +66,8 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
                 z = item.Value.transform.position.z,
                 health = item.Value.Health,
                 activation = item.Value.Activation,
-                isEnabled = item.Value.IsEnabled
+                isEnabled = item.Value.IsEnabled,
+                isDead = item.Value.isDead
             };
         }
     }
@@ -77,5 +79,5 @@ public class SaveZombieData
     public float x, y, z;
     public float activation;
     public float health;
-    public bool isEnabled;
+    public bool isEnabled, isDead;
 }
