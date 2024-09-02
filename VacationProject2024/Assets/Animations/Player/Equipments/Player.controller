@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06291e9f2622674590effcd7e63a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 0.4
+  triggerTime: 0.3
   triggerName: Attack
 --- !u!1102 &-8264305483483518508
 AnimatorState:
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06291e9f2622674590effcd7e63a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 0.3
+  triggerTime: 0.15
   triggerName: Attack
 --- !u!1102 &-7123261876232534585
 AnimatorState:
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06291e9f2622674590effcd7e63a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 0.3
+  triggerTime: 0.15
   triggerName: Attack
 --- !u!114 &-6969495682239508755
 MonoBehaviour:
@@ -1029,9 +1029,9 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 4921671046960254261}
-    second: []
   - first: {fileID: -8330031322946813321}
+    second: []
+  - first: {fileID: 4921671046960254261}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
@@ -1039,6 +1039,18 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 9140038946045059718}
+--- !u!114 &-4078120472140069098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6355b863c8a0440448e8a61dee7b44f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-3930844137441375683
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1199,7 +1211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c06291e9f2622674590effcd7e63a1f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggerTime: 0.4
+  triggerTime: 0.3
   triggerName: Attack
 --- !u!114 &-3188235791976213822
 MonoBehaviour:
@@ -1974,7 +1986,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6000632161887709035}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -4078120472140069098}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

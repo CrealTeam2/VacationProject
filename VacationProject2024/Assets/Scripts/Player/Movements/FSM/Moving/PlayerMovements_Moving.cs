@@ -20,21 +20,13 @@ public class PlayerMovements_Moving : Layer<Player>
             currentState = states["Walking"];
         }
         currentState.OnStateEnter();
-        origin.anim.SetBool("Moving", true);
     }
-    public override void OnStateUpdate()
+    public override void OnStateFixedUpdate()
     {
-        base.OnStateUpdate();
-        origin.anim.SetFloat("MoveX", Input.GetAxis("Horizontal"));
-        origin.anim.SetFloat("MoveY", Input.GetAxis("Vertical"));
+        base.OnStateFixedUpdate();
         if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
             parentLayer.ChangeState("Idle");
         }
-    }
-    public override void OnStateExit()
-    {
-        base.OnStateExit();
-        origin.anim.SetBool("Moving", false);
     }
 }

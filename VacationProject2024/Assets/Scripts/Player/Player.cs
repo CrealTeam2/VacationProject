@@ -56,23 +56,25 @@ public class Player : MonoBehaviour, ISavable
     public Action<EnemyTest> onFistHit;
 
     [Header("Pistol")]
+    [SerializeField] GameObject m_pistolModel;
     [SerializeField] float m_pistolDamage;
-    public float pistolDamage { get { return m_pistolDamage; } }
     [SerializeField] float m_pistolFireRate, m_pistolFocusFireRate;
-    public float pistolCounter = 0.0f;
     [SerializeField] int m_pistolMagSize;
+    [SerializeField] int m_pistolMag, m_bullets;
+    [SerializeField] Transform m_firePoint;
+    [SerializeField] GameObject m_crosshair;
+    public Action onBulletInfoChange;
+    public float pistolCounter = 0.0f;
+    public float pistolDamage { get { return m_pistolDamage; } }
     public float pistolFireRate { get { return m_pistolFireRate; } }
     public float pistolFocusFireRate { get { return m_pistolFocusFireRate; } }
     public int pistolMagSize { get { return m_pistolMagSize; } }
-    public Action onBulletInfoChange;
-    [SerializeField] int m_pistolMag, m_bullets;
     public int pistolMag { get { return m_pistolMag; } set { m_pistolMag = value; onBulletInfoChange?.Invoke(); } }
     public int bullets { get { return m_bullets; } set { m_bullets = value; onBulletInfoChange?.Invoke(); } }
     public bool hasPistol { get; private set; } = false;
-    [SerializeField] Transform m_firePoint;
     public Transform firePoint { get { return m_firePoint; } }
-    [SerializeField] GameObject m_crosshair;
     public GameObject crosshair { get { return m_crosshair; } }
+    public GameObject pistolModel { get { return m_pistolModel; } }
 
     [Header("Knife")]
     [SerializeField] float knifeDamage;
@@ -106,17 +108,17 @@ public class Player : MonoBehaviour, ISavable
     void Awake()
     {
         hp = maxHp;
-        topLayer = new PlayerEquipments_TopLayer(this);
-        topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
-        topLayer.OnStateEnter();
+        //topLayer = new PlayerEquipments_TopLayer(this);
+        //topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
+        //topLayer.OnStateEnter();
         movementTopLayer = new PlayerMovements_TopLayer(this);
         movementTopLayer.onFSMChange += () => { MovementFSMPath = movementTopLayer.GetCurrentFSM(); };
         movementTopLayer.OnStateEnter();
-        FSMPath = topLayer.GetCurrentFSM();
+        //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
-        UnlockPistol();
-        UnlockKnife();
+/*        UnlockPistol();
+        UnlockKnife();*/
     }
     void Start()
     {
@@ -127,9 +129,11 @@ public class Player : MonoBehaviour, ISavable
 
     }
 
+    Vector3 prevPos = Vector3.zero;
     void Update()
     {
-        Move();
+        Debug.Log(Vector3.Distance(prevPos, transform.position));
+        prevPos = transform.position;
         CameraRotation();
         CharacterRotation();
         //topLayer.OnStateUpdate();
@@ -144,59 +148,7 @@ public class Player : MonoBehaviour, ISavable
 
     private void Move()
     {
-        movementTopLayer.OnStateUpdate();
-        /*float _moveDirX = Input.GetAxisRaw("Horizontal");
-        float _moveDirZ = Input.GetAxisRaw("Vertical");
-        if(_moveDirX != 0 || _moveDirZ != 0)
-        {
-            anim.SetBool("Moving", true);
-        }
-        else
-        {
-            anim.SetBool("Moving", false);
-        }
-        anim.SetFloat("MoveX", _moveDirX);
-        anim.SetFloat("MoveY", _moveDirZ);
-        anim.SetBool("Moving", _moveDirX == 0 && _moveDirZ == 0);
-
-        if ((_moveDirX != 0 || _moveDirZ != 0) && Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && canSprint)
-        {
-            anim.SetBool("Running", true);
-            walkSpeed = baseSpeed * 12;
-            Stamina -= Time.deltaTime * 20;
-        }
-        else
-        {
-            anim.SetBool("Running", false);
-            walkSpeed = baseSpeed * 5;
-            if (Stamina <= 100)
-            {
-                Stamina += Time.deltaTime * 10;
-            }
-        }
-
-        Vector3 _moveHorizontal = transform.right * _moveDirX;
-        Vector3 _moveVertical = transform.forward * _moveDirZ;
-
-        Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
-
-        if (_velocity.magnitude > 0 && isGrounded)
-        {
-            rb.MovePosition(transform.position + _velocity * Time.deltaTime * speedMultiplier);
-            if (!canMove)
-            {
-                //SoundManager.Instance.PlaySound("Walk",SoundManager.Instance.MasterVolume, 0); // 무한 반복 재생
-                canMove = true;
-            }
-        }
-        else
-        {
-            if (canMove)
-            {
-                //SoundManager.Instance.StopSound("Walk");
-                canMove = false;
-            }
-        }*/
+        movementTopLayer.OnStateFixedUpdate();
     }
 
     public void MovePos(Vector3 translation)
@@ -219,7 +171,7 @@ public class Player : MonoBehaviour, ISavable
             currentCameraRotationX = lowerCameraRotationLimit;
         }
 
-        //rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
@@ -244,6 +196,7 @@ public class Player : MonoBehaviour, ISavable
                 rb.useGravity = false;
             }
         }
+        Move();
     }
     public void UnlockKnife()
     {
@@ -303,7 +256,8 @@ public class Player : MonoBehaviour, ISavable
 
     public void LoadData(Database data)
     {
-        transform.position = data.savePoint;
+        if(data.savePoint != Vector3.zero) 
+            transform.position = data.savePoint;
     }
 
     public void SaveData(ref Database data)

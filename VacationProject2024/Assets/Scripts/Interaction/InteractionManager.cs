@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
+public class InteractionManager : Singleton<InteractionManager>, ISingletonStart, ISavable
 {
-    List<List<InteractionAgent>> interactionTypeList;
-    List<InteractionAgent> allInteractions;
-    List<InteractionAgent> nearInteractions;
+    Dictionary<string, InteractionAgent> allInteractions;
+    Dictionary<string, InteractionAgent> nearInteractions;
     GameObject player;
     Dictionary<KeyCode, Icon> iconDict;
-    public float interactionDistance;
 
     InteractionAgent enabledInteraction;
 
     public void RegisterInteraction(InteractionAgent agent)
     {
-        allInteractions.Add(agent);
+        allInteractions[agent.id] = agent;
         if (!iconDict.ContainsKey(agent.key))
         {
             iconDict.Add(agent.key, IconManager.Instance.GetIcon(agent.key, 40));
@@ -26,7 +25,6 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
 
     void Init()
     {
-        interactionTypeList = new();
         allInteractions = new();
         nearInteractions = new();
         iconDict = new();
@@ -45,29 +43,35 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
 
     public void Update()
     {
-        for(int i = 0; i < nearInteractions.Count;)
-        {
-            if ((nearInteractions[i].FeedbackTransform.position - player.transform.position).magnitude > nearInteractions[i].detectDistance
-                || nearInteractions[i].AllowInteraction == false)
+        //���� ��ȣ�ۿ��� �־��� ���� �ִ��� Ȯ��
+        List<string> removed = new();
+        foreach (var agentId in nearInteractions.Keys) { 
+            if ((nearInteractions[agentId].feedbackPosition - player.transform.position).magnitude > nearInteractions[agentId].detectDistance
+                || nearInteractions[agentId].AllowInteraction == false)
             {
-                nearInteractions.RemoveAt(i);
+                removed.Add(agentId);
                 continue;
             }
-            i++;
+        }
+        while (removed.Count > 0)
+        {
+            nearInteractions.Remove(removed[0]);
+            removed.RemoveAt(0);
         }
 
-        List<InteractionAgent> removed = new();
-        foreach (InteractionAgent agent in allInteractions) 
+        
+        //��� ��ȣ�ۿ�� �� ������ ��ȣ�ۿ��� �� �� �ִ°��� �ִ���
+        foreach (var agentId in allInteractions.Keys) 
         {
-            if (agent == null)
+            if (allInteractions.ContainsKey(agentId) == false)
             {
-                removed.Add(agent);
+                removed.Add(agentId);
                 continue;
             }
-            if((agent.FeedbackTransform.position - player.transform.position).magnitude < agent.detectDistance
-                && !nearInteractions.Find(inter => inter == agent)
-                && agent.AllowInteraction)
-                nearInteractions.Add(agent);
+            if ((allInteractions[agentId].feedbackPosition - player.transform.position).magnitude < allInteractions[agentId].detectDistance
+                && !nearInteractions.ContainsKey(agentId)
+                && allInteractions[agentId].AllowInteraction)
+                nearInteractions[agentId] = allInteractions[agentId];
         }
 
         while (removed.Count > 0)
@@ -77,16 +81,44 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         }
 
 
+        //��ȣ�ۿ��� ȭ��� �ִ���
+/*        for (int i = 0; i < nearInteractions.Count;)
+        {
+            if (Camera.main.WorldToScreenPoint(nearInteractions[i].feedbackPosition).z > 0)
+            {
+                i++;
+                continue;
+            }
+            nearInteractions.Remove(nearInteractions[i]);
+        }*/
+
+        removed.Clear();
+        foreach(var agentId in nearInteractions.Keys)
+        {
+            if (Camera.main.WorldToScreenPoint(nearInteractions[agentId].feedbackPosition).z <= 0)
+            {
+                removed.Add((agentId));
+            }
+        }
+
+        while (removed.Count > 0)
+        {
+            nearInteractions.Remove(removed[0]);
+            removed.RemoveAt(0);
+        }
 
         var nearestInteraction = nearInteractions.OrderBy
-            (interplay => (Camera.main.WorldToScreenPoint(interplay.FeedbackTransform.position) 
+            (interplay => (Camera.main.WorldToScreenPoint(interplay.Value.feedbackPosition) 
             - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude).FirstOrDefault();
-        Vector2 screenPosition = Vector2.zero;
-        if (nearestInteraction)
-            screenPosition = Camera.main.WorldToScreenPoint(nearestInteraction.FeedbackTransform.position);
 
-        if (nearestInteraction == null 
-            || ((Vector3)screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
+
+
+        Vector3 screenPosition = Vector3.zero;
+        if (nearestInteraction.Key != null)
+            screenPosition = Camera.main.WorldToScreenPoint(nearestInteraction.Value.feedbackPosition);
+        
+        if (nearestInteraction.Key == null 
+            || (screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
         {
             foreach (var ui in iconDict.Values)
             {
@@ -95,9 +127,9 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
             return;
         }
 
-        if (nearestInteraction != enabledInteraction)
+        if (nearestInteraction.Value != enabledInteraction)
         {
-            enabledInteraction = nearestInteraction;
+            enabledInteraction = nearestInteraction.Value;
         }
 
         iconDict[enabledInteraction.key].Enable();
@@ -111,4 +143,38 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
         }
     }
 
+    public void LoadData(Database data)
+    {
+        List<string> removeAgentId = new();
+        foreach (var agentId in data.interactionDatas.Keys)
+        {
+            if (!allInteractions.ContainsKey(agentId))
+            {
+                removeAgentId.Add(agentId);
+                continue;
+            }
+            allInteractions[agentId].UpdateVariableFromUnit(data.interactionDatas[agentId]);
+        }
+
+        while (removeAgentId.Count > 0)
+        {
+            data.zombieData.Remove(removeAgentId[0]);
+            removeAgentId.RemoveAt(0);
+        }
+
+    }
+
+    public void SaveData(ref Database data)
+    {
+        data.interactionDatas.Clear();
+        foreach (var agentId in allInteractions.Keys)
+        {
+            DataUnit dataUnit;
+            data.interactionDatas.TryGetValue(agentId, out dataUnit);
+            if(dataUnit == null) dataUnit = new DataUnit();
+
+            allInteractions[agentId].UpdateUnitFromVariable(ref dataUnit);
+            data.interactionDatas[agentId] = dataUnit;
+        }
+    }
 }

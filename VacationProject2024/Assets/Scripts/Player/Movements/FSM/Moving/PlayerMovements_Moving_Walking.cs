@@ -8,16 +8,11 @@ public class PlayerMovements_Moving_Walking : State<Player>
     {
         
     }
-    public override void OnStateEnter()
+    public override void OnStateFixedUpdate()
     {
-        base.OnStateEnter();
-        origin.anim.Play("Walking", 1);
-    }
-    public override void OnStateUpdate()
-    {
-        base.OnStateUpdate();
-        origin.Stamina = Mathf.Min(origin.maxStamina, origin.Stamina + 5.0f * Time.deltaTime);
-        origin.MovePos((origin.transform.forward * Input.GetAxisRaw("Vertical") + origin.transform.right * Input.GetAxisRaw("Horizontal")).normalized * Time.deltaTime * origin.walkSpeed);
+        base.OnStateFixedUpdate();
+        origin.Stamina = Mathf.Min(origin.maxStamina, origin.Stamina + 5.0f * Time.fixedDeltaTime);
+        origin.MovePos((origin.transform.forward * Input.GetAxisRaw("Vertical") + origin.transform.right * Input.GetAxisRaw("Horizontal")).normalized * Time.fixedDeltaTime * origin.walkSpeed);
         if(Input.GetKey(KeyCode.LeftShift) && origin.Stamina > 10.0f && origin.canSprint)
         {
             parentLayer.ChangeState("Running");

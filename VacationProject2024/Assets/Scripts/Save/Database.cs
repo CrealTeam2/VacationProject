@@ -11,9 +11,10 @@ public class Database
     public Vector3 savePoint;
 
     public SerializableDictionary<string, SaveZombieData> zombieData;
+    
+    public SerializableDictionary<string, DataUnit> interactionDatas;
 
-
-
+    public SerializableDictionary<string, bool> activatedDatas;
 
 
 
@@ -26,6 +27,7 @@ public class Database
     public void InitDatabase()
     {
         savePointsDict = new SerializableDictionary<Vector3, bool>();
+        interactionDatas = new SerializableDictionary<string, DataUnit>();
         savePoint = new Vector3();
         zombieData = new();
     }
