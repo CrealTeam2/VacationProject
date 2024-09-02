@@ -1,27 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using Unity.VisualScripting;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static UnityEditor.Progress;
 
-public class GameManager : MonoBehaviour, ISavable
+public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 {
-    public Transform startTransform;
-    public List<Transform> savePoints = new List<Transform>();
-    Dictionary<Vector3, bool> savePointsDict = new Dictionary<Vector3, bool>();
+    Transform startTransform;
+    Transform endTransform;
+    List<Transform> savePoints;
+    Dictionary<Vector3, bool> savePointsDict;
+    List<Vector3> removeList;
     Vector3 currentSavePoint;
     GameObject player;
 
     private void Awake()
     {
-        InitSavePoint();
+        Init();
+    }
+    void Init()
+    {
+        savePoints = new();
+        savePointsDict = new();
+        removeList = new();
+        
+
     }
 
-    void Start()
+    public void IStart()
     {
+        startTransform = GameObject.FindWithTag("StartPosition").transform;
+        endTransform = GameObject.FindWithTag("EndPosition").transform;
+        var gameObjects = GameObject.FindGameObjectsWithTag("SavePoints");
+        savePoints.Clear();
+        foreach (GameObject t in gameObjects)
+            savePoints.Add(t.transform);
+
+        savePointsDict.Clear();
+        foreach (Transform t in savePoints)
+        {
+            savePointsDict.Add(t.position, false);
+        }
+
         player = GameObject.FindWithTag("Player");
-        player.transform.position = currentSavePoint;
     }
+
 
     // Update is called once per frame
     void Update()
@@ -32,14 +58,6 @@ public class GameManager : MonoBehaviour, ISavable
     private void FixedUpdate()
     {
         CheckIfOnSavePoint();
-    }
-
-    void InitSavePoint()
-    {
-        foreach (Transform t in savePoints)
-        {
-            savePointsDict.Add(t.position, false);
-        }
     }
 
     void CheckIfOnSavePoint()
@@ -55,6 +73,13 @@ public class GameManager : MonoBehaviour, ISavable
                 return;
             }
         }
+
+        if(Mathf.Sqrt(Mathf.Pow(player.transform.position.x - endTransform.position.x, 2) + Mathf.Pow(player.transform.position.z - endTransform.position.z, 2)) < 1
+                && Mathf.Abs(player.transform.position.y - endTransform.position.y) < 5)
+        {
+            DataManager.Instance.InitDatabase();
+            SceneManager.LoadScene("NewRyuScene");
+        }
     }
 
     public void LoadData(Database data)
@@ -63,9 +88,14 @@ public class GameManager : MonoBehaviour, ISavable
         {
             if (!savePointsDict.ContainsKey(item.Key))
             {
-                data.savePointsDict.Remove(item.Key);
+                removeList.Add(item.Key);
             }
             savePointsDict[item.Key] = item.Value;
+        }
+        while(removeList.Count > 0)
+        {
+            data.savePointsDict.Remove(removeList[0]);
+            removeList.RemoveAt(0);
         }
         if (savePointsDict.ContainsKey(data.savePoint))
             currentSavePoint = data.savePoint;

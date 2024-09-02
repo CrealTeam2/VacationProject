@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Door : InteractionAgent
 {
-    // Start is called before the first frame update
-    void Start()
+    bool isOpened = false;
+    Animation anim;
+    
+    protected void Start()
     {
-        
+        base.Start();
+        anim = GetComponent<Animation>();
     }
 
     // Update is called once per frame
@@ -19,8 +22,20 @@ public class Door : InteractionAgent
     {
         base.OnInteraction();
 
-        Debug.Log("DoorInteracted");
-        Invoke("ReEnableInteraction", 5);
+        if (isOpened)
+        {
+            anim.Play("Door2_Close");
+            isOpened = false;
+            feedbackText = "문 열기";
+        }
+
+        else
+        {
+            anim.Play("Door2_Open");
+            isOpened = true;
+            feedbackText = "문 닫기";
+        }
+        Invoke("ReEnableInteraction", 0.2f);
     }
 
     void ReEnableInteraction()

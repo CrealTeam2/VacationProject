@@ -1,88 +1,81 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
-    // Singleton ÀÎ½ºÅÏ½º
-    public static SoundManager Instance;
-
-    // È¿°úÀ½°ú BGMÀ» ÀúÀåÇÒ µñ¼Å³Ê¸® (ÀÌ¸§À¸·Î Á¢±Ù)
+    // È¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ BGMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ (ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     private Dictionary<string, AudioClip> soundEffects;
-    private Dictionary<string, AudioSource> activeSounds;
+    private List<(GameObject, AudioSource, int)> activeSounds;
     private Dictionary<string, AudioClip> bgmClips;
     private AudioSource bgmSource;
+    private GameObject channelPrefab;
+    private Player player;
 
     [Range(0f, 1f)]
-    public float MasterVolume = 1.0f;  // ÀüÃ¼ º¼·ý
+    public float MasterVolume = 1.0f;  // ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
     [Range(0f, 1f)]
-    public float SFXVolume = 1.0f;  // È¿°úÀ½ º¼·ý
+    public float SFXVolume = 1.0f;  // È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Range(0f, 1f)]
-    public float BGMVolume = 1.0f;  // BGM º¼·ý
+    public float BGMVolume = 1.0f;  // BGM ï¿½ï¿½ï¿½ï¿½
 
     private void Awake()
     {
-        // Singleton ÆÐÅÏ Àû¿ë
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-
-            // ¸®¼Ò½º Æú´õ¿¡¼­ »ç¿îµå¸¦ ºÒ·¯¿Í µñ¼Å³Ê¸®¿¡ ÀúÀå
-            LoadAllSoundsFromResources();
-
-            // Àç»ý ÁßÀÎ »ç¿îµå¸¦ °ü¸®ÇÏ±â À§ÇÑ µñ¼Å³Ê¸® ÃÊ±âÈ­
-            activeSounds = new Dictionary<string, AudioSource>();
-
-            // BGMÀ» Àç»ýÇÒ AudioSource »ý¼º
-            bgmSource = gameObject.AddComponent<AudioSource>();
-            bgmSource.loop = true;
-            bgmSource.volume = BGMVolume * MasterVolume;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        activeSounds = new();
+        LoadAllSoundsFromResources();
+        channelPrefab = Resources.Load("Prefab/AudioChannel") as GameObject;
     }
 
-    // Resources/Audio Æú´õÀÇ ¸ðµç ¿Àµð¿À ÆÄÀÏÀ» ºÒ·¯¿Í¼­ µñ¼Å³Ê¸®¿¡ ÀúÀå
+    private void Start()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+    }
+
+    private void Update()
+    {
+        ManageActiveSound();
+    }
+
+    // Resources/Audio ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½Í¼ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void LoadAllSoundsFromResources()
     {
         soundEffects = new Dictionary<string, AudioClip>();
         bgmClips = new Dictionary<string, AudioClip>();
 
-        // Resources/Audio Æú´õ ¾ÈÀÇ ¸ðµç AudioClipÀ» ºÒ·¯¿È
+        // Resources/Audio ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ AudioClipï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½
         AudioClip[] clips = Resources.LoadAll<AudioClip>("Audio");
 
         foreach (var clip in clips)
         {
-            // ÆÄÀÏ ÀÌ¸§¿¡ "BGM"ÀÌ Æ÷ÇÔµÈ °æ¿ì BGMÀ¸·Î ±¸ºÐ
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ "BGM"ï¿½ï¿½ ï¿½ï¿½ï¿½Ôµï¿½ ï¿½ï¿½ï¿½ BGMï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (clip.name.Contains("BGM"))
             {
                 bgmClips[clip.name] = clip;
             }
             else
             {
-                soundEffects[clip.name] = clip;  // »ç¿îµå ÀÌ¸§À» Å°·Î µñ¼Å³Ê¸®¿¡ ÀúÀå
+                soundEffects[clip.name] = clip;  // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
         }
 
         Debug.Log("Loaded " + soundEffects.Count + " sound effects and " + bgmClips.Count + " BGM clips.");
     }
 
-    // Æ¯Á¤ »ç¿îµå¸¦ Àç»ýÇÏ´Â ¸Þ¼­µå (BGM°ú SFX¸¦ ±¸ºÐÇÏ¿© Ã³¸®)
-    public void PlaySound(string soundName, float volume, int repeatCount)
+    // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ (BGMï¿½ï¿½ SFXï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ Ã³ï¿½ï¿½)
+    public void PlaySound(GameObject soundObject, string soundName, float volume, int repeatCount)
     {
-        // BGMÀÎÁö È¿°úÀ½ÀÎÁö ±¸ºÐ
+        // BGMï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (bgmClips.ContainsKey(soundName))
         {
-            // BGM Àç»ý
+            // BGM ï¿½ï¿½ï¿½
             PlayBGM(soundName, volume, repeatCount);
         }
         else if (soundEffects.ContainsKey(soundName))
         {
-            // È¿°úÀ½ Àç»ý
-            PlaySFX(soundName, volume, repeatCount);
+            // È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            PlaySFX(soundObject, soundName, volume, repeatCount);
         }
         else
         {
@@ -90,7 +83,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // BGM Àç»ý ¸Þ¼­µå
+    // BGM ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     private void PlayBGM(string bgmName, float volume, int repeatCount)
     {
         if (bgmClips.TryGetValue(bgmName, out AudioClip clip))
@@ -102,44 +95,89 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // È¿°úÀ½ Àç»ý ¸Þ¼­µå
-    private void PlaySFX(string sfxName, float volume, int repeatCount)
+    // È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+    private void PlaySFX(GameObject soundObject, string sfxName, float volume, int repeatCount)
     {
-        if (!activeSounds.ContainsKey(sfxName))
+        if (soundEffects.TryGetValue(sfxName, out AudioClip clip))
         {
-            if (soundEffects.TryGetValue(sfxName, out AudioClip clip))
+            var channel = GetAvaliableChannel(soundObject);
+            // ï¿½ï¿½ï¿½Î¿ï¿½ AudioSourceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+            channel.clip = clip;
+            channel.volume = volume * SFXVolume * MasterVolume;
+            channel.loop = true;
+            channel.spatialBlend = 1;
+            channel.maxDistance = channel.volume * 30;
+            channel.rolloffMode = AudioRolloffMode.Custom;
+            channel.Play();
+
+            // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+            activeSounds.Add((soundObject, channel, repeatCount));
+        }
+    }
+
+    private AudioSource GetAvaliableChannel(GameObject obj)
+    {
+        AudioSource channel;
+        for (int i = 0; i < obj.transform.childCount; i++)
+        {
+            channel = obj.transform.GetChild(i).GetComponent<AudioSource>();
+            if (channel && channel.gameObject.activeSelf)
             {
-                // »õ·Î¿î AudioSource¸¦ »ý¼ºÇÏ¿© È¿°úÀ½ Àç»ý
-                AudioSource newSource = gameObject.AddComponent<AudioSource>();
-                newSource.clip = clip;
-                newSource.volume = volume * SFXVolume * MasterVolume;
-                newSource.loop = (repeatCount == 0);
-                newSource.Play();
+                channel.gameObject.SetActive(true);
+                channel.transform.localPosition = Vector3.zero;
+                return channel;
+            }
+        }
 
-                // ¹Ýº¹ Àç»ýÀÌ ÇÊ¿äÇÏ´Ù¸é ÄÚ·çÆ¾À» ÅëÇØ ¹Ýº¹ Àç»ý
-                if (repeatCount > 0)
-                {
-                    StartCoroutine(PlaySoundRepeatedly(newSource, clip, volume, repeatCount));
-                }
+        channel = Instantiate(channelPrefab).GetComponent<AudioSource>();
+        channel.transform.parent = obj.transform;
+        channel.transform.localPosition = Vector3.zero;
+        channel.gameObject.SetActive(true);
+        return channel;
+    }
 
-                // Àç»ý ÁßÀÎ »ç¿îµå¸¦ µñ¼Å³Ê¸®¿¡ Ãß°¡
-                activeSounds[sfxName] = newSource;
+    private void UnableChannel(AudioSource source)
+    {
+        source.Stop();
+        source.gameObject.SetActive(false);
+        source.transform.parent = transform;
+    }
+
+    // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ß´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+    public void StopSound(GameObject soundObject, string soundName)
+    {
+        var sounds = activeSounds.FindAll(tuple => tuple.Item1 == soundObject && tuple.Item2.clip.name == soundName);
+        if (sounds.Count > 0)
+        {
+            foreach (var sound in sounds)
+            {
+                sound.Item2.Stop();
+                UnableChannel(sound.Item2);
+                activeSounds.Remove(sound);
             }
         }
     }
 
-    // Æ¯Á¤ »ç¿îµå¸¦ ¸ØÃß´Â ¸Þ¼­µå
-    public void StopSound(string soundName)
+    private void ManageActiveSound()
     {
-        if (activeSounds.TryGetValue(soundName, out AudioSource source))
+        for(int i = 0; i < activeSounds.Count;)
         {
-            source.Stop();
-            Destroy(source); // »ç¿ëÇÑ AudioSource Á¦°Å
-            activeSounds.Remove(soundName); // µñ¼Å³Ê¸®¿¡¼­ Á¦°Å
+            var sound = activeSounds[i];
+            if (!sound.Item2.isPlaying)
+            {
+                if (sound.Item3 - 1 <= 0)
+                {
+                    UnableChannel(sound.Item2);
+                    activeSounds.RemoveAt(i);
+                    continue;
+                }
+                activeSounds[i] = (sound.Item1, sound.Item2, sound.Item3 - 1);
+            }
+            i++;
         }
     }
 
-    private IEnumerator PlaySoundRepeatedly(AudioSource source, AudioClip clip, float volume, int repeatCount)
+/*    private IEnumerator PlaySoundRepeatedly(AudioSource source, AudioClip clip, float volume, int repeatCount)
     {
         for (int i = 0; i < repeatCount; i++)
         {
@@ -147,10 +185,10 @@ public class SoundManager : MonoBehaviour
             yield return new WaitForSeconds(clip.length);
         }
 
-        // ¹Ýº¹ Àç»ýÀÌ ³¡³ª¸é AudioSource¸¦ Á¦°ÅÇÏ°í µñ¼Å³Ê¸®¿¡¼­ Á¦°Å
-        activeSounds.Remove(clip.name);
+        // ï¿½Ýºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ AudioSourceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½Å³Ê¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        activeSounds.Remove((source.gameObject, clip.name));
         Destroy(source);
-    }
+    }*/
 
     public void SetMasterVolume(float volume)
     {
@@ -172,16 +210,21 @@ public class SoundManager : MonoBehaviour
 
     private void UpdateAllVolumes()
     {
-        foreach (var source in activeSounds.Values)
+        foreach (var source in activeSounds)
         {
-            source.volume = SFXVolume * MasterVolume;  // ÇöÀç ¸ðµç AudioSourceÀÇ º¼·ýÀ» SFXVolume°ú MasterVolumeÀ¸·Î Á¶Á¤
+            source.Item2.volume = SFXVolume * MasterVolume;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ AudioSourceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ SFXVolumeï¿½ï¿½ MasterVolumeï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+            if (DetectPlayer(source.Item1.transform))
+            {
+/*                source.Item2.volume */
+            }
         }
 
-        // BGMÀÇ º¼·ýµµ °»½Å
+        // BGMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         bgmSource.volume = BGMVolume * MasterVolume;
     }
 
-    // ½½¶óÀÌ´õ°¡ º¯°æµÉ ¶§ È£ÃâµÉ ¸Þ¼­µå
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void OnMasterVolumeChanged(float value)
     {
         SetMasterVolume(value);
@@ -195,5 +238,13 @@ public class SoundManager : MonoBehaviour
     public void OnBGMVolumeChanged(float value)
     {
         SetBGMVolume(value);
+    }
+    public bool DetectPlayer(Transform rayOrigin)
+    {
+        Ray ray = new Ray(rayOrigin.position, player.transform.position - transform.position);
+        Debug.DrawRay(rayOrigin.position, player.transform.position - rayOrigin.position);
+        RaycastHit[] hits = Physics.RaycastAll(ray, (player.transform.position - rayOrigin.position).magnitude, layerMask: LayerMask.GetMask("Wall"));
+        if (hits.Length > 0) return false;
+        return true;
     }
 }

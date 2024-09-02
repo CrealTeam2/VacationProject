@@ -20,12 +20,13 @@ public class EnemyTest : MonoBehaviour
         if (hp <= 0)
         {
             Destroy(gameObject);
+            
         }
     }
     public void GiveDebuff()
     {
         Player tmp = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        tmp.AddDebuff(new Grabbed(10.0f, this));
+        //tmp.AddDebuff(new Grabbed(10.0f, this));
     }
 }
 [CustomEditor(typeof(EnemyTest))]

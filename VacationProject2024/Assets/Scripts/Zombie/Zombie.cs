@@ -10,21 +10,22 @@ public class Zombie : MonoBehaviour
 
     [SerializeField] float activation;
     [SerializeField] float health;
-    [SerializeField] bool isEnabled = true;
+    [SerializeField] bool isEnabled;
     [SerializeField] internal float currentPersuitTime;
     internal float attackCurTime;
     internal NavMeshAgent navMeshAgent;
-    internal GameObject player;
+    internal Player player;
     public string id;
 
 
     private ZombieTopLayer topLayer;
+    public Action onDeath;
 
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
+    
     public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("ZombieDead"); } }
-    public bool IsEnabled { get => enabled; set => enabled = value; }
-
+    public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
     private void Awake()
     {
         id = CreateId();
@@ -34,21 +35,29 @@ public class Zombie : MonoBehaviour
         activation = 0;
         currentPersuitTime = 0;
         attackCurTime = 0;
-
-        player = GameObject.FindWithTag("Player");
-        topLayer = new ZombieTopLayer(this);
-        topLayer.OnStateEnter();
+        //isEnabled = true;
 
         navMeshAgent = transform.AddComponent<NavMeshAgent>();
         navMeshAgent.speed = Data.maxSpeed;
         navMeshAgent.acceleration = Data.acceleration;
         navMeshAgent.angularSpeed = Data.angularSpeed;
+    }
+
+    private void Start()
+    {
+
+
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        topLayer = new ZombieTopLayer(this);
+        topLayer.OnStateEnter();
+
+
 
     }
     // Update is called once per frame
     void Update()
     {
-        topLayer.OnStateUpdate();
+        if(IsEnabled) topLayer.OnStateUpdate();
     }
 
     string CreateId()
@@ -71,15 +80,21 @@ public class Zombie : MonoBehaviour
     {
         topLayer.OnStateFixedUpdate();
     }
-
+    float detectRange { get => data.baseDetectRange * (1.0f + Mathf.Min(2.0f, activation / 20.0f)); }
     public bool DetectPlayer()
     {
         Ray ray = new Ray(transform.position, player.transform.position - transform.position);
         Debug.DrawRay(transform.position, player.transform.position - transform.position);
         RaycastHit[] hits = Physics.RaycastAll(ray, (player.transform.position - transform.position).magnitude, layerMask: LayerMask.GetMask("Wall"));
-        //Array.Sort(hits, (a, b) => (a.collider.transform.position - transform.position).magnitude.CompareTo((b.collider.transform.position - transform.position).magnitude));
         if (hits.Length > 0) return false;
+        if (Vector3.Distance(player.transform.position, transform.position) > detectRange) return false;
         return true;
+    }
+    public Action onEnable;
+    public void Enable()
+    {
+        IsEnabled = true;
+        onEnable.Invoke();
     }
 }
 
@@ -104,7 +119,7 @@ class ZombieIdle : State<Zombie>
 
     public override void OnStateEnter()
     {
-
+        SoundManager.Instance.PlaySound(origin.gameObject, "ZombieIdle", 0.5f, 1);
     }
     public override void OnStateFixedUpdate()
     {
@@ -127,7 +142,7 @@ class ZombieIdle : State<Zombie>
     }
     public override void OnStateExit()
     {
-        
+        SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
     }
 }
 
@@ -141,24 +156,24 @@ class ZombieAttack : State<Zombie>
         this.zombie = zombie;
         previousHealth = origin.Health;
     }
-
+    Grabbed grab = null;
     public override void OnStateEnter()
     {
         base.OnStateEnter();
-        Debug.Log("EnterAttackState");
+        grab = new Grabbed(10.0f, origin);
+        origin.player.AddDebuff(grab);
         count = 0;
     }
     public override void OnStateFixedUpdate()
     {
         count += Time.fixedDeltaTime;
-        if(origin.Health < previousHealth)
-        {
-            parentLayer.ChangeState("Idle");
-        }
         if(count >= 3)
         {
-            if((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
+            if(grab.ended == false)
+            {
                 Debug.Log("DamagePlayer, " + GetDamage());
+                grab.EndDebuff();
+            }
             parentLayer.ChangeState("Idle");
         }
 
@@ -166,6 +181,8 @@ class ZombieAttack : State<Zombie>
     public override void OnStateExit()
     {
         base.OnStateExit();
+        if (!grab.ended) grab.EndDebuff();
+        grab = null;
     }
 
     float GetDamage()
@@ -184,6 +201,7 @@ class ZombieDead : State<Zombie>
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        origin.onDeath.Invoke();
     }
     public override void OnStateFixedUpdate()
     {
