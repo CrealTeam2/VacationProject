@@ -24,11 +24,15 @@ public class Player : MonoBehaviour, ISavable
     private bool canMove = true;
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
+    [SerializeField] ZombieDetector m_runSoundRange;
+    [SerializeField] float m_runActivationRate = 2.0f;
 
     [SerializeField] float m_walkSpeed, m_runSpeed, m_maxStamina;
     public float walkSpeed { get { return m_walkSpeed; } }
     public float runSpeed { get { return m_runSpeed; } }
     public float maxStamina { get { return m_maxStamina; } }
+    public ZombieDetector runSoundRange { get { return m_runSoundRange; } }
+    public float runActivationRate { get { return m_runActivationRate; } }
 
     [SerializeField]
     private Camera Camera;
@@ -63,6 +67,8 @@ public class Player : MonoBehaviour, ISavable
     [SerializeField] int m_pistolMag, m_bullets;
     [SerializeField] Transform m_firePoint;
     [SerializeField] GameObject m_crosshair;
+    [SerializeField] ZombieDetector m_pistolSoundRange;
+    [SerializeField] float m_pistolActivation;
     public Action onBulletInfoChange;
     public float pistolCounter = 0.0f;
     public float pistolDamage { get { return m_pistolDamage; } }
@@ -75,6 +81,8 @@ public class Player : MonoBehaviour, ISavable
     public Transform firePoint { get { return m_firePoint; } }
     public GameObject crosshair { get { return m_crosshair; } }
     public GameObject pistolModel { get { return m_pistolModel; } }
+    public ZombieDetector pistolSoundRange { get { return m_pistolSoundRange; } }
+    public float pistolActivation { get { return m_pistolActivation; } }
 
     [Header("Knife")]
     [SerializeField] float knifeDamage;
@@ -117,8 +125,8 @@ public class Player : MonoBehaviour, ISavable
         //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
-/*        UnlockPistol();
-        UnlockKnife();*/
+        UnlockPistol();
+        /*UnlockKnife();*/
     }
     void Start()
     {
@@ -220,6 +228,10 @@ public class Player : MonoBehaviour, ISavable
         if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
         {
             hit.transform.GetComponent<EnemyTest>()?.GetDamage(pistolDamage);
+        }
+        foreach(var i in pistolSoundRange.detected)
+        {
+            i.Activation += pistolActivation;
         }
     }
 

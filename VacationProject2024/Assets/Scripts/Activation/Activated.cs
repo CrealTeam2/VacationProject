@@ -6,7 +6,7 @@ public abstract class Activated : MonoBehaviour, ISavable
 {
     [SerializeField] string id;
     protected virtual bool oneTime => true;
-    protected bool activated = false;
+    [SerializeField] protected bool activated = false;
     public void SaveData(ref Database db)
     {
         db.activatedDatas[id] = activated;

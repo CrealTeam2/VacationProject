@@ -14,6 +14,7 @@ TagManager:
   - StartPosition
   - EndPosition
   - SavePoints
+  - Zombie
   layers:
   - Default
   - TransparentFX

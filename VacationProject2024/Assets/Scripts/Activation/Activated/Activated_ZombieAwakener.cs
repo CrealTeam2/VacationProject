@@ -7,9 +7,10 @@ public class Activated_ZombieAwakener : Activated
 {
     [SerializeField] Zombie awakeningZombie;
     [SerializeField] Animator awakenAnimation;
+    [SerializeField] string awakenStateName = "Awaken";
     protected override void OnActivate()
     {
         awakeningZombie.onEnable += base.OnActivate;
-        awakenAnimation.SetTrigger("Awaken");
+        awakenAnimation.Play(awakenStateName);
     }
 }

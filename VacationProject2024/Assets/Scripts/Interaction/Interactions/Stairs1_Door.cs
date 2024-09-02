@@ -31,14 +31,14 @@ public class Stairs1_Door : InteractionAgent
         {
             anim.Play("Stairs1_Door_Close");
             isOpened = false;
-            feedbackText = "¹® ¿­±â";
+            feedbackText = "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½";
         }
 
         else
         {
             anim.Play("Stairs1_Door_Open");
             isOpened = true;
-            feedbackText = "¹® ´Ý±â";
+            feedbackText = "ï¿½ï¿½ ï¿½Ý±ï¿½";
         }
         Invoke("ReEnableInteraction", 0.2f);
     }
