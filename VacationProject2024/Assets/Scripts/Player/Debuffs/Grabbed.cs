@@ -30,7 +30,7 @@ public class Grabbed : Debuff
         debuffed.onFistHit += Check;
         grabber.onDeath += EndDebuff;
     }
-    void Check(EnemyTest enemy)
+    void Check(Zombie enemy)
     {
         if(enemy == grabber)
         {

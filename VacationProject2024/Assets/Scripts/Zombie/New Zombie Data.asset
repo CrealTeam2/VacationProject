@@ -19,6 +19,7 @@ MonoBehaviour:
   baseDetectRange: 8
   attackrange: 1.5
   possibleAttackAngle: 0
+  postAttackEndlag: 1
   minDamage: 10
   maxDamage: 30
   maxActivation: 100

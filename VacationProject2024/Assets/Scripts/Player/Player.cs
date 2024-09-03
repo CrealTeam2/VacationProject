@@ -25,14 +25,12 @@ public class Player : MonoBehaviour, ISavable
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
     [SerializeField] ZombieDetector m_runSoundRange;
-    [SerializeField] float m_runActivationRate = 2.0f;
 
     [SerializeField] float m_walkSpeed, m_runSpeed, m_maxStamina;
     public float walkSpeed { get { return m_walkSpeed; } }
     public float runSpeed { get { return m_runSpeed; } }
     public float maxStamina { get { return m_maxStamina; } }
     public ZombieDetector runSoundRange { get { return m_runSoundRange; } }
-    public float runActivationRate { get { return m_runActivationRate; } }
 
     [SerializeField]
     private Camera Camera;
@@ -53,11 +51,11 @@ public class Player : MonoBehaviour, ISavable
 
     [Header("Unarmed")]
     [SerializeField] float fistDamage;
-    [SerializeField] EnemyDetector m_rightFistHitbox;
-    [SerializeField] EnemyDetector m_leftFistHitbox;
-    public EnemyDetector rightFistHitbox { get { return m_rightFistHitbox; } }
-    public EnemyDetector leftFistHitbox { get { return m_leftFistHitbox; } }
-    public Action<EnemyTest> onFistHit;
+    [SerializeField] ZombieOnetimeDetector m_rightFistHitbox;
+    [SerializeField] ZombieOnetimeDetector m_leftFistHitbox;
+    public ZombieOnetimeDetector rightFistHitbox { get { return m_rightFistHitbox; } }
+    public ZombieOnetimeDetector leftFistHitbox { get { return m_leftFistHitbox; } }
+    public Action<Zombie> onFistHit;
 
     [Header("Pistol")]
     [SerializeField] GameObject m_pistolModel;
@@ -68,7 +66,6 @@ public class Player : MonoBehaviour, ISavable
     [SerializeField] Transform m_firePoint;
     [SerializeField] GameObject m_crosshair;
     [SerializeField] ZombieDetector m_pistolSoundRange;
-    [SerializeField] float m_pistolActivation;
     public Action onBulletInfoChange;
     public float pistolCounter = 0.0f;
     public float pistolDamage { get { return m_pistolDamage; } }
@@ -82,13 +79,12 @@ public class Player : MonoBehaviour, ISavable
     public GameObject crosshair { get { return m_crosshair; } }
     public GameObject pistolModel { get { return m_pistolModel; } }
     public ZombieDetector pistolSoundRange { get { return m_pistolSoundRange; } }
-    public float pistolActivation { get { return m_pistolActivation; } }
 
     [Header("Knife")]
     [SerializeField] float knifeDamage;
-    [SerializeField] EnemyDetector m_knifeHitbox;
-    public EnemyDetector knifeHitbox { get { return m_knifeHitbox; } }
-    public Action<EnemyTest> onKnifeHit;
+    [SerializeField] ZombieOnetimeDetector m_knifeHitbox;
+    public ZombieOnetimeDetector knifeHitbox { get { return m_knifeHitbox; } }
+    public Action<Zombie> onKnifeHit;
     public bool hasKnife { get; private set; } = false;
 
     [Header("Items")]
@@ -113,6 +109,9 @@ public class Player : MonoBehaviour, ISavable
     int m_cantSprint = 0, m_cantFocus = 0;
     public bool canSprint { get { return m_cantSprint <= 0; } set { if (value == false) m_cantSprint++; else m_cantSprint--; } }
     public bool canFocus { get { return m_cantFocus <= 0; } set { if (value == false) m_cantFocus++; else m_cantFocus--; } }
+
+
+    const float pistolActivation = 15.0f;
     void Awake()
     {
         hp = maxHp;
@@ -225,13 +224,13 @@ public class Player : MonoBehaviour, ISavable
     public void FirePistol()
     {
         RaycastHit hit;
-        if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
+        if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Zombie", "Wall", "Window")))
         {
-            hit.transform.GetComponent<EnemyTest>()?.GetDamage(pistolDamage);
+            if(hit.transform.CompareTag("Zombie")) hit.transform.GetComponent<Zombie>().GetDamage(pistolDamage);
         }
         foreach(var i in pistolSoundRange.detected)
         {
-            i.Activation += pistolActivation;
+            i.Activation += 15.0f;
         }
     }
 
@@ -245,12 +244,12 @@ public class Player : MonoBehaviour, ISavable
             //gameover
         }
     }
-    public void FistHit(EnemyTest enemy)
+    public void FistHit(Zombie enemy)
     {
         onFistHit?.Invoke(enemy);
         enemy.GetDamage(fistDamage);
     }
-    public void KnifeHit(EnemyTest enemy)
+    public void KnifeHit(Zombie enemy)
     {
         onKnifeHit?.Invoke(enemy);
         enemy.GetDamage(knifeDamage);

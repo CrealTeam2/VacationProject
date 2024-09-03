@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 {
@@ -12,6 +13,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     List<Vector3> removeList;
     Vector3 currentSavePoint;
     GameObject player;
+    public Action onGameOver;
 
     private void Awake()
     {
