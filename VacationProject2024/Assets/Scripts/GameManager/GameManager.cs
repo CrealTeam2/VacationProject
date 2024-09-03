@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
+using System;
 
 public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 {
@@ -16,6 +16,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     List<Vector3> removeList;
     Vector3 currentSavePoint;
     GameObject player;
+    public Action onGameOver;
 
     private void Awake()
     {

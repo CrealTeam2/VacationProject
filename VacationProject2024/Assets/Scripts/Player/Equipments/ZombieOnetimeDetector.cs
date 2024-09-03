@@ -5,9 +5,9 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class EnemyDetector : MonoBehaviour
+public class ZombieOnetimeDetector : MonoBehaviour
 {
-    public Action<EnemyTest> onHit;
+    public Action<Zombie> onHit;
     List<Collider> hit = new();
     Collider m_collider;
     Collider _collider { get { if (m_collider == null) m_collider = GetComponent<Collider>(); return m_collider; } }
@@ -25,10 +25,10 @@ public class EnemyDetector : MonoBehaviour
         if (!hit.Contains(collision))
         {
             hit.Add(collision);
-            if (collision.gameObject.CompareTag("Enemy"))
+            if (collision.gameObject.CompareTag("Zombie"))
             {
-                EnemyTest tmp = collision.GetComponent<EnemyTest>();
-                onHit.Invoke(tmp);
+                Zombie tmp = collision.GetComponent<Zombie>();
+                onHit?.Invoke(tmp);
             }
         }
     }
