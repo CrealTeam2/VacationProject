@@ -30,6 +30,12 @@ public class DataManager : Singleton<DataManager>
         data = new Database();
     }
 
+    public void ResetData()
+    {
+        InitDatabase();
+        fileDataHandler.Save(data);
+    }
+
     public void SaveGame()
     {
         foreach (ISavable savableObject in savableObjects)
@@ -59,7 +65,7 @@ public class DataManager : Singleton<DataManager>
 
     private void OnApplicationQuit()
     {
-        SaveGame();
+/*        SaveGame();*/
     }
 
     private List<ISavable> FindAllSavableObjects()

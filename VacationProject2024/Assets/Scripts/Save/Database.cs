@@ -28,7 +28,7 @@ public class Database
     {
         savePointsDict = new SerializableDictionary<Vector3, bool>();
         interactionDatas = new SerializableDictionary<string, DataUnit>();
-        savePoint = new Vector3();
+        savePoint = Vector3.zero;
         zombieData = new();
     }
 }

@@ -75,7 +75,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         if(Mathf.Sqrt(Mathf.Pow(player.transform.position.x - endTransform.position.x, 2) + Mathf.Pow(player.transform.position.z - endTransform.position.z, 2)) < 1
                 && Mathf.Abs(player.transform.position.y - endTransform.position.y) < 5)
         {
-            DataManager.Instance.InitDatabase();
+            DataManager.Instance.ResetData();
             SceneManager.LoadScene("RyuScene2");
         }
     }
