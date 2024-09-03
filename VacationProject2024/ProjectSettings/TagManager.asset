@@ -29,6 +29,8 @@ TagManager:
   - Wall
   - NoRendering
   - 
+  - ZombieDetector
+  - Zombie
   - 
   - 
   - 

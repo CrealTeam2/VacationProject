@@ -127,6 +127,7 @@ class ZombieTopLayer : TopLayer<Zombie>
         AddState("Idle", defaultState);
         AddState("Pursuit", new ZombiePursuit(zombie, this));
         AddState("Attack", new ZombieAttack(zombie, this));
+        AddState("PostAttack", new ZombiePostAttack(zombie, this));
         AddState("Dead", new ZombieDead(zombie, this));
         zombie.onDeath += () => { ChangeState("Dead"); };
     }
@@ -209,17 +210,17 @@ class ZombieAttack : State<Zombie>
 {
     Zombie zombie;
     float count;
-    float previousHealth;
     public ZombieAttack(Zombie zombie, Layer<Zombie> parent) : base(zombie, parent)
     {
         this.zombie = zombie;
-        previousHealth = origin.Health;
     }
     Grabbed grab = null;
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        exit = false;
         grab = new Grabbed(10.0f, origin);
+        grab.onDebuffEnd += ExitState;
         origin.player.AddDebuff(grab);
         count = 0;
     }
@@ -233,9 +234,16 @@ class ZombieAttack : State<Zombie>
                 Debug.Log("DamagePlayer, " + GetDamage());
                 grab.EndDebuff();
             }
-            parentLayer.ChangeState("Idle");
+            ExitState();
         }
 
+    }
+    bool exit = false;
+    void ExitState()
+    {
+        if (exit) return;
+        exit = true;
+        parentLayer.ChangeState("PostAttack");
     }
     public override void OnStateExit()
     {
@@ -249,7 +257,39 @@ class ZombieAttack : State<Zombie>
         return UnityEngine.Random.Range(zombie.Data.minDamage, zombie.Data.maxDamage);
     }
 }
+class ZombiePostAttack : State<Zombie>
+{
+    public ZombiePostAttack(Zombie origin, Layer<Zombie> parent) : base(origin, parent)
+    {
 
+    }
+    float counter = 0.0f;
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        counter = 0.0f;
+    }
+    public override void OnStateUpdate()
+    {
+        base.OnStateUpdate();
+        if (counter < origin.Data.postAttackEndlag) counter += Time.deltaTime;
+        if(counter >= origin.Data.postAttackEndlag)
+        {
+            if ((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
+            {
+                parentLayer.ChangeState("Attack");
+            }
+            else if (origin.DetectPlayer() || origin.Activation >= 50)
+            {
+                parentLayer.ChangeState("Pursuit");
+            }
+            else
+            {
+                parentLayer.ChangeState("Idle");
+            }
+        }
+    }
+}
 class ZombieDead : State<Zombie>
 {
     public ZombieDead(Zombie zombie, Layer<Zombie> parent) : base(zombie, parent)

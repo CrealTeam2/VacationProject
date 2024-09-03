@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ public abstract class Debuff
     {
         this.debuffed = debuffed;
         debuffList.Add(this);
-        //GameManager.Instance.onGameOver += EndDebuff;
+        GameManager.Instance.onGameOver += EndDebuff;
     }
     public virtual void OnUpdate()
     {
@@ -35,6 +36,7 @@ public abstract class Debuff
     {
         EndDebuff();
     }
+    public Action onDebuffEnd;
     public void EndDebuff()
     {
         if (ended) return;
@@ -44,6 +46,8 @@ public abstract class Debuff
     }
     public virtual void OnDebuffEnd()
     {
-        //GameManager.Instance.onGameOver -= EndDebuff;
+        onDebuffEnd?.Invoke();
+        onDebuffEnd = null;
+        GameManager.Instance.onGameOver -= EndDebuff;
     }
 }
