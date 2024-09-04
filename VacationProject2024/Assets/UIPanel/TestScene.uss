@@ -1,0 +1,232 @@
+.GameStart {
+    top: 627px;
+    border-left-color: rgba(149, 149, 149, 0);
+    border-right-color: rgba(149, 149, 149, 0);
+    border-top-color: rgba(149, 149, 149, 0);
+    border-bottom-color: rgba(149, 149, 149, 0);
+    font-size: 53px;
+    -unity-font-style: normal;
+    width: 309px;
+    height: 88px;
+    left: 50px;
+    -unity-font: resource('font/Pretendard-ExtraLight');
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+}
+
+.GameStart:hover {
+    font-size: 58px;
+    color: rgb(255, 255, 255);
+}
+
+.GameStart:active {
+    color: rgb(182, 182, 182);
+}
+
+.ReGameStart {
+    top: 668px;
+    border-left-color: rgba(149, 149, 149, 0);
+    border-right-color: rgba(149, 149, 149, 0);
+    border-top-color: rgba(149, 149, 149, 0);
+    border-bottom-color: rgba(149, 149, 149, 0);
+    font-size: 53px;
+    -unity-font-style: normal;
+    width: 309px;
+    height: 88px;
+    left: 50px;
+    -unity-font: resource('font/Pretendard-ExtraLight');
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+}
+
+.ReGameStart:hover {
+    font-size: 57px;
+    color: rgb(255, 255, 255);
+}
+
+.ReGameStart:active {
+    font-size: 57px;
+    color: rgb(182, 182, 182);
+}
+
+.BackgroundOut {
+    border-left-color: rgba(149, 149, 149, 0);
+    border-right-color: rgba(149, 149, 149, 0);
+    border-top-color: rgba(149, 149, 149, 0);
+    border-bottom-color: rgba(149, 149, 149, 0);
+    font-size: 55px;
+    left: 50px;
+    width: 424px;
+    right: 2px;
+    top: 722px;
+    -unity-font: resource('font/Pretendard-ExtraLight');
+    -unity-font-definition: initial;
+    background-color: rgba(188, 188, 188, 0);
+    color: rgb(255, 255, 255);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+.BackgroundOut:hover {
+    font-size: 57px;
+}
+
+.BackgroundOut:active {
+    color: rgb(182, 182, 182);
+    font-size: 57px;
+    position: absolute;
+}
+
+.Profile {
+    height: 80px;
+    background-image: resource('Img/account_circle 1');
+    background-color: rgba(188, 188, 188, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    left: 1585px;
+    top: 919px;
+    position: absolute;
+    right: 247px;
+}
+
+.Profile:hover {
+    scale: 1.15 1.15;
+    background-image: resource('Img/account_circle (1)');
+}
+
+.Setting {
+    width: 80px;
+    height: 80px;
+    left: 1735px;
+    top: 476px;
+    background-image: resource('Img/settings 1');
+    background-color: rgba(188, 188, 188, 0);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+.Setting:hover {
+    scale: 1.15 1.15;
+}
+
+.SceneButton {
+    position: absolute;
+    top: 235px;
+    left: 36px;
+    width: 226px;
+    height: 72px;
+    font-size: 23px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(188, 188, 188, 0);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.SceneButton:hover {
+    background-color: rgb(78, 78, 78);
+}
+
+.ControlButton {
+    position: absolute;
+    top: 414px;
+    left: 36px;
+    width: 226px;
+    height: 72px;
+    font-size: 23px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(188, 188, 188, 0);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.ControlButton:hover {
+    background-color: rgb(78, 78, 78);
+}
+
+.SoundButton {
+    position: absolute;
+    top: 601px;
+    left: 36px;
+    width: 226px;
+    height: 72px;
+    font-size: 23px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(188, 188, 188, 0);
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.SoundButton:hover {
+    background-color: rgb(78, 78, 78);
+}
+
+.ExitButton {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    left: 1453px;
+    top: 32px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(188, 188, 188, 0);
+    background-image: resource('Img/cancel (1)');
+}
+
+.ExitButton:hover {
+    background-color: rgba(113, 113, 113, 0);
+    background-image: resource('Img/cancel');
+    scale: 1.1 1.1;
+}
+
+.Cencel {
+}
+
+.Cencel:hover {
+    scale: 1.1 1.1;
+}
