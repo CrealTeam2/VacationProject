@@ -8,7 +8,7 @@ public class PlayerMovements_Moving_Running : State<Player>
     {
         
     }
-    const float runActivationRate = 3.0f;
+    const float runActivationRate = 10.0f;
     public override void OnStateFixedUpdate()
     {
         base.OnStateFixedUpdate();
