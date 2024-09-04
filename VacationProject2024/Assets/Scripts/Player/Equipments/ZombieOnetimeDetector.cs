@@ -20,6 +20,7 @@ public class ZombieOnetimeDetector : MonoBehaviour
     {
         _collider.enabled = false;
     }
+    public void Refresh() => hit.Clear();
     private void OnTriggerStay(Collider collision)
     {
         if (!hit.Contains(collision))
