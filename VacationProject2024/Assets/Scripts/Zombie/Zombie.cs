@@ -8,6 +8,7 @@ public class Zombie : MonoBehaviour
     [SerializeField] ZombieData data;
     public ZombieData Data => data;
 
+    [SerializeField] string FSMPath;
     [SerializeField] float activation;
     [SerializeField] float health;
     [SerializeField] bool isEnabled;
@@ -48,15 +49,23 @@ public class Zombie : MonoBehaviour
         navMeshAgent.acceleration = Data.acceleration;
         navMeshAgent.angularSpeed = Data.angularSpeed;
         navMeshAgent.enabled = IsEnabled;
+
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        topLayer = new ZombieTopLayer(this);
+        topLayer.OnStateEnter();
+        FSMPath = topLayer.GetCurrentFSM();
+        topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
     }
 
     private void Start()
     {
 
 
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        /*player = GameObject.FindWithTag("Player").GetComponent<Player>();
         topLayer = new ZombieTopLayer(this);
         topLayer.OnStateEnter();
+        FSMPath = topLayer.GetCurrentFSM();
+        topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };*/
 
 
 
@@ -105,17 +114,23 @@ public class Zombie : MonoBehaviour
     }
     public void GetDamage(float damage)
     {
-        if (isDead) return;
+        if (isDead || !IsEnabled) return;
         health = Mathf.Max(health - damage, 0);
         if(health <= 0)
         {
             Die();
         }
     }
+    public void AddActivation(float value)
+    {
+        if (!isEnabled || isDead) return;
+        activation = Mathf.Min(Data.maxActivation, activation + value);
+    }
     public void Die()
     {
+        if (isDead) return;
         isDead = true;
-        onDeath?.Invoke();
+        topLayer.ChangeState("Dead");
     }
 }
 
@@ -129,7 +144,6 @@ class ZombieTopLayer : TopLayer<Zombie>
         AddState("Attack", new ZombieAttack(zombie, this));
         AddState("PostAttack", new ZombiePostAttack(zombie, this));
         AddState("Dead", new ZombieDead(zombie, this));
-        zombie.onDeath += () => { ChangeState("Dead"); };
     }
     public override void OnStateFixedUpdate()
     {
@@ -300,6 +314,7 @@ class ZombieDead : State<Zombie>
     public override void OnStateEnter()
     {
         base.OnStateEnter();
+        origin.onDeath?.Invoke();
     }
     public override void OnStateFixedUpdate()
     {

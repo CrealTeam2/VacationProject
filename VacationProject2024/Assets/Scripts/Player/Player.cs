@@ -81,9 +81,28 @@ public class Player : MonoBehaviour, ISavable
     public ZombieDetector pistolSoundRange { get { return m_pistolSoundRange; } }
 
     [Header("Knife")]
+    [SerializeField] GameObject m_knifeModel;
     [SerializeField] float knifeDamage;
     [SerializeField] ZombieOnetimeDetector m_knifeHitbox;
     public ZombieOnetimeDetector knifeHitbox { get { return m_knifeHitbox; } }
+    int m_knifeActive = 0;
+    public bool knifeHitboxEnabled
+    {
+        set
+        {
+            if(value == true)
+            {
+                if (m_knifeActive == 0) knifeHitbox.enabled = true;
+                m_knifeActive++;
+            }
+            else
+            {
+                m_knifeActive--;
+                if (m_knifeActive == 0) knifeHitbox.enabled = false;
+            }
+        }
+    }
+    public GameObject knifeModel { get { return m_knifeModel; } }
     public Action<Zombie> onKnifeHit;
     public bool hasKnife { get; private set; } = false;
 
@@ -124,8 +143,9 @@ public class Player : MonoBehaviour, ISavable
         //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
+        knifeHitbox.onHit += KnifeHit;
         UnlockPistol();
-        /*UnlockKnife();*/
+        UnlockKnife();
     }
     void Start()
     {
@@ -135,12 +155,8 @@ public class Player : MonoBehaviour, ISavable
         //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
 
     }
-
-    Vector3 prevPos = Vector3.zero;
     void Update()
     {
-        Debug.Log(Vector3.Distance(prevPos, transform.position));
-        prevPos = transform.position;
         CameraRotation();
         CharacterRotation();
         //topLayer.OnStateUpdate();
@@ -230,7 +246,7 @@ public class Player : MonoBehaviour, ISavable
         }
         foreach(var i in pistolSoundRange.detected)
         {
-            i.Activation += 15.0f;
+            i.AddActivation(15.0f);
         }
     }
 
@@ -251,6 +267,7 @@ public class Player : MonoBehaviour, ISavable
     }
     public void KnifeHit(Zombie enemy)
     {
+        Debug.Log("EAEWEAEW");
         onKnifeHit?.Invoke(enemy);
         enemy.GetDamage(knifeDamage);
     }
