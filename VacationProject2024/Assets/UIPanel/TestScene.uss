@@ -120,8 +120,7 @@
 }
 
 .Setting:hover {
-    scale: 1 1;
-    background-image: resource('Img/settings (3)');
+    scale: 1.15 1.15;
 }
 
 .SceneButton {
@@ -222,5 +221,12 @@
 .ExitButton:hover {
     background-color: rgba(113, 113, 113, 0);
     background-image: resource('Img/cancel');
+    scale: 1.1 1.1;
+}
+
+.Cencel {
+}
+
+.Cencel:hover {
     scale: 1.1 1.1;
 }

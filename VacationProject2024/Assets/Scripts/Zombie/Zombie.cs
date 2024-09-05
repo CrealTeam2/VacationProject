@@ -6,6 +6,7 @@ using System;
 public class Zombie : MonoBehaviour
 {
     [SerializeField] ZombieData data;
+    [SerializeField] internal Animator anim;
     public ZombieData Data => data;
 
     [SerializeField] string FSMPath;
@@ -94,7 +95,7 @@ public class Zombie : MonoBehaviour
 
     private void FixedUpdate()
     {
-        topLayer.OnStateFixedUpdate();
+        if(isEnabled) topLayer.OnStateFixedUpdate();
     }
     float detectRange { get => data.baseDetectRange * (1.0f + Mathf.Min(2.0f, activation / 25.0f)); }
     public bool DetectPlayer()
@@ -118,6 +119,7 @@ public class Zombie : MonoBehaviour
         health = Mathf.Max(health - damage, 0);
         if(health <= 0)
         {
+            anim.SetTrigger("Death");
             Die();
         }
     }
@@ -194,6 +196,7 @@ class ZombiePursuit : State<Zombie>
         base.OnStateEnter();
         origin.currentPersuitTime = origin.Data.pursuitTime;
         origin.navMeshAgent.isStopped = false;
+        origin.anim.SetBool("Pursuit", true);
     }
     public override void OnStateFixedUpdate()
     {
@@ -217,6 +220,7 @@ class ZombiePursuit : State<Zombie>
     {
         base.OnStateExit();
         origin.navMeshAgent.isStopped = true;
+        origin.anim.SetBool("Pursuit", false);
     }
 }
 
@@ -237,10 +241,14 @@ class ZombieAttack : State<Zombie>
         grab.onDebuffEnd += ExitState;
         origin.player.AddDebuff(grab);
         count = 0;
+        origin.anim.SetBool("Attacking", true);
     }
     public override void OnStateFixedUpdate()
     {
         count += Time.fixedDeltaTime;
+        Vector3 pos2 = origin.transform.position;
+        Vector3 pos1 = origin.player.transform.position;
+        origin.transform.rotation = Quaternion.Euler(0, Mathf.Atan2(pos1.x - pos2.x, pos1.z - pos2.z) * Mathf.Rad2Deg, 0);
         if(count >= 3)
         {
             if(grab.ended == false)
@@ -264,6 +272,7 @@ class ZombieAttack : State<Zombie>
         base.OnStateExit();
         if (!grab.ended) grab.EndDebuff();
         grab = null;
+        origin.anim.SetBool("Attacking", false);
     }
 
     float GetDamage()

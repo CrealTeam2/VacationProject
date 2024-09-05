@@ -46,7 +46,7 @@ public class ZombieManager : Singleton<ZombieManager>, ISavable
             zombie.IsEnabled = item.Value.isEnabled;
             if (item.Value.isDead || item.Value.health <= 0)
             {
-                Debug.Log("DeadLoaded");
+                zombie.anim.Play("Death", 0, 1);
                 zombie.Die();
             }
             zombie.gameObject.SetActive(item.Value.isEnabled);
