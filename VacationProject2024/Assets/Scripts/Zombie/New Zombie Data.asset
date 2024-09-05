@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: New Zombie Data
   m_EditorClassIdentifier: 
   maxHealth: 100
-  maxSpeed: 3
+  maxSpeed: 1
   angularSpeed: 100
-  acceleration: 3
+  acceleration: 1
   baseDetectRange: 8
   attackrange: 1.5
   possibleAttackAngle: 0
