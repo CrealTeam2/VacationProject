@@ -6,11 +6,18 @@ using UnityEngine;
 public class Activated_ZombieAwakener : Activated
 {
     [SerializeField] Zombie awakeningZombie;
-    [SerializeField] Animator awakenAnimation;
+    [SerializeField] Animator awakenAnim;
     [SerializeField] string awakenStateName = "Awaken";
     protected override void OnActivate()
     {
-        awakeningZombie.onEnable += base.OnActivate;
-        awakenAnimation.Play(awakenStateName);
+        base.OnActivate();
+        Debug.Log(awakenAnim.gameObject.name);
+        awakeningZombie.Enable();
+        awakenAnim.Play("Awaken");
+        if (awakenAnim != null)
+        {
+            Debug.Log(awakenStateName);
+            awakenAnim.Play(awakenStateName);
+        }
     }
 }
