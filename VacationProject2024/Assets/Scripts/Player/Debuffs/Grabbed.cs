@@ -5,7 +5,7 @@ using UnityEngine;
 public class Grabbed : Debuff
 {
     public readonly Zombie grabber;
-    const float slowScale = 0.1f;
+    const float slowScale = 0.02f;
     public Grabbed(float duration, Zombie grabber) : base(duration)
     {
         this.grabber = grabber;
@@ -30,11 +30,12 @@ public class Grabbed : Debuff
         debuffed.onFistHit += Check;
         grabber.onDeath += EndDebuff;
     }
+    const float grabCutChance = 25.0f;
     void Check(Zombie enemy)
     {
         if(enemy == grabber)
         {
-            EndDebuff();
+            if(Random.Range(0, 100.0f) < grabCutChance) EndDebuff();
         }
     }
     public override void OnDebuffEnd()
