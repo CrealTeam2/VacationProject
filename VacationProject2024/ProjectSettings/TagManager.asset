@@ -31,10 +31,8 @@ TagManager:
   - 
   - ZombieDetector
   - Zombie
-  - 
-  - 
-  - 
-  - 
+  - PlayerDetector
+  - Player
   - 
   - 
   - 

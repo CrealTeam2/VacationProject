@@ -235,8 +235,16 @@ public class Player : MonoBehaviour, ISavable
     public void ClipFinish() => onClipFinish?.Invoke();
     public Action onFlashGrenadeUse, onBandageUse, onMedicineUse;
     public void UseFlashGrenade() => onFlashGrenadeUse.Invoke();
-    public void UseBandages() => onBandageUse.Invoke();
-    public void UseMedicine() => onMedicineUse.Invoke();
+    const float bandageHeal = 50.0f;
+    public void UseBandages()
+    {
+        hp = Mathf.Min(maxHp, hp + bandageHeal);
+        onBandageUse?.Invoke();
+    }
+    public void UseMedicine()
+    {
+        onMedicineUse?.Invoke();
+    }
     public void FirePistol()
     {
         RaycastHit hit;

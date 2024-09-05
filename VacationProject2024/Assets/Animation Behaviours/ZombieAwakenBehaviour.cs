@@ -5,20 +5,26 @@ using UnityEngine;
 public class ZombieAwakenBehaviour : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.applyRootMotion = true;
+        tmp = animator.transform.position;
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    Vector3 tmp;
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if(stateInfo.normalizedTime < 1.0f) tmp = animator.transform.position;
+        Debug.Log(tmp);
+    }
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        animator.applyRootMotion = false;
         animator.GetComponent<Zombie>().Enable();
+        Debug.Log(tmp);
+        animator.transform.position = tmp;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
