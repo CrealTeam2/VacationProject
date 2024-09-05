@@ -104,7 +104,7 @@ public class SoundManager : Singleton<SoundManager>
             // ���ο� AudioSource�� �����Ͽ� ȿ���� ���
             channel.clip = clip;
             channel.volume = volume * SFXVolume * MasterVolume;
-            channel.loop = true;
+            channel.loop = false;
             channel.spatialBlend = 1;
             channel.maxDistance = channel.volume * 30;
             channel.rolloffMode = AudioRolloffMode.Custom;
@@ -163,6 +163,7 @@ public class SoundManager : Singleton<SoundManager>
         for(int i = 0; i < activeSounds.Count;)
         {
             var sound = activeSounds[i];
+            print(sound.Item2.isPlaying);
             if (!sound.Item2.isPlaying)
             {
                 if (sound.Item3 - 1 <= 0)
@@ -171,6 +172,7 @@ public class SoundManager : Singleton<SoundManager>
                     activeSounds.RemoveAt(i);
                     continue;
                 }
+                sound.Item2.Play();
                 activeSounds[i] = (sound.Item1, sound.Item2, sound.Item3 - 1);
             }
             i++;

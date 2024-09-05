@@ -6,11 +6,26 @@ public class Door : InteractionAgent
 {
     bool isOpened = false;
     Animation anim;
-    
+    [Header("Opening")]
+    [SerializeField] string openAnim;
+    [SerializeField] string openText;
+    [SerializeField] string openSound;
+
+    [Header("Closing")]
+    [SerializeField] string closeAnim;
+    [SerializeField] string closeText;
+    [SerializeField] string closeSound;
+
+    private void Awake()
+    {
+        base.Awake();
+        anim = GetComponent<Animation>();
+        feedbackText = openText;
+    }
+
     protected void Start()
     {
         base.Start();
-        anim = GetComponent<Animation>();
     }
 
     // Update is called once per frame
@@ -24,23 +39,40 @@ public class Door : InteractionAgent
 
         if (isOpened)
         {
-            anim.Play("Door2_Close");
+            anim.Play(closeAnim);
             isOpened = false;
-            feedbackText = "문 열기";
+            feedbackText = openText;
+            SoundManager.Instance.PlaySound(gameObject, closeSound, 1, 1);
         }
 
         else
         {
-            anim.Play("Door2_Open");
+            anim.Play(openAnim);
             isOpened = true;
-            feedbackText = "문 닫기";
+            feedbackText = closeText;
+            SoundManager.Instance.PlaySound(gameObject, openSound, 1, 1);
         }
         Invoke("ReEnableInteraction", 0.2f);
     }
+    public override void UpdateUnitFromVariable(ref DataUnit unit)
+    {
+        unit.Bool["IsOpened"] = isOpened;
+    }
+
+    public override void UpdateVariableFromUnit(DataUnit unit)
+    {
+        isOpened = unit.Bool["IsOpened"];
+        if (isOpened)
+        {
+            anim.Play(openAnim);
+            feedbackText = closeText;
+        }
+        else feedbackText = openText;
+    }
+
 
     void ReEnableInteraction()
     {
         AllowInteraction = true;
-        Debug.Log("Enabled");
     }
 }

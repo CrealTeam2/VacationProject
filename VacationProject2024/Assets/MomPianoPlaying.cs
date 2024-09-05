@@ -6,7 +6,7 @@ public class MomPianoPlaying : StateMachineBehaviour
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        SoundManager.Instance.PlaySound(animator.gameObject, "Piano1", 0.5f, 9999);
+        /*SoundManager.Instance.PlaySound(animator.gameObject, "Piano1", 0.5f, 9999);*/
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
