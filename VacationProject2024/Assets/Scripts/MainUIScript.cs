@@ -95,13 +95,13 @@ public class UIController : MonoBehaviour
             float newValue = Mathf.Round(evt.newValue / stepSize) * stepSize;
             sensitivitySlider.value = newValue;
             currentSensitivity = newValue;
-            sensitivityLabel.text = $"°¨µµ °ª: {currentSensitivity:F1}";
+            sensitivityLabel.text = $"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {currentSensitivity:F1}";
             ApplySensitivity(currentSensitivity);
 
             PlayerPrefs.SetFloat("Sensitivity", currentSensitivity);
         });
 
-        sensitivityLabel.text = $"°¨µµ °ª: {currentSensitivity:F1}";
+        sensitivityLabel.text = $"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {currentSensitivity:F1}";
     }
 
     private void ChangeResolution(string resolution)
