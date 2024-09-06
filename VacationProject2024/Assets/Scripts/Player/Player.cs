@@ -21,7 +21,7 @@ public class Player : MonoBehaviour, ISavable
     //private float walkSpeed;
     public float lowerCameraRotationLimit = 60f;
     public float upperCameraRotationLimit = -60f;
-    private bool canMove = true;
+    private bool canMove = false;
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
     [SerializeField] ZombieDetector m_runSoundRange;
@@ -157,8 +157,11 @@ public class Player : MonoBehaviour, ISavable
     }
     void Update()
     {
-        CameraRotation();
-        CharacterRotation();
+        if (canMove)
+        {
+            CameraRotation();
+            CharacterRotation();
+        }
         //topLayer.OnStateUpdate();
         pistolCounter += Time.deltaTime;
         foreach (var i in debuffs) i.OnUpdate();
@@ -171,6 +174,7 @@ public class Player : MonoBehaviour, ISavable
 
     private void Move()
     {
+        if (canMove)
         movementTopLayer.OnStateFixedUpdate();
     }
 
@@ -247,6 +251,7 @@ public class Player : MonoBehaviour, ISavable
     }
     public void FirePistol()
     {
+        SoundManager.Instance.PlaySound(gameObject, "RevolverShoot", 1, 1);
         RaycastHit hit;
         if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Zombie", "Wall", "Window")))
         {
@@ -256,6 +261,10 @@ public class Player : MonoBehaviour, ISavable
         {
             i.AddActivation(15.0f);
         }
+    }
+    public void SetMovementEnabled(bool isEnabled)
+    {
+        canMove = isEnabled;
     }
 
     public Action onDamage;
