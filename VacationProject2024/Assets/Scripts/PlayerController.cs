@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
 
-    private bool canMove = true; // ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓÀ» Á¦¾îÇÏ´Â º¯¼ö
+    private bool canMove = true; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     void Start()
     {
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (canMove) // ¿òÁ÷ÀÏ ¼ö ÀÖ´Â °æ¿ì¿¡¸¸ Move, CameraRotation, CharacterRotation È£Ãâ
+        if (canMove) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ Move, CameraRotation, CharacterRotation È£ï¿½ï¿½
         {
             Move();
             CameraRotation();
