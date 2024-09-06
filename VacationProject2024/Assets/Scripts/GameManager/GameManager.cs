@@ -110,4 +110,8 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         }
         data.savePoint = currentSavePoint;
     }
+    public void GameOver()
+    {
+        onGameOver?.Invoke();
+    }
 }

@@ -56,6 +56,8 @@ public class Zombie : MonoBehaviour
         topLayer.OnStateEnter();
         FSMPath = topLayer.GetCurrentFSM();
         topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
+
+        GameManager.Instance.onGameOver += () => { isEnabled = false; };
     }
 
     private void Start()
@@ -253,7 +255,7 @@ class ZombieAttack : State<Zombie>
         {
             if(grab.ended == false)
             {
-                Debug.Log("DamagePlayer, " + GetDamage());
+                origin.player.GetDamage(GetDamage());
                 grab.EndDebuff();
             }
             ExitState();

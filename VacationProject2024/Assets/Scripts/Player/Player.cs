@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
-using static UnityEngine.UI.Image;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour, ISavable
 {
     [Header("Hp")]
+    [SerializeField] Image hpIndicator;
+    [SerializeField] Transform m_deathCameraAnchor;
+    public Transform deathCameraAnchor { get { return m_deathCameraAnchor; } }
+    Color prevColor;
     [SerializeField] float m_maxHp;
     [SerializeField] float m_hp;
     public float maxHp { get { return m_maxHp; } }
@@ -15,7 +19,8 @@ public class Player : MonoBehaviour, ISavable
 
     [Header("Movement")]
     [SerializeField] string MovementFSMPath;
-    [SerializeField] Transform rotator;
+    [SerializeField] Transform m_rotator;
+    public Transform rotator { get { return m_rotator; } }
     [SerializeField] public float Stamina = 100;
     [SerializeField] private float lookSensitivity;
     //private float walkSpeed;
@@ -146,6 +151,7 @@ public class Player : MonoBehaviour, ISavable
         knifeHitbox.onHit += KnifeHit;
         UnlockPistol();
         UnlockKnife();
+        prevColor = hpIndicator.color;
     }
     void Start()
     {
@@ -157,11 +163,13 @@ public class Player : MonoBehaviour, ISavable
     }
     void Update()
     {
+        if (isDead) return;
         if (canMove)
         {
             CameraRotation();
             CharacterRotation();
         }
+
         //topLayer.OnStateUpdate();
         pistolCounter += Time.deltaTime;
         foreach (var i in debuffs) i.OnUpdate();
@@ -188,7 +196,6 @@ public class Player : MonoBehaviour, ISavable
         float _xRotation = Input.GetAxisRaw("Mouse Y");
         float _cameraRotationX = _xRotation * lookSensitivity;
         currentCameraRotationX -= _cameraRotationX;
-
         if (currentCameraRotationX > upperCameraRotationLimit)
         {
             currentCameraRotationX = upperCameraRotationLimit;
@@ -210,6 +217,7 @@ public class Player : MonoBehaviour, ISavable
 
     private void FixedUpdate()
     {
+        if (isDead) return;
         isGrounded = Physics.Raycast(transform.position + Vector3.up * 2.0f, Vector3.down, out RaycastHit hit, 2.3f);
         if (isGrounded)
         {
@@ -242,7 +250,7 @@ public class Player : MonoBehaviour, ISavable
     const float bandageHeal = 50.0f;
     public void UseBandages()
     {
-        hp = Mathf.Min(maxHp, hp + bandageHeal);
+        SetHp(Mathf.Min(maxHp, hp + bandageHeal));
         onBandageUse?.Invoke();
     }
     public void UseMedicine()
@@ -267,15 +275,25 @@ public class Player : MonoBehaviour, ISavable
         canMove = isEnabled;
     }
 
-    public Action onDamage;
+    public Action<float> onHpChange;
+    bool isDead = false;
     public void GetDamage(float damage)
     {
-        hp = Mathf.Max(0, hp - damage);
-        onDamage?.Invoke();
+        if (hp <= 0) return;
+        SetHp(Mathf.Max(0, hp - damage));
         if(hp <= 0)
         {
-            //gameover
+            isDead = true;
+            anim.SetTrigger("Death");
+            GameManager.Instance.GameOver();
         }
+    }
+    void SetHp(float hp)
+    {
+        prevColor.a = 1.0f - hp / maxHp;
+        hpIndicator.color = prevColor;
+        this.hp = hp;
+        onHpChange?.Invoke(hp);
     }
     public void FistHit(Zombie enemy)
     {
