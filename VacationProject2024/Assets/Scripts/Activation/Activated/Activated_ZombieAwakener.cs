@@ -11,12 +11,9 @@ public class Activated_ZombieAwakener : Activated
     protected override void OnActivate()
     {
         base.OnActivate();
-        Debug.Log(awakenAnim.gameObject.name);
         awakeningZombie.Enable();
-        awakenAnim.Play("Awaken");
         if (awakenAnim != null)
         {
-            Debug.Log(awakenStateName);
             awakenAnim.Play(awakenStateName);
         }
     }
