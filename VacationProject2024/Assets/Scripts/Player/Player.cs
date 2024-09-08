@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 public class Player : MonoBehaviour, ISavable
 {
@@ -151,7 +152,7 @@ public class Player : MonoBehaviour, ISavable
         knifeHitbox.onHit += KnifeHit;
         UnlockPistol();
         UnlockKnife();
-        prevColor = hpIndicator.color;
+        //prevColor = hpIndicator.color;
     }
     void Start()
     {
@@ -275,12 +276,28 @@ public class Player : MonoBehaviour, ISavable
         canMove = isEnabled;
     }
 
+    public void UpdateSensitivity(float newSensitivity)
+    {
+        lookSensitivity = newSensitivity;
+    }
+
     public Action<float> onHpChange;
     bool isDead = false;
     public void GetDamage(float damage)
     {
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
+        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
+        if (hp < 50)
+        {
+            vignetteComp.active = true;
+            vignetteComp.intensity.value =  0.4f - 0.02f * hp;
+        }
+        else
+        {
+            vignetteComp.active=false;
+        }
+
         if(hp <= 0)
         {
             isDead = true;
@@ -290,21 +307,27 @@ public class Player : MonoBehaviour, ISavable
     }
     void SetHp(float hp)
     {
-        prevColor.a = 1.0f - hp / maxHp;
-        hpIndicator.color = prevColor;
+/*        prevColor.a = 1.0f - hp / maxHp;
+        hpIndicator.color = prevColor;*/
         this.hp = hp;
         onHpChange?.Invoke(hp);
     }
+
+    string[] punchSound = new string[2] { "PunchHit1", "PunchHit2" };
     public void FistHit(Zombie enemy)
     {
         onFistHit?.Invoke(enemy);
         enemy.GetDamage(fistDamage);
+        SoundManager.Instance.PlaySound(gameObject, punchSound[UnityEngine.Random.Range(0, 2)], 1, 1);
     }
+
+    string[] knifeSounds = new string[2] { "KnifeDamage1", "KnifeDamage2" };
     public void KnifeHit(Zombie enemy)
     {
         Debug.Log("EAEWEAEW");
         onKnifeHit?.Invoke(enemy);
         enemy.GetDamage(knifeDamage);
+        SoundManager.Instance.PlaySound(gameObject, knifeSounds[UnityEngine.Random.Range(0, 2)], 1, 1);
     }
 
     public void AddDebuff(Debuff debuff)

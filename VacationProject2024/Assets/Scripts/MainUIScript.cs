@@ -23,7 +23,7 @@ public class UIController : MonoBehaviour
     private float defaultSensitivity = 1.0f;
     private float currentSensitivity;
     private float stepSize = 0.1f;
-    private PlayerController playerController;
+    private Player playerController;
     private VisualElement TabUI;
     private bool isTabUIVisible = false;
 
@@ -83,7 +83,7 @@ public class UIController : MonoBehaviour
         currentSensitivity = PlayerPrefs.GetFloat("Sensitivity", defaultSensitivity);
         sensitivitySlider.value = currentSensitivity;
 
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<Player>();
 
         if (playerController != null)
         {

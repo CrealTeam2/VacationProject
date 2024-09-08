@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class RightPunchHitboxBehaviour : PlayerAnimationBehaviour
 {
+    string[] a = new string[3] { "PunchSwing", "PunchSwing2", "PunchSwing3" };
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         player.rightFistHitbox.enabled = true;
+        SoundManager.Instance.PlaySound(animator.gameObject, a[Random.Range(0, 3)], 0.5f, 1);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
