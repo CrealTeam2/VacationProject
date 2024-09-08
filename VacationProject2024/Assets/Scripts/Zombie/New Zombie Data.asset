@@ -17,7 +17,7 @@ MonoBehaviour:
   angularSpeed: 100
   acceleration: 1
   baseDetectRange: 8
-  attackrange: 1.5
+  attackrange: 0.71
   possibleAttackAngle: 0
   postAttackEndlag: 1
   minDamage: 10
