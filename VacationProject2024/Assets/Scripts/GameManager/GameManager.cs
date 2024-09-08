@@ -21,8 +21,8 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     {
         Init();
         Application.targetFrameRate = 60;
-
     }
+
     void Init()
     {
         savePoints = new();
