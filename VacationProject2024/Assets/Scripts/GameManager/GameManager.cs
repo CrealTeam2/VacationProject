@@ -17,12 +17,16 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     public Action onGameOver;
     public Volume globalVolume;
 
+    public bool ElectorcitySupply;
+    public delegate void OnGeneratorOn();
+    public OnGeneratorOn onGeneratorOn;
+
     private void Awake()
     {
         Init();
         Application.targetFrameRate = 60;
-
     }
+
     void Init()
     {
         savePoints = new();

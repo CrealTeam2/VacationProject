@@ -10,7 +10,7 @@ public class Elevator : MonoBehaviour
     void Start()
     {
         anim = gameObject.GetComponent<Animation>();
-
+        anim.Play("Elevator_Close");
     }
 
     // Update is called once per frame

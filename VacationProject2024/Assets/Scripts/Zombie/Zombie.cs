@@ -32,7 +32,7 @@ public class Zombie : MonoBehaviour
         get => isEnabled; set
         {
             isEnabled = value;
-            navMeshAgent.enabled = isEnabled;
+/*            navMeshAgent.enabled = isEnabled;*/
         }
     }
 
@@ -50,7 +50,7 @@ public class Zombie : MonoBehaviour
         navMeshAgent.speed = Data.maxSpeed;
         navMeshAgent.acceleration = Data.acceleration;
         navMeshAgent.angularSpeed = Data.angularSpeed;
-        navMeshAgent.enabled = IsEnabled;
+        navMeshAgent.enabled = false;
 
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         topLayer = new ZombieTopLayer(this);
@@ -205,6 +205,8 @@ class ZombiePursuit : State<Zombie>
         origin.currentPersuitTime = origin.Data.pursuitTime;
         origin.navMeshAgent.isStopped = false;
         origin.anim.SetBool("Pursuit", true);
+
+        origin.navMeshAgent.enabled = true;
     }
     public override void OnStateFixedUpdate()
     {
@@ -229,6 +231,7 @@ class ZombiePursuit : State<Zombie>
         base.OnStateExit();
         origin.navMeshAgent.isStopped = true;
         origin.anim.SetBool("Pursuit", false);
+        origin.navMeshAgent.enabled = false;
     }
 }
 
