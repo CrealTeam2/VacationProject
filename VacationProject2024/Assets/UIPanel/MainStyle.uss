@@ -1,0 +1,80 @@
+.GameStart-button {
+    height: 97px;
+    opacity: 1;
+    display: flex;
+    visibility: visible;
+    left: 12px;
+    width: 361px;
+    -unity-text-align: lower-center;
+    color: rgb(255, 255, 255);
+    font-size: 59.83px;
+    top: 580px;
+    background-color: rgba(188, 188, 188, 0);
+    -unity-slice-scale: 0;
+    -unity-text-outline-color: rgba(0, 0, 0, 0);
+    -unity-font-style: normal;
+}
+
+.GameStart-button:hover {
+    scale: 1.12 1.12;
+    color: rgb(255, 255, 255);
+}
+
+.GameStart-button:active {
+    color: rgb(205, 205, 205);
+}
+
+.BackgroundOut-button {
+    height: 97px;
+    opacity: 1;
+    display: flex;
+    visibility: visible;
+    left: -8px;
+    width: 573px;
+    -unity-text-align: lower-center;
+    color: rgb(255, 255, 255);
+    font-size: 59.83px;
+    top: 618px;
+    background-color: rgba(188, 188, 188, 0);
+}
+
+.BackgroundOut-button:hover {
+    color: rgb(255, 255, 255);
+    scale: 1.07 1.07;
+}
+
+.BackgroundOut-button:active {
+    color: rgb(205, 205, 205);
+}
+
+.Profile-size {
+    flex-grow: 1;
+    background-image: resource('Img/account_circle');
+    width: 724px;
+    height: 60px;
+    left: 1694px;
+    max-width: 36px;
+    max-height: 36px;
+    top: 804px;
+    bottom: -8px;
+    right: 59px;
+}
+
+.Profile-size:hover {
+    scale: 1.2 1.2;
+}
+
+.Setting-size {
+    flex-grow: 1;
+    background-image: resource('Img/settings');
+    max-width: 36px;
+    max-height: 36px;
+    right: 0;
+    bottom: -8px;
+    left: 1786px;
+    top: 767px;
+}
+
+.Setting-size:hover {
+    scale: 1.2 1.2;
+}
