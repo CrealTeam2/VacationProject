@@ -12,14 +12,14 @@
     </ui:VisualElement>
     <ui:VisualElement name="SettingScene" style="width: 1920px; height: 1080px; display: none;">
         <ui:VisualElement name="BackGround" style="flex-grow: 1; background-color: rgb(0, 0, 0); background-image: none;">
-            <ui:VisualElement name="BackGroundImg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.87); background-image: resource(&apos;Img/image 6 (1)&apos;); position: absolute; width: 1920px; height: 1080px; left: 117px;" />
+            <ui:VisualElement name="BackGroundImg" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.87); background-image: resource(&apos;Img/image 6 (1)&apos;); position: absolute; width: 1920px; height: 1080px; left: 117px; display: flex;" />
             <ui:Label tabindex="-1" text="게임 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; height: 50px; width: 137px; color: rgb(255, 255, 255); font-size: 31px; -unity-font: resource(&apos;font/Pretendard-ExtraLight&apos;); -unity-font-definition: initial; left: 87px; top: 26px;" />
             <ui:VisualElement name="SettingImg" style="width: 40px; height: 40px; background-image: resource(&apos;Img/settings&apos;); left: 26px; top: 32px; position: absolute;" />
             <ui:VisualElement name="line" style="flex-grow: 1; position: absolute; height: 957px; top: 41px; left: 310px; background-color: rgb(255, 255, 255); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-left-color: rgba(255, 255, 255, 0); border-right-color: rgba(255, 255, 255, 0); border-top-color: rgba(255, 255, 255, 0); border-bottom-color: rgba(255, 255, 255, 0); background-image: resource(&apos;Img/Rectangle 15&apos;);" />
-            <ui:Button text="    화면 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SceneSetting" class="SceneButton">
-                <ui:VisualElement style="height: 25px; width: 30px; background-image: resource(&apos;Img/computer 1&apos;); left: 6px; top: 12px;" />
+            <ui:Button text="    화면 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SceneSetting" class="SceneButton" style="display: flex;">
+                <ui:VisualElement style="height: 25px; width: 30px; background-image: resource(&apos;Img/computer 1&apos;); left: 6px; top: 12px; display: flex;" />
             </ui:Button>
-            <ui:Button text="    조작 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ControlSetting" class="ControlButton">
+            <ui:Button text="    조작 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ControlSetting" class="ControlButton" style="display: flex;">
                 <ui:VisualElement style="height: 25px; width: 30px; background-image: resource(&apos;Img/dns 1&apos;); left: 6px; top: 12px;" />
             </ui:Button>
             <ui:Button text="    소리 설정" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SoundSetting" class="SoundButton">
@@ -28,11 +28,11 @@
             <ui:VisualElement name="Panel1" style="flex-grow: 1; height: 1080px; width: 1610px; left: 315px; display: none; position: absolute;">
                 <ui:DropdownField label="해상도" name="SceneControl" style="color: rgb(255, 255, 255); width: 441px; height: 54px; font-size: 25px; -unity-font: resource(&apos;font/Pretendard-ExtraLight&apos;); -unity-font-definition: initial; left: 282px; top: 173px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Panel2" style="flex-grow: 1; height: 1080px; width: 1610px; left: 315px; display: none; position: absolute;">
+            <ui:VisualElement name="Panel2" style="flex-grow: 1; height: 1080px; width: 1610px; left: 315px; display: flex; position: absolute;">
                 <ui:Label tabindex="-1" text="감도 값" parse-escape-sequences="true" display-tooltip-when-elided="true" name="sensitivityLabel" style="position: absolute; color: rgb(255, 255, 255); font-size: 24px; -unity-font: resource(&apos;font/Pretendard-ExtraLight&apos;); -unity-font-definition: initial; top: 177px; left: 288px;" />
                 <ui:Slider high-value="100" name="sensitivitySlider" style="position: absolute; background-color: rgba(238, 238, 238, 0); left: 414px; width: 372px; top: 177px; height: 39px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Panel3" style="flex-grow: 1; height: 1080px; width: 1610px; left: 315px; display: flex; position: absolute;">
+            <ui:VisualElement name="Panel3" style="flex-grow: 1; height: 1080px; width: 1610px; left: 315px; display: none; position: absolute;">
                 <ui:Slider label="&#10;&#10;마스터 볼륨" high-value="100" style="top: 170px; width: 697px; left: 136px; color: rgb(255, 255, 255); -unity-font: resource(&apos;font/Pretendard-ExtraLight&apos;); -unity-font-definition: initial; font-size: 27px; height: 176px;">
                     <ui:Slider high-value="100" />
                 </ui:Slider>
@@ -46,23 +46,28 @@
             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExitButton" class="ExitButton" style="left: 1820px; width: 60px; height: 60px;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="TabUI" usage-hints="DynamicTransform" style="height: 1080px; width: 529px; display: flex; background-image: resource(&apos;Img/Group 5&apos;); left: -4px;">
+    <ui:VisualElement name="TabUI" usage-hints="DynamicTransform" style="height: 1080px; width: 529px; display: none; background-image: resource(&apos;Img/Group 5&apos;); left: -4px;">
         <ui:Label tabindex="-1" text="Item" parse-escape-sequences="true" display-tooltip-when-elided="true" style="color: rgb(145, 145, 145); -unity-font: resource(&apos;font/GideonRoman-Regular&apos;); -unity-font-definition: initial; font-size: 30px; border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-left-color: rgba(76, 74, 0, 0); border-right-color: rgba(76, 74, 0, 0); border-top-color: rgba(76, 74, 0, 0); border-bottom-color: rgba(76, 74, 0, 0); -unity-text-outline-width: 0.3px; -unity-text-outline-color: rgb(126, 106, 0); width: 77px; top: 392px; left: 26px;" />
-        <ui:Label text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="number" usage-hints="None" tabindex="1" style="position: relative; top: 625px; left: 191px; color: rgb(255, 255, 255); -unity-font: resource(&apos;font/GideonRoman-Regular&apos;); font-size: 44px; -unity-font-definition: initial; height: 27px; width: 20px;" />
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 130px; height: 130px; background-image: resource(&apos;Img/Slice 4 1&apos;); top: 452px; left: 27px; flex-direction: row;" />
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 130px; height: 130px; background-image: resource(&apos;Img/Slice 4 1&apos;); top: 452px; left: 201px; flex-direction: row;" />
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 130px; height: 130px; background-image: resource(&apos;Img/Slice 4 1&apos;); top: 452px; left: 370px; flex-direction: row;" />
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Slice 6 1&apos;); top: 637px; left: 29px; flex-direction: row;" />
-        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Slice 6 1&apos;); top: 637px; left: 151px; flex-direction: row;" />
+        <ui:VisualElement name="Slot" tabindex="1" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Slice 6 1&apos;); top: 637px; left: 151px; flex-direction: row;" />
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Slice 6 1&apos;); top: 637px; left: 276px; flex-direction: row;" />
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Slice 6 1&apos;); top: 637px; left: 400px; flex-direction: row;" />
-        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Medicine&apos;); top: 631px; left: 882px; flex-direction: row;" />
-        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/bandage&apos;); top: 621px; left: 1075px; flex-direction: row;" />
-        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Key&apos;); top: 628px; left: 1275px; flex-direction: row;" />
+        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Medicine&apos;); top: 621px; left: 884px; flex-direction: row;">
+            <ui:Label text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="number" usage-hints="None" tabindex="2" view-data-key="1" style="position: absolute; top: 58px; left: 72px; color: rgb(184, 184, 184); -unity-font: resource(&apos;font/GideonRoman-Regular&apos;); font-size: 27px; -unity-font-definition: initial; height: 24px; width: 27px; cursor: resource(&apos;Img/account_circle (1)&apos;);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/bandage&apos;); top: 621px; left: 1075px; flex-direction: row;">
+            <ui:Label text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="number" usage-hints="None" tabindex="2" view-data-key="1" style="position: absolute; top: 58px; left: 72px; color: rgb(184, 184, 184); -unity-font: resource(&apos;font/GideonRoman-Regular&apos;); font-size: 27px; -unity-font-definition: initial; height: 24px; width: 27px; cursor: resource(&apos;Img/account_circle (1)&apos;);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 100px; height: 100px; background-image: resource(&apos;Img/Key&apos;); top: 628px; left: 1275px; flex-direction: row;">
+            <ui:Label text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="number" usage-hints="None" tabindex="2" view-data-key="1" style="position: absolute; top: 58px; left: 72px; color: rgb(184, 184, 184); -unity-font: resource(&apos;font/GideonRoman-Regular&apos;); font-size: 27px; -unity-font-definition: initial; height: 24px; width: 27px; cursor: resource(&apos;Img/account_circle (1)&apos;);" />
+        </ui:VisualElement>
         <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 130px; height: 130px; background-image: resource(&apos;Img/Knife&apos;); top: 452px; left: 859px; flex-direction: row;" />
-        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 130px; height: 130px; background-image: resource(&apos;Img/Gun&apos;); top: 454px; left: 1065px; flex-direction: row;" />
+        <ui:VisualElement name="Slot" style="flex-grow: 1; position: absolute; width: 130px; height: 130px; background-image: resource(&apos;Img/Gun (2)&apos;); top: 454px; left: 1065px; flex-direction: row;" />
     </ui:VisualElement>
-    <ui:VisualElement name="Controlview" style="flex-grow: 1; position: absolute; width: 1605px; height: 890px; top: 108px; left: 165px; background-color: rgb(47, 47, 47); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; display: none;">
+    <ui:VisualElement name="Controlview" style="flex-grow: 1; position: absolute; width: 1605px; height: 890px; top: 108px; left: 165px; background-color: rgb(47, 47, 47); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; display: flex;">
         <ui:VisualElement name="Controlview2" style="flex-grow: 1; position: absolute; width: 1482px; height: 786px; top: 19px; left: 29px; background-color: rgb(47, 47, 47); background-image: resource(&apos;Img/조작법img&apos;);" />
         <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="Cencel" class="Cencel" style="position: absolute; top: 1px; left: 1520px; background-color: rgba(188, 188, 188, 0); background-image: resource(&apos;Img/cancel (1)&apos;); height: 75px; width: 75px; border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0);" />
     </ui:VisualElement>
