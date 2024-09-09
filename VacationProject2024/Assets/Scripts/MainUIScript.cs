@@ -137,6 +137,20 @@ public class UIController : MonoBehaviour
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
+    private void GameResumeButton_Clicked()
+    {
+        if (playerController != null)
+        {
+            playerController.SetMovementEnabled(true);
+
+        }
+        StartScene.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
+        DataManager.Instance.LoadGame();
+    }
+
 
     private void ShowStartScene()
     {
