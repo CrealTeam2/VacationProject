@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using UnityEngine.Rendering;
 
 public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 {
@@ -14,13 +15,18 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     Vector3 currentSavePoint;
     GameObject player;
     public Action onGameOver;
+    public Volume globalVolume;
+
+    public bool ElectorcitySupply;
+    public delegate void OnGeneratorOn();
+    public OnGeneratorOn onGeneratorOn;
 
     private void Awake()
     {
         Init();
         Application.targetFrameRate = 60;
-
     }
+
     void Init()
     {
         savePoints = new();

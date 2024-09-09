@@ -188,7 +188,7 @@ PrefabInstance:
     - target: {fileID: 8625397490805126484, guid: 6482a355bf9be7f43b3d96c28a104d0a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1407,7 +1407,7 @@ PrefabInstance:
     - target: {fileID: 8625397490805126484, guid: 6482a355bf9be7f43b3d96c28a104d0a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5081,7 +5081,7 @@ PrefabInstance:
     - target: {fileID: 8625397490805126484, guid: 6482a355bf9be7f43b3d96c28a104d0a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11098,7 +11098,7 @@ PrefabInstance:
     - target: {fileID: 8625397490805126484, guid: 6482a355bf9be7f43b3d96c28a104d0a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27455,7 +27455,7 @@ PrefabInstance:
     - target: {fileID: 8625397490805126484, guid: 6482a355bf9be7f43b3d96c28a104d0a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6976205872178199245, guid: 6482a355bf9be7f43b3d96c28a104d0a, type: 3}
@@ -28312,7 +28312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1043712441
 Light:
   m_ObjectHideFlags: 0
@@ -38290,7 +38290,7 @@ PrefabInstance:
     - target: {fileID: 8625397490805126484, guid: 6482a355bf9be7f43b3d96c28a104d0a,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -53677,12 +53677,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_maxHp: 100
   m_hp: 0
+  MovementFSMPath: 
   rotator: {fileID: 1539687593}
-  baseSpeed: 2
   Stamina: 100
   lookSensitivity: 5
   lowerCameraRotationLimit: -80
   upperCameraRotationLimit: 80
+  m_runSoundRange: {fileID: 0}
+  m_walkSpeed: 0
+  m_runSpeed: 0
+  m_maxStamina: 0
   Camera: {fileID: 0}
   speedMultiplier: 1
   FSMPath: 
@@ -53691,20 +53695,22 @@ MonoBehaviour:
   acting: 0
   switching: 0
   fistDamage: 10
-  rightFistHitbox: {fileID: 116399659}
-  leftFistHitbox: {fileID: 1867048401}
-  hasPistol: 0
+  m_rightFistHitbox: {fileID: 0}
+  m_leftFistHitbox: {fileID: 0}
+  m_pistolModel: {fileID: 0}
   m_pistolDamage: 25
   m_pistolFireRate: 0.3
-  pistolCounter: 0
+  m_pistolFocusFireRate: 0
   m_pistolMagSize: 7
   m_pistolMag: 0
   m_bullets: 0
   m_firePoint: {fileID: 1766840306}
   m_crosshair: {fileID: 404749681}
+  m_pistolSoundRange: {fileID: 0}
+  pistolCounter: 0
+  m_knifeModel: {fileID: 0}
   knifeDamage: 25
-  knifeHitbox: {fileID: 1096329803}
-  hasKnife: 0
+  m_knifeHitbox: {fileID: 0}
   flashGrenades: 0
   bandages: 0
   medicines: 0

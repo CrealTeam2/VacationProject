@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 public class Player : MonoBehaviour, ISavable
 {
@@ -26,7 +27,7 @@ public class Player : MonoBehaviour, ISavable
     //private float walkSpeed;
     public float lowerCameraRotationLimit = 60f;
     public float upperCameraRotationLimit = -60f;
-    private bool canMove = true;
+    private bool canMove = false;
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
     [SerializeField] ZombieDetector m_runSoundRange;
@@ -134,6 +135,10 @@ public class Player : MonoBehaviour, ISavable
     public bool canSprint { get { return m_cantSprint <= 0; } set { if (value == false) m_cantSprint++; else m_cantSprint--; } }
     public bool canFocus { get { return m_cantFocus <= 0; } set { if (value == false) m_cantFocus++; else m_cantFocus--; } }
 
+    public Action<float> onHpChange;
+    bool isDead = false;
+    float vignetteCurTime = 0;
+    Vignette vignette;
 
     const float pistolActivation = 15.0f;
     void Awake()
@@ -151,7 +156,7 @@ public class Player : MonoBehaviour, ISavable
         knifeHitbox.onHit += KnifeHit;
         UnlockPistol();
         UnlockKnife();
-        prevColor = hpIndicator.color;
+        //prevColor = hpIndicator.color;
     }
     void Start()
     {
@@ -159,13 +164,18 @@ public class Player : MonoBehaviour, ISavable
         rb = GetComponent<Rigidbody>();
 
         //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
-
+        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
+        vignette = vignetteComp;
     }
     void Update()
     {
         if (isDead) return;
-        CameraRotation();
-        CharacterRotation();
+        if (canMove)
+        {
+            CameraRotation();
+            CharacterRotation();
+        }
+
         //topLayer.OnStateUpdate();
         pistolCounter += Time.deltaTime;
         foreach (var i in debuffs) i.OnUpdate();
@@ -178,6 +188,7 @@ public class Player : MonoBehaviour, ISavable
 
     private void Move()
     {
+        if (canMove)
         movementTopLayer.OnStateFixedUpdate();
     }
 
@@ -227,6 +238,18 @@ public class Player : MonoBehaviour, ISavable
             }
         }
         Move();
+
+
+        vignetteCurTime -= Time.fixedDeltaTime;
+        if (hp < 50 || vignetteCurTime > 0)
+        {
+            vignette.active = true;
+            vignette.intensity.value = 0.4f - 0.02f * hp;
+        }
+        else
+        {
+            vignette.active = false;
+        }
     }
     public void UnlockKnife()
     {
@@ -254,6 +277,7 @@ public class Player : MonoBehaviour, ISavable
     }
     public void FirePistol()
     {
+        SoundManager.Instance.PlaySound(gameObject, "RevolverShoot", 1, 1);
         RaycastHit hit;
         if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Zombie", "Wall", "Window")))
         {
@@ -264,14 +288,24 @@ public class Player : MonoBehaviour, ISavable
             i.AddActivation(15.0f);
         }
     }
+    public void SetMovementEnabled(bool isEnabled)
+    {
+        canMove = isEnabled;
+    }
 
-    public Action<float> onHpChange;
-    bool isDead = false;
+    public void UpdateSensitivity(float newSensitivity)
+    {
+        lookSensitivity = newSensitivity;
+    }
+
+
     public void GetDamage(float damage)
     {
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
-        if(hp <= 0)
+
+        vignetteCurTime += 3;
+        if (hp <= 0)
         {
             isDead = true;
             anim.SetTrigger("Death");
@@ -280,21 +314,27 @@ public class Player : MonoBehaviour, ISavable
     }
     void SetHp(float hp)
     {
-        prevColor.a = 1.0f - hp / maxHp;
-        hpIndicator.color = prevColor;
+/*        prevColor.a = 1.0f - hp / maxHp;
+        hpIndicator.color = prevColor;*/
         this.hp = hp;
         onHpChange?.Invoke(hp);
     }
+
+    string[] punchSound = new string[2] { "PunchHit1", "PunchHit2" };
     public void FistHit(Zombie enemy)
     {
         onFistHit?.Invoke(enemy);
         enemy.GetDamage(fistDamage);
+        SoundManager.Instance.PlaySound(gameObject, punchSound[UnityEngine.Random.Range(0, 2)], 1, 1);
     }
+
+    string[] knifeSounds = new string[2] { "KnifeDamage1", "KnifeDamage2" };
     public void KnifeHit(Zombie enemy)
     {
         Debug.Log("EAEWEAEW");
         onKnifeHit?.Invoke(enemy);
         enemy.GetDamage(knifeDamage);
+        SoundManager.Instance.PlaySound(gameObject, knifeSounds[UnityEngine.Random.Range(0, 2)], 1, 1);
     }
 
     public void AddDebuff(Debuff debuff)

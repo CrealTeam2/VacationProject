@@ -23,7 +23,7 @@ public class UIController : MonoBehaviour
     private float defaultSensitivity = 1.0f;
     private float currentSensitivity;
     private float stepSize = 0.1f;
-    private PlayerController playerController;
+    private Player playerController;
     private VisualElement TabUI;
     private bool isTabUIVisible = false;
 
@@ -83,7 +83,7 @@ public class UIController : MonoBehaviour
         currentSensitivity = PlayerPrefs.GetFloat("Sensitivity", defaultSensitivity);
         sensitivitySlider.value = currentSensitivity;
 
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<Player>();
 
         if (playerController != null)
         {
@@ -134,12 +134,16 @@ public class UIController : MonoBehaviour
 
         }
         StartScene.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void ShowStartScene()
     {
         StartScene.style.display = DisplayStyle.Flex;
         SettingScene.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
     }
 
     private void OnSettingButtonClicked()
@@ -147,6 +151,8 @@ public class UIController : MonoBehaviour
         StartScene.style.display = DisplayStyle.None;
         SettingScene.style.display = DisplayStyle.Flex;
         ShowPanel1();
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
     }
 
     private void OnExitButtonClicked()
@@ -197,6 +203,18 @@ public class UIController : MonoBehaviour
     {
         isTabUIVisible = !isTabUIVisible;
         TabUI.style.display = isTabUIVisible ? DisplayStyle.Flex : DisplayStyle.None;
+
+        if(isTabUIVisible)
+        {
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        }
+
 
         if (playerController != null)
         {

@@ -1,22 +1,50 @@
 fileFormatVersion: 2
 guid: add0059fa677d3945a732cc2cdba23e6
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Stairs1_Door
-    100002: //RootNode
-    400000: Stairs1_Door
-    400002: //RootNode
-    2100000: Wood
-    2100002: Metal
-    2300000: Stairs1_Door
-    3300000: Stairs1_Door
-    4300000: Stairs1_Door
-    6400000: Stairs1_Door
-    7400000: Stairs1_Door_Close
-    7400002: Stairs1_Door_Open
-    9500000: //RootNode
-    11100000: //RootNode
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Stairs1_Door
+  - first:
+      1: 100002
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Stairs1_Door
+  - first:
+      4: 400002
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: Wood
+  - first:
+      21: 2100002
+    second: Metal
+  - first:
+      23: 2300000
+    second: Stairs1_Door
+  - first:
+      33: 3300000
+    second: Stairs1_Door
+  - first:
+      43: 4300000
+    second: Stairs1_Door
+  - first:
+      64: 6400000
+    second: Stairs1_Door
+  - first:
+      74: 7400000
+    second: Stairs1_Door_Close
+  - first:
+      74: 7400002
+    second: Stairs1_Door_Open
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      111: 11100000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -29,7 +57,7 @@ ModelImporter:
       name: Wood
     second: {fileID: 2100000, guid: e97f3d7e0fec3cd4290a0b554be6e3d6, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -38,6 +66,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -58,6 +87,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Stairs1_Door_Close
       takeName: Take 001
+      internalID: 0
       firstFrame: 20
       lastFrame: 40
       wrapMode: 0
@@ -86,6 +116,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Stairs1_Door_Open
       takeName: Take 001
+      internalID: 0
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -118,25 +149,36 @@ ModelImporter:
     meshCompression: 0
     addColliders: 1
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -145,10 +187,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -158,13 +200,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 1
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

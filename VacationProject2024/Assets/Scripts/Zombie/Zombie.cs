@@ -24,16 +24,18 @@ public class Zombie : MonoBehaviour
     public Action onDeath;
     public bool isDead = false;
 
-
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
-    
+
     public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("ZombieDead"); } }
-    public bool IsEnabled { get => isEnabled; set
+    public bool IsEnabled
+    {
+        get => isEnabled; set
         {
             isEnabled = value;
-            navMeshAgent.enabled = isEnabled;
+/*            navMeshAgent.enabled = isEnabled;*/
         }
     }
+
     private void Awake()
     {
         id = CreateId();
@@ -43,13 +45,12 @@ public class Zombie : MonoBehaviour
         activation = 0;
         currentPersuitTime = 0;
         attackCurTime = 0;
-        //isEnabled = true;
 
         navMeshAgent = transform.AddComponent<NavMeshAgent>();
         navMeshAgent.speed = Data.maxSpeed;
         navMeshAgent.acceleration = Data.acceleration;
         navMeshAgent.angularSpeed = Data.angularSpeed;
-        navMeshAgent.enabled = IsEnabled;
+        navMeshAgent.enabled = false;
 
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         topLayer = new ZombieTopLayer(this);
@@ -62,21 +63,12 @@ public class Zombie : MonoBehaviour
 
     private void Start()
     {
-
-
-        /*player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        topLayer = new ZombieTopLayer(this);
-        topLayer.OnStateEnter();
-        FSMPath = topLayer.GetCurrentFSM();
-        topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };*/
-
-
-
     }
+
     // Update is called once per frame
     void Update()
     {
-        if(IsEnabled) topLayer.OnStateUpdate();
+        if (IsEnabled) topLayer.OnStateUpdate();
     }
 
     string CreateId()
@@ -84,12 +76,12 @@ public class Zombie : MonoBehaviour
         string str = "";
         int[] arr = new int[3] { (int)(transform.position.z * 10) + 10000, (int)(transform.position.y * 10) + 10000, (int)(transform.position.x * 10) + 10000 };
 
-        for(int i = 0; i < arr.Length; i++)
+        for (int i = 0; i < arr.Length; i++)
         {
             str = arr[i] + str;
-            while(str.Length < 5*(i+1))
+            while (str.Length < 5 * (i + 1))
             {
-                str = "0"+str;
+                str = "0" + str;
             }
         }
         return str;
@@ -97,9 +89,11 @@ public class Zombie : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(isEnabled) topLayer.OnStateFixedUpdate();
+        if (isEnabled) topLayer.OnStateFixedUpdate();
     }
+
     float detectRange { get => data.baseDetectRange * (1.0f + Mathf.Min(2.0f, activation / 25.0f)); }
+
     public bool DetectPlayer()
     {
         Ray ray = new Ray(transform.position, player.transform.position - transform.position);
@@ -109,32 +103,43 @@ public class Zombie : MonoBehaviour
         if (Vector3.Distance(player.transform.position, transform.position) > detectRange) return false;
         return true;
     }
-    public Action onEnable;
+
     public void Enable()
     {
         IsEnabled = true;
-        onEnable?.Invoke();
+        // onEnable 관련된 부분을 제거
     }
+
     public void GetDamage(float damage)
     {
         if (isDead || !IsEnabled) return;
         health = Mathf.Max(health - damage, 0);
-        if(health <= 0)
+        if (health <= 0)
         {
             anim.SetTrigger("Death");
             Die();
         }
     }
+
     public void AddActivation(float value)
     {
         if (!isEnabled || isDead) return;
         activation = Mathf.Min(Data.maxActivation, activation + value);
     }
+
     public void Die()
     {
         if (isDead) return;
         isDead = true;
         topLayer.ChangeState("Dead");
+    }
+
+    // Gizmos로 attackrange를 시각적으로 표시하는 메서드
+    private void OnDrawGizmosSelected()
+    {
+        // 좀비의 위치를 기준으로 attackrange를 나타내는 원을 그립니다.
+        Gizmos.color = Color.red;  // 원의 색상 설정
+        Gizmos.DrawWireSphere(transform.position, data.attackrange);  // 공격 범위 (attackrange) 크기의 구를 그립니다.
     }
 }
 
@@ -153,7 +158,7 @@ class ZombieTopLayer : TopLayer<Zombie>
     {
         if (origin.Activation > 0)
         {
-            if(origin.DetectPlayer()) origin.Activation = Mathf.Max(0, origin.Activation - origin.activationDecreaseRate * Time.fixedDeltaTime);
+            if (origin.DetectPlayer()) origin.Activation = Mathf.Max(0, origin.Activation - origin.activationDecreaseRate * Time.fixedDeltaTime);
             else origin.Activation = Mathf.Max(0, origin.Activation - origin.activationDecreaseRate * Time.fixedDeltaTime * 2.0f);
         }
         base.OnStateFixedUpdate();
@@ -187,6 +192,7 @@ class ZombieIdle : State<Zombie>
         SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
     }
 }
+
 class ZombiePursuit : State<Zombie>
 {
     public ZombiePursuit(Zombie origin, Layer<Zombie> parent) : base(origin, parent)
@@ -199,6 +205,8 @@ class ZombiePursuit : State<Zombie>
         origin.currentPersuitTime = origin.Data.pursuitTime;
         origin.navMeshAgent.isStopped = false;
         origin.anim.SetBool("Pursuit", true);
+
+        origin.navMeshAgent.enabled = true;
     }
     public override void OnStateFixedUpdate()
     {
@@ -209,7 +217,7 @@ class ZombiePursuit : State<Zombie>
         }
         else if (origin.currentPersuitTime > 0)
         {
-            if(origin.Activation <= 50.0f) origin.currentPersuitTime -= Time.fixedDeltaTime;
+            if (origin.Activation <= 50.0f) origin.currentPersuitTime -= Time.fixedDeltaTime;
             origin.navMeshAgent.SetDestination(origin.player.transform.position);
         }
         else
@@ -223,6 +231,7 @@ class ZombiePursuit : State<Zombie>
         base.OnStateExit();
         origin.navMeshAgent.isStopped = true;
         origin.anim.SetBool("Pursuit", false);
+        origin.navMeshAgent.enabled = false;
     }
 }
 
@@ -251,9 +260,9 @@ class ZombieAttack : State<Zombie>
         Vector3 pos2 = origin.transform.position;
         Vector3 pos1 = origin.player.transform.position;
         origin.transform.rotation = Quaternion.Euler(0, Mathf.Atan2(pos1.x - pos2.x, pos1.z - pos2.z) * Mathf.Rad2Deg, 0);
-        if(count >= 3)
+        if (count >= 3)
         {
-            if(grab.ended == false)
+            if (grab.ended == false)
             {
                 origin.player.GetDamage(GetDamage());
                 grab.EndDebuff();
@@ -282,6 +291,7 @@ class ZombieAttack : State<Zombie>
         return UnityEngine.Random.Range(zombie.Data.minDamage, zombie.Data.maxDamage);
     }
 }
+
 class ZombiePostAttack : State<Zombie>
 {
     public ZombiePostAttack(Zombie origin, Layer<Zombie> parent) : base(origin, parent)
@@ -298,7 +308,7 @@ class ZombiePostAttack : State<Zombie>
     {
         base.OnStateUpdate();
         if (counter < origin.Data.postAttackEndlag) counter += Time.deltaTime;
-        if(counter >= origin.Data.postAttackEndlag)
+        if (counter >= origin.Data.postAttackEndlag)
         {
             if ((origin.transform.position - origin.player.transform.position).magnitude <= origin.Data.attackrange)
             {
@@ -315,6 +325,7 @@ class ZombiePostAttack : State<Zombie>
         }
     }
 }
+
 class ZombieDead : State<Zombie>
 {
     public ZombieDead(Zombie zombie, Layer<Zombie> parent) : base(zombie, parent)

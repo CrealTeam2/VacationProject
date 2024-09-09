@@ -56,6 +56,7 @@ public class PlayerEquipments_Pistol_Idle : PlayerEquipments_WeaponIdleState
         RaycastHit hit;
         if (Physics.Raycast(origin.firePoint.position, origin.firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Enemy")))
         {
+            
             hit.transform.GetComponent<EnemyTest>()?.GetDamage(origin.pistolDamage);
         }
     }

@@ -1,22 +1,50 @@
 fileFormatVersion: 2
 guid: fd577b5ed821ae747a1cad2a962f3431
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Commode_Drawer1
-    100002: //RootNode
-    400000: Commode_Drawer1
-    400002: //RootNode
-    2100000: Wood
-    2100002: Wood&Metal
-    2300000: Commode_Drawer1
-    3300000: Commode_Drawer1
-    4300000: Commode_Drawer1
-    6400000: Commode_Drawer1
-    7400000: Commode_Drawer1_Close
-    7400002: Commode_Drawer1_Open
-    9500000: //RootNode
-    11100000: //RootNode
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Commode_Drawer1
+  - first:
+      1: 100002
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Commode_Drawer1
+  - first:
+      4: 400002
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: Wood
+  - first:
+      21: 2100002
+    second: Wood&Metal
+  - first:
+      23: 2300000
+    second: Commode_Drawer1
+  - first:
+      33: 3300000
+    second: Commode_Drawer1
+  - first:
+      43: 4300000
+    second: Commode_Drawer1
+  - first:
+      64: 6400000
+    second: Commode_Drawer1
+  - first:
+      74: 7400000
+    second: Commode_Drawer1_Close
+  - first:
+      74: 7400002
+    second: Commode_Drawer1_Open
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      111: 11100000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -29,7 +57,7 @@ ModelImporter:
       name: Wood&Metal
     second: {fileID: 2100000, guid: 0d379a02f2cf3704e99199aa09608f08, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -38,6 +66,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -58,6 +87,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Commode_Drawer1_Close
       takeName: Take 001
+      internalID: 0
       firstFrame: 20
       lastFrame: 40
       wrapMode: 0
@@ -86,6 +116,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Commode_Drawer1_Open
       takeName: Take 001
+      internalID: 0
       firstFrame: 0
       lastFrame: 20
       wrapMode: 0
@@ -118,25 +149,36 @@ ModelImporter:
     meshCompression: 0
     addColliders: 1
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -145,10 +187,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -158,13 +200,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 1
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

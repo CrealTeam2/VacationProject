@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 [RequireComponent(typeof(Light))]
 public class LightBlinker : MonoBehaviour
 {
@@ -34,9 +33,9 @@ public class LightBlinker : MonoBehaviour
         float blinkTime = Random.Range(0.05f, 0.2f);
         for(int i = 0; i < blinkCount; i++)
         {
-            target.enabled = false;
+            target.intensity *= 0.01f;
             yield return new WaitForSeconds(blinkTime);
-            target.enabled = true;
+            target.intensity /= 0.01f;
             yield return new WaitForSeconds(blinkTime);
         }
     }
