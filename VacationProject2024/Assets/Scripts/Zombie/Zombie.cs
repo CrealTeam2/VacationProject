@@ -182,7 +182,7 @@ class ZombieIdle : State<Zombie>
         {
             parentLayer.ChangeState("Attack");
         }
-        else if (origin.DetectPlayer() || (origin.Activation >= 50 && origin.navMeshAgent.remainingDistance < 50.0f))
+        else if (origin.DetectPlayer() || origin.Activation >= 50.0f)
         {
             parentLayer.ChangeState("Pursuit");
         }
