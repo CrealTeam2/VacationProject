@@ -2,6 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
+using static UnityEngine.UI.Image;
 
 public class Zombie : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class Zombie : MonoBehaviour
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
 
-    public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("ZombieDead"); } }
+    public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("Dead"); } }
     public bool IsEnabled
     {
         get => isEnabled; set
@@ -63,6 +64,7 @@ public class Zombie : MonoBehaviour
 
     private void Start()
     {
+        SoundManager.Instance.PlaySound(gameObject, "ZombieIdle", 0.3f, 999);
     }
 
     // Update is called once per frame
@@ -107,6 +109,7 @@ public class Zombie : MonoBehaviour
     public void Enable()
     {
         IsEnabled = true;
+
         // onEnable ���õ� �κ��� ����
     }
 
@@ -138,7 +141,7 @@ public class Zombie : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         // ������ ��ġ�� �������� attackrange�� ��Ÿ���� ���� �׸��ϴ�.
-        Gizmos.color = Color.red;  // ���� ���� ����
+        Gizmos.color = Color.red;  // ���� ���� ����w
         Gizmos.DrawWireSphere(transform.position, data.attackrange);  // ���� ���� (attackrange) ũ���� ���� �׸��ϴ�.
     }
 }
@@ -174,7 +177,7 @@ class ZombieIdle : State<Zombie>
 
     public override void OnStateEnter()
     {
-        SoundManager.Instance.PlaySound(origin.gameObject, "ZombieIdle", 0.5f, 1);
+        
     }
     public override void OnStateFixedUpdate()
     {
@@ -189,7 +192,7 @@ class ZombieIdle : State<Zombie>
     }
     public override void OnStateExit()
     {
-        SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
+
     }
 }
 
@@ -337,6 +340,8 @@ class ZombieDead : State<Zombie>
     {
         base.OnStateEnter();
         origin.onDeath?.Invoke();
+        SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
+        SoundManager.Instance.PlaySound(origin.gameObject, "ZombieScream", 1, 1);
     }
     public override void OnStateFixedUpdate()
     {

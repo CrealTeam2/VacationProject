@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/RyuScene2.unity
-    guid: 9a2d94e2dee5a2a4a804f93f5439d101
+    path: Assets/Scenes/MapScenes/InGameMap.unity
+    guid: 95b1e6898a99b534cbacf8edf84e6adc
   m_configObjects: {}

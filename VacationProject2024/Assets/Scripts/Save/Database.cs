@@ -16,6 +16,8 @@ public class Database
 
     public SerializableDictionary<string, bool> activatedDatas;
 
+    public bool elevatorMoved;
+
 
 
 

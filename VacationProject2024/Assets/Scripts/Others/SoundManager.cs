@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Unity.VisualScripting.Member;
 
@@ -26,6 +27,7 @@ public class SoundManager : Singleton<SoundManager>
         activeSounds = new();
         LoadAllSoundsFromResources();
         channelPrefab = Resources.Load("Prefab/AudioChannel") as GameObject;
+        bgmSource = transform.AddComponent<AudioSource>();
     }
 
     private void Start()
@@ -84,7 +86,7 @@ public class SoundManager : Singleton<SoundManager>
     }
 
     // BGM ��� �޼���
-    private void PlayBGM(string bgmName, float volume, int repeatCount)
+    public void PlayBGM(string bgmName, float volume, int repeatCount)
     {
         if (bgmClips.TryGetValue(bgmName, out AudioClip clip))
         {

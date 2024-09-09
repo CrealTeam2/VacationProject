@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Rendering;
@@ -16,6 +17,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     GameObject player;
     public Action onGameOver;
     public Volume globalVolume;
+    public Image fadeImage;
 
     public bool ElectorcitySupply;
     public delegate void OnGeneratorOn();
@@ -52,6 +54,8 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         }
 
         player = GameObject.FindWithTag("Player");
+
+        SoundManager.Instance.PlayBGM("MainBGM", 0.4f, 55);
     }
 
 
@@ -84,7 +88,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
                 && Mathf.Abs(player.transform.position.y - endTransform.position.y) < 5)
         {
             DataManager.Instance.ResetData();
-            SceneManager.LoadScene("RyuScene2");
+            SceneManager.LoadScene("InGameScene");
         }
     }
 
@@ -116,8 +120,26 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         }
         data.savePoint = currentSavePoint;
     }
-    public void GameOver()
+    public IEnumerator GameOver()
     {
         onGameOver?.Invoke();
+        fadeImage.gameObject.SetActive(true);
+        for(int i = 0; i < 100; i++)
+        {
+            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
+            yield return null;
+        }
+        yield return new WaitForSeconds(2);
+
+        for(int i = 100; i > 0; i--)
+        {
+            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
+            yield return null;
+        }
+        fadeImage.gameObject.SetActive(false);
+
+        SceneManager.LoadScene("InGameMap");
     }
+
+    
 }

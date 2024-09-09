@@ -5,9 +5,10 @@ using UnityEngine;
 public class ElevatorCollider : MonoBehaviour
 {
     bool isOnElv;
+    bool isUsed = false;
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Player")
+        if(collision.gameObject.tag == "Player" && transform.parent.parent.GetComponent<Elevator>().isUsed == false)
         {
             isOnElv = true;
             StartCoroutine(GenerateElv());
