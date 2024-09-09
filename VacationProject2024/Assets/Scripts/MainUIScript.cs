@@ -317,12 +317,15 @@ public class UIController : MonoBehaviour
         }
     }
     private void OnReGameStart2Clicked() {
-        if (EscView != null)
+        if (playerController != null)
         {
-            EscView.style.display = DisplayStyle.None;
-            UnityEngine.Cursor.visible = false;
-            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            playerController.SetMovementEnabled(true);
         }
+        
+        StartScene.style.display= DisplayStyle.None;
+        EscView.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         DataManager.Instance.LoadGame();
         isGamePaused = false;
     }
