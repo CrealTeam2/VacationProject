@@ -43,11 +43,11 @@ public class UIController : MonoBehaviour
     private float currentSensitivity;
     private float stepSize = 0.1f;
 
-    private PlayerController playerController;
+    private Player playerController;
     private bool isTabUIVisible = false;
     private bool isGamePaused = false;
 
-    private void OnStart()
+    private void Start()
     {
         InitializeUIElements();
         InitializeSettings();
@@ -72,7 +72,7 @@ public class UIController : MonoBehaviour
         ControlSetting = root.Q<Button>("ControlSetting");
         SoundSetting = root.Q<Button>("SoundSetting");
         GameStart = root.Q<Button>("GameStart");
-        ReGameStart2 = root.Q<Button>("ReGameStart2");
+        ReGameStart2 = root.Q<Button>("ReGameStart");
         GameSetting = root.Q<Button>("GameSetting");
         GameOut = root.Q<Button>("GameOut");
         StartScene = root.Q<VisualElement>("StartScene");
@@ -166,7 +166,7 @@ public class UIController : MonoBehaviour
             sensitivityLabel.text = $"���� ��: {currentSensitivity:F1}";
         }
 
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<Player>();
     }
 
     private void ChangeResolution(string resolution)
@@ -198,7 +198,8 @@ public class UIController : MonoBehaviour
             playerController.SetMovementEnabled(true);
         }
         StartScene.style.display = DisplayStyle.None;
-        ResumeGame();
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void ShowStartScene()
@@ -291,28 +292,38 @@ public class UIController : MonoBehaviour
         if (Controlview != null)
         {
             Controlview.style.display = DisplayStyle.Flex;
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
         }
         if (StartScene != null)
         {
             StartScene.style.display = DisplayStyle.None;
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
         }
     }
     private void OnCencelClicked() {
         if (Controlview != null)
         {
             Controlview.style.display = DisplayStyle.None;
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         }
         if (StartScene != null)
         {
             StartScene.style.display = DisplayStyle.Flex;
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
         }
     }
     private void OnReGameStart2Clicked() {
         if (EscView != null)
         {
             EscView.style.display = DisplayStyle.None;
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         }
-        ResumeGame();
+        DataManager.Instance.LoadGame();
         isGamePaused = false;
     }
     private void OnGameSettingClicked() {
