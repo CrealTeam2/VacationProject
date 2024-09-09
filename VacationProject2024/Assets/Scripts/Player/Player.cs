@@ -165,8 +165,8 @@ public class Player : MonoBehaviour, ISavable
         rb = GetComponent<Rigidbody>();
 
         //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
-        //GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
-        //vignette = vignetteComp;
+        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
+        vignette = vignetteComp;
     }
     void Update()
     {
@@ -240,16 +240,16 @@ public class Player : MonoBehaviour, ISavable
         Move();
 
 
-        /*vignetteCurTime -= Time.fixedDeltaTime;
+        vignetteCurTime -= Time.fixedDeltaTime;
         if (hp < 50 || vignetteCurTime > 0)
         {
             vignette.active = true;
-            vignette.intensity.value = Mathf.Lerp(0, 0.5f, hp / maxHp);
+            vignette.intensity.value = Mathf.Lerp(0.5f, 0, hp / maxHp) * (vignetteCurTime / 3 + 1);
         }
         else
         {
             vignette.active = false;
-        }*/
+        }
     }
     public void UnlockKnife()
     {
@@ -309,7 +309,7 @@ public class Player : MonoBehaviour, ISavable
         {
             isDead = true;
             anim.SetTrigger("Death");
-            GameManager.Instance.GameOver();
+            StartCoroutine(GameManager.Instance.GameOver());
         }
     }
     void SetHp(float hp)

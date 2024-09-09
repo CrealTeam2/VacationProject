@@ -38,6 +38,6 @@ public class FixGenerator : InteractionAgent
 
     public override void UpdateVariableFromUnit(DataUnit unit)
     {
-        AllowInteraction = unit.Bool["IsUded"];
+        AllowInteraction = unit.Bool["IsUsed"];
     }
 }

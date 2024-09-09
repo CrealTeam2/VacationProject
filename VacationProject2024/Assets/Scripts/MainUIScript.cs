@@ -14,6 +14,7 @@ public class UIController : MonoBehaviour
     private Button ControlSetting;
     private Button SoundSetting;
     private Button GameStart;
+    private Button ReGameStart;
     private VisualElement Panel1;
     private VisualElement Panel2;
     private VisualElement Panel3;
@@ -27,7 +28,7 @@ public class UIController : MonoBehaviour
     private VisualElement TabUI;
     private bool isTabUIVisible = false;
 
-    private void OnEnable()
+    private void Start()
     {
         var uiDocument = GetComponent<UIDocument>();
         var root = uiDocument.rootVisualElement;
@@ -42,6 +43,8 @@ public class UIController : MonoBehaviour
         sensitivityLabel = root.Q<Label>("sensitivityLabel");
         GameStart = root.Q<Button>("GameStart");
         GameStart.clicked += GameStartButton_Clicked;
+        ReGameStart = root.Q<Button>("ReGameStart");
+        ReGameStart.clicked += GameResumeButton_Clicked;
 
         ShowStartScene();
 
