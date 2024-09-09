@@ -25,6 +25,7 @@ public class Door : InteractionAgent
         base.Awake();
         anim = GetComponent<Animation>();
         feedbackText = openText;
+        if (link != null) link.enabled = false;
     }
 
     protected void Start()
