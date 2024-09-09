@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FixGenerator : InteractionAgent
 {
+    [SerializeField] GameObject activator;
     bool isUsed = false;
     Animation anim;
 
@@ -27,9 +28,10 @@ public class FixGenerator : InteractionAgent
     {
         base.OnInteraction();
         SoundManager.Instance.StopSound(gameObject, "BrokenGeneratorSound");
-        SoundManager.Instance.PlaySound(gameObject, "GeneratorSound", 1, 1);
+        SoundManager.Instance.PlaySound(gameObject, "GeneratorSound", 0.6f, 1);
         GameManager.Instance.ElectorcitySupply = true;
         GameManager.Instance.onGeneratorOn.Invoke();
+        activator.SetActive(true);
     }
     public override void UpdateUnitFromVariable(ref DataUnit unit)
     {

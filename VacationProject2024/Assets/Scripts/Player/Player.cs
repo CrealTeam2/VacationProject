@@ -244,7 +244,7 @@ public class Player : MonoBehaviour, ISavable
         if (hp < 50 || vignetteCurTime > 0)
         {
             vignette.active = true;
-            vignette.intensity.value = 0.4f - 0.02f * hp;
+            vignette.intensity.value = Mathf.Lerp(0, 0.5f, hp / maxHp);
         }
         else
         {
@@ -304,7 +304,7 @@ public class Player : MonoBehaviour, ISavable
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
 
-        vignetteCurTime += 3;
+        vignetteCurTime = 3;
         if (hp <= 0)
         {
             isDead = true;

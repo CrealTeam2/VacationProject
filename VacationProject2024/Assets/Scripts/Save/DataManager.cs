@@ -22,7 +22,7 @@ public class DataManager : Singleton<DataManager>
     {
         fileDataHandler = new(Application.persistentDataPath, fileName);
         savableObjects = FindAllSavableObjects();
-        LoadGame();
+/*        LoadGame();*/
     }
 
     public void InitDatabase()
