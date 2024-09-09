@@ -27,7 +27,7 @@ public class Player : MonoBehaviour, ISavable
     //private float walkSpeed;
     public float lowerCameraRotationLimit = 60f;
     public float upperCameraRotationLimit = -60f;
-    private bool canMove = false;
+    [SerializeField] private bool canMove = false;
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
     [SerializeField] ZombieDetector m_runSoundRange;
@@ -150,6 +150,7 @@ public class Player : MonoBehaviour, ISavable
         movementTopLayer = new PlayerMovements_TopLayer(this);
         movementTopLayer.onFSMChange += () => { MovementFSMPath = movementTopLayer.GetCurrentFSM(); };
         movementTopLayer.OnStateEnter();
+        MovementFSMPath = movementTopLayer.GetCurrentFSM();
         //FSMPath = topLayer.GetCurrentFSM();
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
@@ -164,8 +165,8 @@ public class Player : MonoBehaviour, ISavable
         rb = GetComponent<Rigidbody>();
 
         //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
-        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
-        vignette = vignetteComp;
+        //GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
+        //vignette = vignetteComp;
     }
     void Update()
     {
@@ -188,8 +189,7 @@ public class Player : MonoBehaviour, ISavable
 
     private void Move()
     {
-        if (canMove)
-        movementTopLayer.OnStateFixedUpdate();
+        if (canMove) movementTopLayer.OnStateFixedUpdate();
     }
 
     public void MovePos(Vector3 translation)
@@ -240,7 +240,7 @@ public class Player : MonoBehaviour, ISavable
         Move();
 
 
-        vignetteCurTime -= Time.fixedDeltaTime;
+        /*vignetteCurTime -= Time.fixedDeltaTime;
         if (hp < 50 || vignetteCurTime > 0)
         {
             vignette.active = true;
@@ -249,7 +249,7 @@ public class Player : MonoBehaviour, ISavable
         else
         {
             vignette.active = false;
-        }
+        }*/
     }
     public void UnlockKnife()
     {

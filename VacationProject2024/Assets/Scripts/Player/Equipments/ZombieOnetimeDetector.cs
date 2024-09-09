@@ -8,29 +8,27 @@ using UnityEngine;
 public class ZombieOnetimeDetector : MonoBehaviour
 {
     public Action<Zombie> onHit;
-    List<Collider> hit = new();
+    bool hit = false;
     Collider m_collider;
     Collider _collider { get { if (m_collider == null) m_collider = GetComponent<Collider>(); return m_collider; } }
     private void OnEnable()
     {
-        hit.Clear();
+        hit = false;
         _collider.enabled = true;
     }
     private void OnDisable()
     {
         _collider.enabled = false;
     }
-    public void Refresh() => hit.Clear();
+    public void Refresh() => hit = false;
     private void OnTriggerStay(Collider collision)
     {
-        if (!hit.Contains(collision))
+        if (hit) return;
+        if (collision.gameObject.CompareTag("Zombie"))
         {
-            hit.Add(collision);
-            if (collision.gameObject.CompareTag("Zombie"))
-            {
-                Zombie tmp = collision.GetComponent<Zombie>();
-                onHit?.Invoke(tmp);
-            }
+            Zombie tmp = collision.GetComponent<Zombie>();
+            onHit?.Invoke(tmp);
+            hit = true;
         }
     }
 }
