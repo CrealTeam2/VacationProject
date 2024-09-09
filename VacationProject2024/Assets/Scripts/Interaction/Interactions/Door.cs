@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class Door : InteractionAgent
@@ -15,6 +16,9 @@ public class Door : InteractionAgent
     [SerializeField] string closeAnim;
     [SerializeField] string closeText;
     [SerializeField] string closeSound;
+
+    [Header("Pathfinding")]
+    [SerializeField] NavMeshLink link;
 
     private void Awake()
     {
@@ -39,6 +43,7 @@ public class Door : InteractionAgent
 
         if (isOpened)
         {
+            if(link != null) link.enabled = false;
             anim.Play(closeAnim);
             isOpened = false;
             feedbackText = openText;
@@ -47,6 +52,7 @@ public class Door : InteractionAgent
 
         else
         {
+            if(link != null) link.enabled = true;
             anim.Play(openAnim);
             isOpened = true;
             feedbackText = closeText;
@@ -64,10 +70,15 @@ public class Door : InteractionAgent
         isOpened = unit.Bool["IsOpened"];
         if (isOpened)
         {
+            if(link != null) link.enabled = true;
             anim.Play(openAnim);
             feedbackText = closeText;
         }
-        else feedbackText = openText;
+        else
+        {
+            if(link != null) link.enabled = false;
+            feedbackText = openText;
+        }
     }
 
 
