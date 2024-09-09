@@ -135,6 +135,10 @@ public class Player : MonoBehaviour, ISavable
     public bool canSprint { get { return m_cantSprint <= 0; } set { if (value == false) m_cantSprint++; else m_cantSprint--; } }
     public bool canFocus { get { return m_cantFocus <= 0; } set { if (value == false) m_cantFocus++; else m_cantFocus--; } }
 
+    public Action<float> onHpChange;
+    bool isDead = false;
+    float vignetteCurTime = 0;
+    Vignette vignette;
 
     const float pistolActivation = 15.0f;
     void Awake()
@@ -160,7 +164,8 @@ public class Player : MonoBehaviour, ISavable
         rb = GetComponent<Rigidbody>();
 
         //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
-
+        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
+        vignette = vignetteComp;
     }
     void Update()
     {
@@ -233,6 +238,18 @@ public class Player : MonoBehaviour, ISavable
             }
         }
         Move();
+
+
+        vignetteCurTime -= Time.fixedDeltaTime;
+        if (hp < 50 || vignetteCurTime > 0)
+        {
+            vignette.active = true;
+            vignette.intensity.value = 0.4f - 0.02f * hp;
+        }
+        else
+        {
+            vignette.active = false;
+        }
     }
     public void UnlockKnife()
     {
@@ -281,24 +298,14 @@ public class Player : MonoBehaviour, ISavable
         lookSensitivity = newSensitivity;
     }
 
-    public Action<float> onHpChange;
-    bool isDead = false;
+
     public void GetDamage(float damage)
     {
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
-        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
-        if (hp < 50)
-        {
-            vignetteComp.active = true;
-            vignetteComp.intensity.value =  0.4f - 0.02f * hp;
-        }
-        else
-        {
-            vignetteComp.active=false;
-        }
 
-        if(hp <= 0)
+        vignetteCurTime += 3;
+        if (hp <= 0)
         {
             isDead = true;
             anim.SetTrigger("Death");

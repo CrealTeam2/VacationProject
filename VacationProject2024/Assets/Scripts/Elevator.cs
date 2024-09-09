@@ -10,6 +10,7 @@ public class Elevator : MonoBehaviour
     void Start()
     {
         anim = gameObject.GetComponent<Animation>();
+        GameManager.Instance.onGeneratorOn += OpenDoor;
         anim.Play("Elevator_Close");
     }
 
@@ -17,6 +18,11 @@ public class Elevator : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void OpenDoor()
+    {
+        anim.Play("Elevator_Open");
     }
 
     public IEnumerator MoveUp()
