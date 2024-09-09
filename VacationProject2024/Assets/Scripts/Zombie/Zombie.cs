@@ -107,7 +107,7 @@ public class Zombie : MonoBehaviour
     public void Enable()
     {
         IsEnabled = true;
-        // onEnable °ü·ÃµÈ ºÎºÐÀ» Á¦°Å
+        // onEnable ï¿½ï¿½ï¿½Ãµï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     public void GetDamage(float damage)
@@ -134,12 +134,12 @@ public class Zombie : MonoBehaviour
         topLayer.ChangeState("Dead");
     }
 
-    // Gizmos·Î attackrange¸¦ ½Ã°¢ÀûÀ¸·Î Ç¥½ÃÇÏ´Â ¸Þ¼­µå
+    // Gizmosï¿½ï¿½ attackrangeï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     private void OnDrawGizmosSelected()
     {
-        // Á»ºñÀÇ À§Ä¡¸¦ ±âÁØÀ¸·Î attackrange¸¦ ³ªÅ¸³»´Â ¿øÀ» ±×¸³´Ï´Ù.
-        Gizmos.color = Color.red;  // ¿øÀÇ »ö»ó ¼³Á¤
-        Gizmos.DrawWireSphere(transform.position, data.attackrange);  // °ø°Ý ¹üÀ§ (attackrange) Å©±âÀÇ ±¸¸¦ ±×¸³´Ï´Ù.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ attackrangeï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½Ï´ï¿½.
+        Gizmos.color = Color.red;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Gizmos.DrawWireSphere(transform.position, data.attackrange);  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (attackrange) Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½Ï´ï¿½.
     }
 }
 
@@ -182,7 +182,7 @@ class ZombieIdle : State<Zombie>
         {
             parentLayer.ChangeState("Attack");
         }
-        else if (origin.DetectPlayer() || origin.Activation >= 50)
+        else if (origin.DetectPlayer() || (origin.Activation >= 50 && origin.navMeshAgent.remainingDistance < 50.0f))
         {
             parentLayer.ChangeState("Pursuit");
         }
