@@ -38,6 +38,15 @@ public class UIController : MonoBehaviour
     private VisualElement Paperlist2;
     private VisualElement Paperlist3;
     private VisualElement Paperlist4;
+    private VisualElement weaponry;
+    private VisualElement items;
+    private VisualElement gunImage;
+    private VisualElement knifeImage;
+    private VisualElement medicineImage;
+    private Label medicineAmount;
+    private VisualElement bandageImage;
+    private Label bandageAmount;
+    private VisualElement keyImage;
 
     private float defaultSensitivity = 1.0f;
     private float currentSensitivity;
@@ -98,6 +107,15 @@ public class UIController : MonoBehaviour
         PaperText2 = root.Q<Label>("PaperText2");
         PaperText2 = root.Q<Label>("PaperText3");
         PaperText2 = root.Q<Label>("PaperText4");
+        weaponry = TabUI.Q<VisualElement>("Weaponry");
+        items = TabUI.Q<VisualElement>("Item");
+        gunImage = weaponry.Q<VisualElement>("Gun");
+        knifeImage = weaponry.Q<VisualElement>("Knife");
+        medicineImage = items.Q<VisualElement>("Medicine");
+        medicineAmount = medicineImage.Q<Label>("Amount");
+        bandageImage = items.Q<VisualElement>("Bandage");
+        bandageAmount = bandageImage.Q<Label>("Amount");
+        keyImage = items.Q<VisualElement>("Key");
 
         if (TabUI != null) TabUI.style.display = DisplayStyle.None;
         if (Paperlist != null) Paperlist.style.display = DisplayStyle.None;
@@ -344,6 +362,7 @@ public class UIController : MonoBehaviour
     private void PauseGame()
     {
         Time.timeScale = 0f;
+        isGamePaused = true;
         if (playerController != null)
         {
             playerController.SetMovementEnabled(false);
@@ -352,6 +371,10 @@ public class UIController : MonoBehaviour
 
     private void ResumeGame()
     {
+        if (playerController != null)
+        {
+            playerController.SetMovementEnabled(true);
+        }
         isGamePaused = false;
         Time.timeScale = 1f;
     }
@@ -365,6 +388,44 @@ public class UIController : MonoBehaviour
         {
             ToggleEscView();
         }
+
+        if (playerController.hasPistol)
+            gunImage.style.opacity = 1;
+        else gunImage.style.opacity= 0.3f;
+
+        if (playerController.hasKnife)
+            knifeImage.style.opacity = 1;
+        else knifeImage.style.opacity = 0.3f;
+
+        if(playerController.medicines > 0)
+        {
+            medicineImage.style.opacity = 1;
+            medicineAmount.text = playerController.medicines.ToString();
+        }
+        else
+        {
+            medicineImage.style.opacity = 0.3f;
+            medicineAmount.text = "0";
+        }
+
+        if (playerController.bandages > 0)
+        {
+            bandageImage.style.opacity = 1;
+            bandageAmount.text = playerController.bandages.ToString();
+        }
+        else
+        {
+            bandageImage.style.opacity = 0.3f;
+            bandageAmount.text = "0";
+        }
+
+        if (playerController.hasKey)
+        {
+            keyImage.style.opacity = 1;
+        }
+        else keyImage.style.opacity = 0.3f;
+
+
     }
     private void ToggleTabUI()
     {
@@ -412,7 +473,6 @@ public class UIController : MonoBehaviour
             }
             PauseGame();
         }
-        isGamePaused = !isGamePaused;
     }
     private void OnCencelClicked(VisualElement paperlist)
     {

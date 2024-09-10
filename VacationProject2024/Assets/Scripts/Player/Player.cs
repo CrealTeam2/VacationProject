@@ -117,6 +117,7 @@ public class Player : MonoBehaviour, ISavable
     public int bandages = 0;
     public int medicines = 0;
     public int usingItemNum = 0;
+    public bool hasKey = false;
 
     [Header("FSMVals")]
     public bool punchedRight = false;
