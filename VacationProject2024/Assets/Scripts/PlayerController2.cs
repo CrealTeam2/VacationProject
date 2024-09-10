@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float lookSensitivity;
     [SerializeField] private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
-    private int currentPaperNumber = -1; // ÇöÀç »óÈ£ÀÛ¿ë ÁßÀÎ Paper ¹øÈ£
+    private int currentPaperNumber = -1; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Paper ï¿½ï¿½È£
 
     private bool canMove = true;
     private bool nearPaper = false;

@@ -156,7 +156,7 @@ public class Player : MonoBehaviour, ISavable
         rightFistHitbox.onHit += FistHit;
         leftFistHitbox.onHit += FistHit;
         knifeHitbox.onHit += KnifeHit;
-        UnlockPistol();
+        //UnlockPistol();
         UnlockKnife();
         //prevColor = hpIndicator.color;
     }
