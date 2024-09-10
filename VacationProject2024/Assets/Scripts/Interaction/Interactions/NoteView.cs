@@ -2,38 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoteView : InteractionAgent
+public class NoteView : LockedInteraction
 {
-    Player player;
-    
-    protected void Start()
+    [SerializeField] int noteIndex = 0;
+    UIController uiController;
+    protected override void Awake()
     {
-        base.Start();
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        base.Awake();
+        uiController = FindObjectOfType<UIController>();
     }
-
-    // Update is called once per frame
-    void Update()
+    protected override void OnUnlockedInteraction()
     {
-        
-    }
-
-    public override void UpdateUnitFromVariable(ref DataUnit du)
-    {
-        du.Bool["Enabled"] = gameObject.activeSelf;
-    }
-
-    public override void UpdateVariableFromUnit(DataUnit du)
-    {
-        bool enable;
-        if (!du.Bool.TryGetValue("Enabled", out enable)) enable = true; 
-        gameObject.SetActive(enable);
-    }
-    public override void OnInteraction()
-    {
-        base.OnInteraction();
-
-        player.bandages++;
-        gameObject.SetActive(false);
+        base.OnUnlockedInteraction();
+        if (uiController != null) uiController.ShowSpecificPaperlist(noteIndex);
     }
 }
