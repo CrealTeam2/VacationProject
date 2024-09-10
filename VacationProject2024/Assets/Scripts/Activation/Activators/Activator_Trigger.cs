@@ -12,6 +12,7 @@ public class Activator_Trigger : Activator
         {
             Activate();
             SoundManager.Instance.PlaySound(gameObject, "Scream", 1, 1);
+            SoundManager.Instance.PlaySound(GameManager.Instance.player.transform.Find("Rotator").gameObject, "Chase", 1, 1);
             t = true;
         }
     }

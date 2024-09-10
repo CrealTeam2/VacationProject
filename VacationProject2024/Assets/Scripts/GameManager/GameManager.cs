@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     Dictionary<Vector3, bool> savePointsDict;
     List<Vector3> removeList;
     Vector3 currentSavePoint;
-    GameObject player;
+    public GameObject player;
     public Action onGameOver;
     public Volume globalVolume;
     public Image fadeImage;

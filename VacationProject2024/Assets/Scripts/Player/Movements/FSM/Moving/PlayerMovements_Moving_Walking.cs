@@ -8,6 +8,17 @@ public class PlayerMovements_Moving_Walking : State<Player>
     {
         
     }
+
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        SoundManager.Instance.PlaySound(origin.gameObject, "FootStep", 0.2f, 99);
+    }
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        SoundManager.Instance.StopSound(origin.gameObject, "FootStep");
+    }
     public override void OnStateFixedUpdate()
     {
         base.OnStateFixedUpdate();

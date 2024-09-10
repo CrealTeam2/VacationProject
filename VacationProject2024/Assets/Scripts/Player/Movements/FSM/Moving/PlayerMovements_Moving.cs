@@ -12,21 +12,22 @@ public class PlayerMovements_Moving : Layer<Player>
     public override void OnStateEnter()
     {
         if(Input.GetKey(KeyCode.LeftShift) && origin.Stamina > 10.0f)
-        {
             currentState = states["Running"];
-        }
-        else
-        {
-            currentState = states["Walking"];
-        }
+        else currentState = states["Walking"];
+
         currentState.OnStateEnter();
     }
     public override void OnStateFixedUpdate()
     {
         base.OnStateFixedUpdate();
         if(Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
-        {
             parentLayer.ChangeState("Idle");
-        }
+    }
+
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        SoundManager.Instance.StopSound(origin.gameObject, "FootStep");
+        SoundManager.Instance.StopSound(origin.gameObject, "RunStep");
     }
 }

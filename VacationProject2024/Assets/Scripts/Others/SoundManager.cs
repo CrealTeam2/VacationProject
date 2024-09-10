@@ -160,6 +160,18 @@ public class SoundManager : Singleton<SoundManager>
             }
         }
     }
+    public void ChangeVolume(GameObject soundObject, string soundName, float rate)
+    {
+        var sounds = activeSounds.FindAll(tuple => tuple.Item1 == soundObject && tuple.Item2.clip.name == soundName);
+        if (sounds.Count > 0)
+        {
+            foreach (var sound in sounds)
+            {
+                sound.Item2.volume = rate;
+            }
+        }
+    }
+
 
     private void ManageActiveSound()
     {

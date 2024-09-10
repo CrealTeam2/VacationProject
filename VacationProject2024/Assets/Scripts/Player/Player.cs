@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
+using static UnityEngine.UI.Image;
 
 public class Player : MonoBehaviour, ISavable
 {
@@ -240,6 +241,10 @@ public class Player : MonoBehaviour, ISavable
         }
         Move();
 
+        if(Stamina == maxStamina)
+            SoundManager.Instance.StopSound(transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading");
+        else SoundManager.Instance.ChangeVolume(transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading", 0.01f * (100 - Stamina));
+
 
         vignetteCurTime -= Time.fixedDeltaTime;
         if (hp < 50 || vignetteCurTime > 0)
@@ -278,7 +283,7 @@ public class Player : MonoBehaviour, ISavable
     }
     public void FirePistol()
     {
-        SoundManager.Instance.PlaySound(gameObject, "RevolverShoot", 1, 1);
+        SoundManager.Instance.PlaySound(transform.Find("PistolSoundRange").gameObject, "RevolverShoot", 1, 1);
         RaycastHit hit;
         if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Zombie", "Wall", "Window")))
         {
