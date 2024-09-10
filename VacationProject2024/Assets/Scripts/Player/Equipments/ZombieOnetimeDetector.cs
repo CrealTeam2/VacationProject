@@ -27,6 +27,7 @@ public class ZombieOnetimeDetector : MonoBehaviour
         if (collision.gameObject.CompareTag("Zombie"))
         {
             Zombie tmp = collision.GetComponent<Zombie>();
+            if (tmp.isDead) return;
             onHit?.Invoke(tmp);
             hit = true;
         }

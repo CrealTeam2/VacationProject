@@ -155,7 +155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: bc7eb8aff3a0f304a89031a7a15d42ea, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 1dd089ae2ddc3cd408e8085420991c42, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 1dd089ae2ddc3cd408e8085420991c42,
+    type: 3}
   m_SortingOrder: 0
 --- !u!4 &63965668
 Transform:
@@ -251,9 +252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f67dc6d20e0f1a489e4dccec31a2b16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiText: {fileID: 125676592}
-  fullText: 
-  delay: 0.05
 --- !u!114 &125676592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,10 +512,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 192098890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009e6a0e676a9004a95f011d0801a17f, type: 3}
+  m_Script: {fileID: 11500000, guid: b14dfbd854e186a4cae238cca8473e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paperNumber: 3
+  paperNumber: 2
 --- !u!1 &484460478
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,12 +548,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db093120f9b5ef5448db45758d96cb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textAnimation: {fileID: 125676591}
-  uiText: {fileID: 125676592}
-  panel: {fileID: 1963020980}
-  message: "\uC5EC\uAE30\uC5D0\uB294 \uC544\uBB34\uAC83\uB3C4 \uC5C6\uB294\uAC70
-    \uAC19\uB2E4."
-  displayDuration: 3
 --- !u!65 &484460480
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -674,11 +666,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db093120f9b5ef5448db45758d96cb17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textAnimation: {fileID: 696571176}
-  uiText: {fileID: 696571175}
-  panel: {fileID: 1349778444}
-  message: "\uC791\uB3D9\uC744 \uD558\uC9C0 \uC54A\uB294\uAC70 \uAC19\uB2E4."
-  displayDuration: 2
 --- !u!65 &498593253
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -880,10 +867,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 651801980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009e6a0e676a9004a95f011d0801a17f, type: 3}
+  m_Script: {fileID: 11500000, guid: b14dfbd854e186a4cae238cca8473e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paperNumber: 4
+  paperNumber: 3
 --- !u!1 &696571172
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,9 +963,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f67dc6d20e0f1a489e4dccec31a2b16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiText: {fileID: 696571175}
-  fullText: 
-  delay: 0.05
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,6 +973,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1073,6 +1058,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,10 +1288,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 980863100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009e6a0e676a9004a95f011d0801a17f, type: 3}
+  m_Script: {fileID: 11500000, guid: b14dfbd854e186a4cae238cca8473e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paperNumber: 1
+  paperNumber: 0
 --- !u!1 &1272979078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1543,10 +1551,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1714041324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009e6a0e676a9004a95f011d0801a17f, type: 3}
+  m_Script: {fileID: 11500000, guid: b14dfbd854e186a4cae238cca8473e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paperNumber: 2
+  paperNumber: 1
 --- !u!1 &1880101891
 GameObject:
   m_ObjectHideFlags: 0
@@ -1798,13 +1806,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1939813227}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf189ca2cda90004797e791b9d91e63a, type: 3}
+  m_Script: {fileID: 11500000, guid: 60fae7b36f0520a4d920ba9caee76479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 3
-  theCamera: {fileID: 963194227}
-  lookSensitivity: 2
-  cameraRotationLimit: 2
 --- !u!1 &1963020980
 GameObject:
   m_ObjectHideFlags: 0
