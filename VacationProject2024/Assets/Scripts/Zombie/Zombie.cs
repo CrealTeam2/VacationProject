@@ -21,13 +21,13 @@ public class Zombie : MonoBehaviour
     internal Player player;
     public string id;
 
-    private ZombieTopLayer topLayer;
+    private TopLayer<Zombie> topLayer;
     public Action onDeath;
     public bool isDead = false;
 
     public float Activation { get => activation; set => activation = Mathf.Clamp(value, 0, data.maxActivation); }
 
-    public float Health { get => health; set { health = value; if (health <= 0) topLayer.ChangeState("Dead"); } }
+    public float Health { get { return health; } set { health = value; } }
     public bool IsEnabled
     {
         get => isEnabled; set
@@ -54,15 +54,16 @@ public class Zombie : MonoBehaviour
         navMeshAgent.enabled = false;
 
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        topLayer = new ZombieTopLayer(this);
+        topLayer = InitTop();
         topLayer.OnStateEnter();
         FSMPath = topLayer.GetCurrentFSM();
         topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
 
         GameManager.Instance.onGameOver += () => { isEnabled = false; };
     }
+    protected virtual TopLayer<Zombie> InitTop() => new ZombieTopLayer(this);
 
-    private void Start()
+    protected virtual void Start()
     {
         SoundManager.Instance.PlaySound(gameObject, "ZombieIdle", 0.3f, 999);
     }
@@ -130,7 +131,7 @@ public class Zombie : MonoBehaviour
         activation = Mathf.Min(Data.maxActivation, activation + value);
     }
 
-    public void Die()
+    public virtual void Die()
     {
         if (isDead) return;
         isDead = true;
