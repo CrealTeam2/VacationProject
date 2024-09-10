@@ -29,6 +29,17 @@ class Mom_Alive : State<Zombie>
     {
 
     }
+    public override void OnStateEnter()
+    {
+        base.OnStateEnter();
+        SoundManager.Instance.PlaySound(GameObject.Find("Piano").transform.Find("Piano_Cap").gameObject, "Piano1", 0.6f, 9999);
+    }
+
+    public override void OnStateExit()
+    {
+        base.OnStateExit();
+        SoundManager.Instance.StopSound(GameObject.Find("Piano").transform.Find("Piano_Cap").gameObject, "Piano1");
+    }
 }
 class Mom_Dead : State<Zombie>
 {
