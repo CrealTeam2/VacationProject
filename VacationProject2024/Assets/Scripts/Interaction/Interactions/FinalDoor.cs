@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FinalDoor : InteractionAgent
+public class FinalDoor : LockedInteraction
 {
     Animation anim;
     
@@ -17,27 +17,10 @@ public class FinalDoor : InteractionAgent
     {
         
     }
-    public override void OnInteraction()
+    protected override void OnUnlockedInteraction()
     {
-        base.OnInteraction();
-
-        if (true)
-        {
-            anim.Play("Outer_Door_Open");
-        }
-
-/*        if (isOpened)
-        {
-            anim.Play("Door2_Close");
-            isOpened = false;
-            feedbackText = "�� ����";
-        }
-        else
-        {
-            anim.Play("Door2_Open");
-            isOpened = true;
-            feedbackText = "�� �ݱ�";
-        }
-        Invoke("ReEnableInteraction", 0.2f);*/
+        base.OnUnlockedInteraction();
+        anim.Play("Outer_Door_Open");
+        StartCoroutine(GameManager.Instance.GameWin());
     }
 }

@@ -331,13 +331,13 @@ public class Player : MonoBehaviour, ISavable
     {
         onFistHit?.Invoke(enemy);
         enemy.GetDamage(fistDamage);
+        Debug.Log("fisthit");
         SoundManager.Instance.PlaySound(gameObject, punchSound[UnityEngine.Random.Range(0, 2)], 1, 1);
     }
 
     string[] knifeSounds = new string[2] { "KnifeDamage1", "KnifeDamage2" };
     public void KnifeHit(Zombie enemy)
     {
-        Debug.Log("EAEWEAEW");
         onKnifeHit?.Invoke(enemy);
         enemy.GetDamage(knifeDamage);
         SoundManager.Instance.PlaySound(gameObject, knifeSounds[UnityEngine.Random.Range(0, 2)], 1, 1);

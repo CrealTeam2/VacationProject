@@ -120,7 +120,13 @@ public class SoundManager : Singleton<SoundManager>
 
     private AudioSource GetAvaliableChannel(GameObject obj)
     {
-        AudioSource channel;
+        AudioSource[] list = obj.GetComponents<AudioSource>();
+        foreach(var i in list)
+        {
+            if (!i.isPlaying) return i;
+        }
+        return obj.AddComponent<AudioSource>();
+        /*AudioSource channel; 
         for (int i = 0; i < obj.transform.childCount; i++)
         {
             channel = obj.transform.GetChild(i).GetComponent<AudioSource>();
@@ -136,7 +142,7 @@ public class SoundManager : Singleton<SoundManager>
         channel.transform.parent = obj.transform;
         channel.transform.localPosition = Vector3.zero;
         channel.gameObject.SetActive(true);
-        return channel;
+        return channel;*/
     }
 
     private void UnableChannel(AudioSource source)
@@ -155,7 +161,7 @@ public class SoundManager : Singleton<SoundManager>
             foreach (var sound in sounds)
             {
                 sound.Item2.Stop();
-                UnableChannel(sound.Item2);
+                //UnableChannel(sound.Item2);
                 activeSounds.Remove(sound);
             }
         }
@@ -183,7 +189,7 @@ public class SoundManager : Singleton<SoundManager>
             {
                 if (sound.Item3 - 1 <= 0)
                 {
-                    UnableChannel(sound.Item2);
+                    //UnableChannel(sound.Item2);
                     activeSounds.RemoveAt(i);
                     continue;
                 }

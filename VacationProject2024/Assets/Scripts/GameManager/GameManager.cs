@@ -147,6 +147,17 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         yield return new WaitForSeconds(4);
         SceneManager.LoadScene("InGameMap_RYU3");
     }
-
+    public IEnumerator GameWin()
+    {
+        onGameOver?.Invoke();
+        fadeImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1);
+        for (int i = 0; i < 100; i++)
+        {
+            fadeImage.color = new Color(1, 1, 1, 0.01f * i);
+            yield return null;
+        }
+        yield return new WaitForSeconds(4);
+    }
     
 }
