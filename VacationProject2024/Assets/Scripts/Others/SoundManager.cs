@@ -184,7 +184,6 @@ public class SoundManager : Singleton<SoundManager>
         for(int i = 0; i < activeSounds.Count;)
         {
             var sound = activeSounds[i];
-            print(sound.Item2.isPlaying);
             if (!sound.Item2.isPlaying)
             {
                 if (sound.Item3 - 1 <= 0)

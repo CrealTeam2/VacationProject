@@ -32,6 +32,7 @@ public class Player : MonoBehaviour, ISavable
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
     [SerializeField] ZombieDetector m_runSoundRange;
+    [SerializeField] internal AudioSource breatheSFX, heavyBreatheSFX;
 
     [SerializeField] float m_walkSpeed, m_runSpeed, m_maxStamina;
     public float walkSpeed { get { return m_walkSpeed; } }
@@ -136,6 +137,7 @@ public class Player : MonoBehaviour, ISavable
     int m_cantSprint = 0, m_cantFocus = 0;
     public bool canSprint { get { return m_cantSprint <= 0; } set { if (value == false) m_cantSprint++; else m_cantSprint--; } }
     public bool canFocus { get { return m_cantFocus <= 0; } set { if (value == false) m_cantFocus++; else m_cantFocus--; } }
+    public bool hastened = false;
 
     public Action<float> onHpChange;
     bool isDead = false;

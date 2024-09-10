@@ -18,6 +18,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     public Action onGameOver;
     public Volume globalVolume;
     public Image fadeImage;
+    [SerializeField] GameObject gameEnd;
 
     public bool ElectorcitySupply;
     public delegate void OnGeneratorOn();
@@ -145,7 +146,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
             yield return null;
         }
         yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("InGameMap_RYU3");
+        SceneManager.LoadScene("InGameMap");
     }
     public IEnumerator GameWin()
     {
@@ -154,10 +155,19 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         yield return new WaitForSeconds(1);
         for (int i = 0; i < 100; i++)
         {
-            fadeImage.color = new Color(1, 1, 1, 0.01f * i);
+            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
             yield return null;
         }
-        yield return new WaitForSeconds(4);
+        gameEnd.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
     }
-    
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("InGameMap");
+        Destroy(gameObject);
+    }
 }
