@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class KeyObject : LockedInteraction
 {
+    [SerializeField] LockedInteraction unlocked;
     Player player;
     protected void Start()
     {
@@ -34,6 +35,7 @@ public class KeyObject : LockedInteraction
     {
         base.OnUnlockedInteraction();
         player.hasKey = true;
+        unlocked.Unlock();
         gameObject.SetActive(false);    
     }
 }
