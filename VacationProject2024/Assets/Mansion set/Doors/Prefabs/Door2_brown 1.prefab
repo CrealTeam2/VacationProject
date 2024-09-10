@@ -172,7 +172,6 @@ GameObject:
   - component: {fileID: 6028122296452131295}
   - component: {fileID: 1764353331795104532}
   - component: {fileID: 585272725690061451}
-  - component: {fileID: 1853442253664385192}
   m_Layer: 0
   m_Name: Door2_brown 1
   m_TagString: Untagged
@@ -288,27 +287,3 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &1853442253664385192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5446232141446126851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d408ed6be853044fbc59d2f6b1a6732, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  feedbackTransform: {fileID: 0}
-  feedbackText: 
-  id: 1ac7853f-c1ea-4043-a700-bf3ac9d75f89
-  key: 102
-  detectDistance: 1.5
-  openAnim: Door2_Open
-  openText: "\uBB38 \uC5F4\uAE30"
-  openSound: DoorOpen
-  closeAnim: Door2_Close
-  closeText: "\uBB38 \uB2EB\uAE30"
-  closeSound: DoorClose
-  link: {fileID: 1067738287215376668}

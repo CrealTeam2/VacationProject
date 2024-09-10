@@ -6,7 +6,7 @@ using System.IO;
 using System.Data;
 using System;
 
-public class DataManager : Singleton<DataManager>
+public class DataManager : Singleton<DataManager>, ISingletonStart
 {
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
@@ -18,7 +18,7 @@ public class DataManager : Singleton<DataManager>
     Database data = new Database();
     public List<ISavable> savableObjects;
 
-    private void Start()
+    public void IStart()
     {
         fileDataHandler = new(Application.persistentDataPath, fileName);
         savableObjects = FindAllSavableObjects();
