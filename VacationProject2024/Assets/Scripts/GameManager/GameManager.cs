@@ -102,7 +102,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
                 && Mathf.Abs(player.transform.position.y - endTransform.position.y) < 5)
         {
             DataManager.Instance.ResetData();
-            SceneManager.LoadScene("InGameScene");
+            SceneManager.LoadScene("InGameMap_RYU3");
         }
     }
 
@@ -145,7 +145,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
             yield return null;
         }
         yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("InGameMap");
+        SceneManager.LoadScene("InGameMap_RYU3");
     }
 
     

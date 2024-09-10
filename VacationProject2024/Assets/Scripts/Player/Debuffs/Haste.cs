@@ -17,7 +17,7 @@ public class Haste : Debuff
     public override void OnUpdate()
     {
         base.OnUpdate();
-        debuffed.Stamina = debuffed.maxStamina;
+        debuffed.Stamina = 10;
     }
     public override void OnDebuffEnd()
     {

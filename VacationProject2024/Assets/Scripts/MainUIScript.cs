@@ -350,6 +350,8 @@ public class UIController : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         DataManager.Instance.LoadGame();
         isGamePaused = false;
+        StartCoroutine(GameManager.Instance.StartGame());
+
     }
     private void OnGameSettingClicked() {
         if (EscView != null)
