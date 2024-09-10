@@ -262,6 +262,7 @@ public class UIController : MonoBehaviour
                 Debug.LogWarning("Invalid Paperlist number.");
                 break;
         }
+        print(Paperlist.style.display);
     }
 
     private void OnCencel2Clicked()

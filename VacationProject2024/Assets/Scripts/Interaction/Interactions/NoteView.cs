@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NoteView : LockedInteraction
 {
-    [SerializeField] int noteIndex = 0;
+    [SerializeField] int noteIndex = 1;
     UIController uiController;
     protected override void Awake()
     {
