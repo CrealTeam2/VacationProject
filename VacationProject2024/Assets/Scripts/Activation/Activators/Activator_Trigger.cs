@@ -7,6 +7,10 @@ public class Activator_Trigger : Activator
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) Activate();
+        if (other.CompareTag("Player"))
+        {
+            Activate();
+            SoundManager.Instance.PlaySound(gameObject, "Scream", 1, 1);
+        }
     }
 }

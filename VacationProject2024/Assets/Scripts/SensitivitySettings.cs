@@ -15,7 +15,7 @@ public class SensitivitySettings : MonoBehaviour
 
     private float stepSize = 0.1f;
 
-    private PlayerController playerController;
+    private Player playerController;
 
     private void OnEnable()
     {
@@ -35,7 +35,7 @@ public class SensitivitySettings : MonoBehaviour
         currentSensitivity = PlayerPrefs.GetFloat("Sensitivity", defaultSensitivity);
         sensitivitySlider.value = currentSensitivity;
 
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<Player>();
 
         sensitivitySlider.RegisterValueChangedCallback(evt =>
         {

@@ -56,10 +56,12 @@ public class UIController : MonoBehaviour
     private bool isTabUIVisible = false;
     private bool isGamePaused = false;
 
-    private void Start()
+    private void Awake()
     {
         InitializeUIElements();
         InitializeSettings();
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
     }
 
     private void InitializeUIElements()
@@ -218,6 +220,8 @@ public class UIController : MonoBehaviour
         StartScene.style.display = DisplayStyle.None;
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
+        StartCoroutine(GameManager.Instance.StartGame());
     }
 
     private void ShowStartScene()

@@ -20,7 +20,7 @@ public class IconManager : Singleton<IconManager>
         foreach (var key in keysForIcon)
             iconDictionary.Add(key, CreateIcon(key));
 
-        DontDestroyOnLoad(document);
+        DontDestroyOnLoad(document.transform.parent.gameObject);
 
     }
 

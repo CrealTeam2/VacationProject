@@ -26,6 +26,7 @@ public class Door : InteractionAgent
         anim = GetComponent<Animation>();
         feedbackText = openText;
         if (link != null) link.enabled = false;
+        ReEnableInteraction();
     }
 
     protected void Start()

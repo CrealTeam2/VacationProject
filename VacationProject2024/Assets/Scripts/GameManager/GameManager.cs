@@ -54,8 +54,22 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         }
 
         player = GameObject.FindWithTag("Player");
+        fadeImage = GameObject.Find("Canvas").transform.Find("Fade").GetComponent<Image>();
 
         SoundManager.Instance.PlayBGM("MainBGM", 0.4f, 55);
+        fadeImage.gameObject.SetActive(true);
+        fadeImage.color = new Color(0, 0, 0, 0.9f);
+    }
+
+    public IEnumerator StartGame()
+    {
+        fadeImage.gameObject.SetActive(true);
+        for (int i = 100; i > 0; i--)
+        {
+            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
+            yield return null;
+        }
+        fadeImage.gameObject.SetActive(false);
     }
 
 
@@ -124,20 +138,13 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     {
         onGameOver?.Invoke();
         fadeImage.gameObject.SetActive(true);
-        for(int i = 0; i < 100; i++)
+        yield return new WaitForSeconds(1);
+        for (int i = 0; i < 100; i++)
         {
             fadeImage.color = new Color(0, 0, 0, 0.01f * i);
             yield return null;
         }
-        yield return new WaitForSeconds(2);
-
-        for(int i = 100; i > 0; i--)
-        {
-            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
-            yield return null;
-        }
-        fadeImage.gameObject.SetActive(false);
-
+        yield return new WaitForSeconds(4);
         SceneManager.LoadScene("InGameMap");
     }
 

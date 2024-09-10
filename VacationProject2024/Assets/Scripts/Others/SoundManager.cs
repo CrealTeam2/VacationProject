@@ -25,6 +25,7 @@ public class SoundManager : Singleton<SoundManager>
     private void Awake()
     {
         activeSounds = new();
+        activeSounds.Clear();
         LoadAllSoundsFromResources();
         channelPrefab = Resources.Load("Prefab/AudioChannel") as GameObject;
         bgmSource = transform.AddComponent<AudioSource>();
