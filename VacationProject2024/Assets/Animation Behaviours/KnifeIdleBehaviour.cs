@@ -23,14 +23,14 @@ public class KnifeIdleBehaviour : PlayerAnimationBehaviour
             animator.SetTrigger("ExitCurrent");
             animator.SetInteger("SwitchingTo", 0);
         }
-        else if (Input.GetKeyDown(KeyCode.E) && player.medicines > 0)
+        else if (Input.GetKeyDown(KeyCode.Q) && player.medicines > 0)
         {
             animator.SetTrigger("ExitCurrent");
             animator.SetInteger("SwitchingTo", 2);
             animator.SetBool("UseItem", true);
             animator.SetInteger("UsingItem", 0);
         }
-        else if (Input.GetKeyDown(KeyCode.Q) && player.bandages > 0)
+        else if (Input.GetKeyDown(KeyCode.E) && player.bandages > 0)
         {
             animator.SetTrigger("ExitCurrent");
             animator.SetInteger("SwitchingTo", 2);

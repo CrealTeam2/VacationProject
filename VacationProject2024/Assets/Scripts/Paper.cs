@@ -2,5 +2,5 @@ using UnityEngine;
 
 public class Paper : MonoBehaviour
 {
-    public int paperNumber; // Paper¿¡ °íÀ¯ ¹øÈ£ ºÎ¿©
+    public int paperNumber; // Paperï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½Î¿ï¿½
 }
