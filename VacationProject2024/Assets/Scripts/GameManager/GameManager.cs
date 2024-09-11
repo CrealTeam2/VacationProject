@@ -59,15 +59,15 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 
         SoundManager.Instance.PlayBGM("MainBGM", 0.4f, 55);
         fadeImage.gameObject.SetActive(true);
-        fadeImage.color = new Color(0, 0, 0, 0.9f);
+        fadeImage.color = new Color(0, 0, 0, 0.8f);
     }
 
     public IEnumerator StartGame()
     {
         fadeImage.gameObject.SetActive(true);
-        for (int i = 100; i > 0; i--)
+        for (int i = 204; i > 0; i--)
         {
-            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
+            fadeImage.color = new Color(0, 0, 0, i/255f);
             yield return null;
         }
         fadeImage.gameObject.SetActive(false);

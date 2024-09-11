@@ -6,6 +6,7 @@ public class UIController : MonoBehaviour
 {
     private Button SettingButton;
     private Button ExitButton;
+    private Button BackGroundExit;
     private Button ProfileButton;
     private Button Cencel;
     private Button SceneSetting;
@@ -77,6 +78,7 @@ public class UIController : MonoBehaviour
 
         SettingButton = root.Q<Button>("SettingButton");
         ExitButton = root.Q<Button>("ExitButton");
+        BackGroundExit = root.Q<Button>("BackgroundOut");
         ProfileButton = root.Q<Button>("ProfileButton");
         Cencel = root.Q<Button>("Cencel");
         SceneSetting = root.Q<Button>("SceneSetting");
@@ -129,6 +131,7 @@ public class UIController : MonoBehaviour
         if (Paperlist3 != null) Paperlist3.style.display = DisplayStyle.None;
         if (Paperlist4 != null) Paperlist4.style.display = DisplayStyle.None;
 
+        if (BackGroundExit != null) BackGroundExit.clicked += Quit;
         if (GameStart != null) GameStart.clicked += GameStartButton_Clicked;
         if (SettingButton != null) SettingButton.clicked += OnSettingButtonClicked;
         if (ExitButton != null) ExitButton.clicked += OnExitButtonClicked;
@@ -145,7 +148,7 @@ public class UIController : MonoBehaviour
         Controlview.style.display = DisplayStyle.None;
         EscView.style.display = DisplayStyle.None;
     }
-
+    public void Quit() => Application.Quit();
     private void InitializeSettings()
     {
         if (SceneControl != null)
@@ -243,6 +246,8 @@ public class UIController : MonoBehaviour
         Paperlist2.style.display = DisplayStyle.None;
         Paperlist3.style.display = DisplayStyle.None;
         Paperlist4.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         switch (paperNumber)
         {
@@ -486,6 +491,9 @@ public class UIController : MonoBehaviour
         if (paperlist != null)
         {
             paperlist.style.display = DisplayStyle.None;
+            InteractionManager.Instance.isreadingPaper = false;
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

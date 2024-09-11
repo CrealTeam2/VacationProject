@@ -15,5 +15,6 @@ public class NoteView : LockedInteraction
     {
         base.OnUnlockedInteraction();
         if (uiController != null) uiController.ShowSpecificPaperlist(noteIndex);
+        InteractionManager.Instance.isreadingPaper = true;
     }
 }
