@@ -185,7 +185,7 @@ public class SoundManager : Singleton<SoundManager>
         {
             if (activeSounds[i].Item2 == null)
             {
-                removeQueue.Add(activeSounds[i]);
+                activeSounds.RemoveAt(i);
                 continue;
             }
             var sound = activeSounds[i];
@@ -194,7 +194,7 @@ public class SoundManager : Singleton<SoundManager>
                 if (sound.Item3 - 1 <= 0)
                 {
                     //UnableChannel(sound.Item2);
-                    removeQueue.Add(activeSounds[i]);
+                    activeSounds.RemoveAt(i);
                     continue;
                 }
                 sound.Item2.Play();

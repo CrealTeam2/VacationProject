@@ -98,7 +98,7 @@ public class Player : MonoBehaviour, ISavable
     {
         set
         {
-            if(value == true)
+            if (value == true)
             {
                 if (m_knifeActive == 0) knifeHitbox.enabled = true;
                 m_knifeActive++;
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour, ISavable
     public Action<float> onHpChange;
     bool isDead = false;
     float vignetteCurTime = 0;
-    Vignette vignette;
+    internal Vignette vignette;
 
     const float pistolActivation = 15.0f;
     void Awake()
@@ -174,6 +174,14 @@ public class Player : MonoBehaviour, ISavable
     }
     void Update()
     {
+        if (vignetteQueue.Count > 0)
+        {
+            vignette.active = true;
+            vignette.color.value = vignetteQueue[0].VignetteColor();
+            vignette.intensity.value = vignetteQueue[0].VignetteIntensity();
+            vignetteQueue[0].OnQueueUpdate();
+        }
+        else vignette.active = false;
         if (isDead) return;
         if (canMove)
         {
@@ -184,7 +192,7 @@ public class Player : MonoBehaviour, ISavable
         //topLayer.OnStateUpdate();
         pistolCounter += Time.deltaTime;
         foreach (var i in debuffs) i.OnUpdate();
-        if(removeQueue.Count > 0)
+        if (removeQueue.Count > 0)
         {
             debuffs.RemoveAll((Debuff i) => { return removeQueue.Contains(i); });
             removeQueue.Clear();
@@ -225,6 +233,11 @@ public class Player : MonoBehaviour, ISavable
         rb.MoveRotation(rb.rotation * Quaternion.Euler(_characterRotationY));
     }
 
+    List<VignetteQueue> vignetteQueue = new();
+    public void AddVignetteQueue(VignetteQueue queue)
+    {
+        queue.AddToQueue(vignetteQueue);
+    }
     private void FixedUpdate()
     {
         if (isDead) return;
@@ -243,12 +256,12 @@ public class Player : MonoBehaviour, ISavable
         }
         Move();
 
-        if(Stamina == maxStamina)
+        if (Stamina == maxStamina)
             SoundManager.Instance.StopSound(transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading");
         else SoundManager.Instance.ChangeVolume(transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading", 0.01f * (100 - Stamina));
 
-
-        vignetteCurTime -= Time.fixedDeltaTime;
+        
+        /*vignetteCurTime -= Time.fixedDeltaTime;
         if (hp < 50 || vignetteCurTime > 0)
         {
             vignette.active = true;
@@ -257,7 +270,7 @@ public class Player : MonoBehaviour, ISavable
         else
         {
             vignette.active = false;
-        }
+        }*/
     }
     public void UnlockKnife()
     {
@@ -289,9 +302,9 @@ public class Player : MonoBehaviour, ISavable
         RaycastHit hit;
         if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Zombie", "Wall", "Window")))
         {
-            if(hit.transform.CompareTag("Zombie")) hit.transform.GetComponent<Zombie>().GetDamage(pistolDamage);
+            if (hit.transform.CompareTag("Zombie")) hit.transform.GetComponent<Zombie>().GetDamage(pistolDamage);
         }
-        foreach(var i in pistolSoundRange.detected)
+        foreach (var i in pistolSoundRange.detected)
         {
             i.AddActivation(15.0f);
         }
@@ -305,19 +318,74 @@ public class Player : MonoBehaviour, ISavable
     {
         lookSensitivity = newSensitivity;
     }
-
-
+    DamageVignetteQueue dmgVignette;
     public void GetDamage(float damage)
     {
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
-
-        vignetteCurTime = 3;
         if (hp <= 0)
         {
             isDead = true;
             anim.SetTrigger("Death");
             StartCoroutine(GameManager.Instance.GameOver());
+            new DeathVignetteQueue().AddToQueue(vignetteQueue);
+        }
+        else
+        {
+            if (dmgVignette == null || dmgVignette.removed == true)
+            {
+                dmgVignette = new DamageVignetteQueue(this, hp);
+                dmgVignette.AddToQueue(vignetteQueue);
+            }
+            else
+            {
+                dmgVignette.Refresh(hp);
+            }
+        }
+    }
+    class DamageVignetteQueue : VignetteQueue
+    {
+        const float duration = 5.0f;
+        float counter = 0.0f;
+        readonly Player affected;
+        float hpLeft;
+        public DamageVignetteQueue(Player affected, float hpLeft) : base(5)
+        {
+            this.affected = affected;
+            this.hpLeft = hpLeft;
+        }
+        public void Refresh(float hpLeft)
+        {
+            this.hpLeft = hpLeft;
+        }
+        public override void OnQueueUpdate()
+        {
+            base.OnQueueUpdate();
+            counter += Time.deltaTime;
+            if (counter > duration) RemoveFromQueue();
+        }
+        public override Color VignetteColor()
+        {
+            return Color.red;
+        }
+        public override float VignetteIntensity()
+        {
+            return Mathf.Lerp(0.5f, 0, hpLeft / affected.maxHp) * (1.0f - counter / duration) * 2.0f;
+        }
+    }
+    class DeathVignetteQueue : VignetteQueue
+    {
+        public DeathVignetteQueue() : base(99999)
+        {
+
+        }
+        public override Color VignetteColor()
+        {
+            return Color.red;
+        }
+        public override float VignetteIntensity()
+        {
+            return 1.0f;
         }
     }
     void SetHp(float hp)
@@ -364,6 +432,30 @@ public class Player : MonoBehaviour, ISavable
     public void SaveData(ref Database data)
     {
 
+    }
+}
+public abstract class VignetteQueue
+{
+    public readonly int priority;
+    public bool removed { get; private set; } = false;
+    public VignetteQueue(int priority)
+    {
+        this.priority = priority;
+    }
+    List<VignetteQueue> queue;
+    public void AddToQueue(List<VignetteQueue> queue)
+    {
+        this.queue = queue;
+        queue.Add(this);
+        queue.Sort((a, b) => b.priority.CompareTo(a.priority));
+    }
+    public virtual void OnQueueUpdate() { }
+    public abstract float VignetteIntensity();
+    public abstract Color VignetteColor();
+    public void RemoveFromQueue()
+    {
+        queue.Remove(this);
+        removed = true;
     }
 }
 /*[CustomEditor(typeof(Player))]

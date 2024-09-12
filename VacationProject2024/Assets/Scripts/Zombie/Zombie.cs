@@ -16,6 +16,7 @@ public class Zombie : MonoBehaviour
     [SerializeField] bool isEnabled;
     [SerializeField] internal float currentPersuitTime;
     [SerializeField] internal float activationDecreaseRate = 1.0f;
+    internal Collider hitbox;
     internal float attackCurTime;
     internal NavMeshAgent navMeshAgent;
     internal Player player;
@@ -58,6 +59,8 @@ public class Zombie : MonoBehaviour
         topLayer.OnStateEnter();
         FSMPath = topLayer.GetCurrentFSM();
         topLayer.onFSMChange += () => { FSMPath = topLayer.GetCurrentFSM(); };
+
+        hitbox = GetComponent<Collider>();
 
         GameManager.Instance.onGameOver += () => { isEnabled = false; };
     }
@@ -268,8 +271,8 @@ class ZombieAttack : State<Zombie>
         {
             if (grab.ended == false)
             {
-                origin.player.GetDamage(GetDamage());
                 grab.EndDebuff();
+                origin.player.GetDamage(GetDamage());
             }
             ExitState();
         }
@@ -341,6 +344,7 @@ class ZombieDead : State<Zombie>
     {
         base.OnStateEnter();
         origin.onDeath?.Invoke();
+        origin.hitbox.enabled = false;
         SoundManager.Instance.StopSound(origin.gameObject, "ZombieIdle");
         SoundManager.Instance.PlaySound(origin.gameObject, "ZombieScream", 1, 1);
     }
