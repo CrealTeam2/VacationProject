@@ -33,7 +33,7 @@ public class BandageObject : InteractionAgent
     {
         base.OnInteraction();
 
-        player.bandages++;
+        player.UseBandages();
         gameObject.SetActive(false);
     }
 }

@@ -13,15 +13,12 @@ public class Haste : Debuff
     {
         base.OnDebuffAdd(debuffList, debuffed);
         debuffed.speedMultiplier *= speedMultiplier;
-    }
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-        debuffed.Stamina = 10;
+        debuffed.hastened = true;
     }
     public override void OnDebuffEnd()
     {
         base.OnDebuffEnd();
         debuffed.speedMultiplier /= speedMultiplier;
+        debuffed.hastened = false;
     }
 }

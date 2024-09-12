@@ -591,6 +591,7 @@ MonoBehaviour:
   isEnabled: 1
   currentPersuitTime: 0
   activationDecreaseRate: 1
+  hitbox: {fileID: 8353039326354395120}
   id: 
   isDead: 0
 --- !u!54 &2237079307389810841

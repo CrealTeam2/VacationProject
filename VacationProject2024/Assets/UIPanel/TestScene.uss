@@ -230,3 +230,17 @@
 .Cencel:hover {
     scale: 1.1 1.1;
 }
+
+.PageButton {
+    -unity-font: resource('font/Pretendard-Regular');
+    background-color: rgba(178, 178, 178, 0);
+    width: 120px;
+    height: 60%;
+    top: 20%;
+    -unity-font-definition: initial;
+    font-size: 40px;
+}
+
+.PageButton:hover {
+    color: rgb(255, 0, 0);
+}

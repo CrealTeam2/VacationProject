@@ -32,6 +32,7 @@ public class Player : MonoBehaviour, ISavable
     private bool onStair = false;
     private float currentCameraRotationX = 0f;
     [SerializeField] ZombieDetector m_runSoundRange;
+    [SerializeField] internal AudioSource breatheSFX, heavyBreatheSFX;
 
     [SerializeField] float m_walkSpeed, m_runSpeed, m_maxStamina;
     public float walkSpeed { get { return m_walkSpeed; } }
@@ -97,7 +98,7 @@ public class Player : MonoBehaviour, ISavable
     {
         set
         {
-            if(value == true)
+            if (value == true)
             {
                 if (m_knifeActive == 0) knifeHitbox.enabled = true;
                 m_knifeActive++;
@@ -127,6 +128,13 @@ public class Player : MonoBehaviour, ISavable
     public int itemNum = 0;
     public bool reloadQueued = false;
 
+    [Header("Rotting")]
+    [SerializeField] float minRotCooldown = 60.0f;
+    [SerializeField] float maxRotCooldown = 180.0f;
+
+    [Header("UIs")]
+    [SerializeField] Text talkText;
+
     TopLayer<Player> topLayer;
     public const float focusSlowScale = 0.5f;
     #endregion
@@ -136,13 +144,15 @@ public class Player : MonoBehaviour, ISavable
     int m_cantSprint = 0, m_cantFocus = 0;
     public bool canSprint { get { return m_cantSprint <= 0; } set { if (value == false) m_cantSprint++; else m_cantSprint--; } }
     public bool canFocus { get { return m_cantFocus <= 0; } set { if (value == false) m_cantFocus++; else m_cantFocus--; } }
+    public bool hastened = false;
 
     public Action<float> onHpChange;
     bool isDead = false;
     float vignetteCurTime = 0;
-    Vignette vignette;
+    internal Vignette vignette;
 
     const float pistolActivation = 15.0f;
+    Color talkTextColor;
     void Awake()
     {
         hp = maxHp;
@@ -158,8 +168,9 @@ public class Player : MonoBehaviour, ISavable
         leftFistHitbox.onHit += FistHit;
         knifeHitbox.onHit += KnifeHit;
         //UnlockPistol();
-        UnlockKnife();
+        //UnlockKnife();
         //prevColor = hpIndicator.color;
+        talkTextColor = talkText.color;
     }
     void Start()
     {
@@ -172,6 +183,15 @@ public class Player : MonoBehaviour, ISavable
     }
     void Update()
     {
+        if (vignetteQueue.Count > 0)
+        {
+            Debug.Log(vignetteQueue[0].GetType().ToString());
+            vignette.active = true;
+            vignette.color.value = vignetteQueue[0].VignetteColor();
+            vignette.intensity.value = vignetteQueue[0].VignetteIntensity();
+            vignetteQueue[0].OnQueueUpdate();
+        }
+        else vignette.active = false;
         if (isDead) return;
         if (canMove)
         {
@@ -182,13 +202,30 @@ public class Player : MonoBehaviour, ISavable
         //topLayer.OnStateUpdate();
         pistolCounter += Time.deltaTime;
         foreach (var i in debuffs) i.OnUpdate();
-        if(removeQueue.Count > 0)
+        if (removeQueue.Count > 0)
         {
             debuffs.RemoveAll((Debuff i) => { return removeQueue.Contains(i); });
             removeQueue.Clear();
         }
     }
 
+    public bool rottingStarted = false;
+    public void Rot()
+    {
+        rottingStarted = true;
+        Rotting tmp = new Rotting();
+        tmp.onDebuffEnd += ContinueRotting;
+        AddDebuff(tmp);
+    }
+    public void ContinueRotting()
+    {
+        StartCoroutine(RotWait());
+    }
+    IEnumerator RotWait()
+    {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(minRotCooldown, maxRotCooldown));
+        Rot();
+    }
     private void Move()
     {
         if (canMove) movementTopLayer.OnStateFixedUpdate();
@@ -223,6 +260,11 @@ public class Player : MonoBehaviour, ISavable
         rb.MoveRotation(rb.rotation * Quaternion.Euler(_characterRotationY));
     }
 
+    List<VignetteQueue> vignetteQueue = new();
+    public void AddVignetteQueue(VignetteQueue queue)
+    {
+        queue.AddToQueue(vignetteQueue);
+    }
     private void FixedUpdate()
     {
         if (isDead) return;
@@ -241,12 +283,12 @@ public class Player : MonoBehaviour, ISavable
         }
         Move();
 
-        if(Stamina == maxStamina)
+        if (Stamina == maxStamina)
             SoundManager.Instance.StopSound(transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading");
         else SoundManager.Instance.ChangeVolume(transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading", 0.01f * (100 - Stamina));
 
-
-        vignetteCurTime -= Time.fixedDeltaTime;
+        
+        /*vignetteCurTime -= Time.fixedDeltaTime;
         if (hp < 50 || vignetteCurTime > 0)
         {
             vignette.active = true;
@@ -255,7 +297,7 @@ public class Player : MonoBehaviour, ISavable
         else
         {
             vignette.active = false;
-        }
+        }*/
     }
     public void UnlockKnife()
     {
@@ -265,7 +307,6 @@ public class Player : MonoBehaviour, ISavable
     {
         hasPistol = true;
         pistolMag = pistolMagSize;
-        bullets = pistolMagSize * 5;
     }
     public Action onClipFinish;
     public void ClipFinish() => onClipFinish?.Invoke();
@@ -287,9 +328,9 @@ public class Player : MonoBehaviour, ISavable
         RaycastHit hit;
         if (Physics.Raycast(firePoint.position, firePoint.forward, out hit, Mathf.Infinity, LayerMask.GetMask("Zombie", "Wall", "Window")))
         {
-            if(hit.transform.CompareTag("Zombie")) hit.transform.GetComponent<Zombie>().GetDamage(pistolDamage);
+            if (hit.transform.CompareTag("Zombie")) hit.transform.GetComponent<Zombie>().GetDamage(pistolDamage);
         }
-        foreach(var i in pistolSoundRange.detected)
+        foreach (var i in pistolSoundRange.detected)
         {
             i.AddActivation(15.0f);
         }
@@ -303,19 +344,74 @@ public class Player : MonoBehaviour, ISavable
     {
         lookSensitivity = newSensitivity;
     }
-
-
-    public void GetDamage(float damage)
+    DamageVignetteQueue dmgVignette;
+    public void GetDamage(float damage, bool effect)
     {
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
-
-        vignetteCurTime = 3;
         if (hp <= 0)
         {
             isDead = true;
             anim.SetTrigger("Death");
             StartCoroutine(GameManager.Instance.GameOver());
+            new DeathVignetteQueue().AddToQueue(vignetteQueue);
+        }
+        else if(effect)
+        {
+            if (dmgVignette == null || dmgVignette.removed == true)
+            {
+                dmgVignette = new DamageVignetteQueue(this, hp);
+                dmgVignette.AddToQueue(vignetteQueue);
+            }
+            else
+            {
+                dmgVignette.Refresh(hp);
+            }
+        }
+    }
+    class DamageVignetteQueue : VignetteQueue
+    {
+        const float duration = 5.0f;
+        float counter = 0.0f;
+        readonly Player affected;
+        float hpLeft;
+        public DamageVignetteQueue(Player affected, float hpLeft) : base(5)
+        {
+            this.affected = affected;
+            this.hpLeft = hpLeft;
+        }
+        public void Refresh(float hpLeft)
+        {
+            this.hpLeft = hpLeft;
+        }
+        public override void OnQueueUpdate()
+        {
+            base.OnQueueUpdate();
+            counter += Time.deltaTime;
+            if (counter > duration) RemoveFromQueue();
+        }
+        public override Color VignetteColor()
+        {
+            return Color.red;
+        }
+        public override float VignetteIntensity()
+        {
+            return Mathf.Lerp(0.5f, 0, hpLeft / affected.maxHp) * (1.0f - counter / duration) * 2.0f;
+        }
+    }
+    class DeathVignetteQueue : VignetteQueue
+    {
+        public DeathVignetteQueue() : base(99999)
+        {
+
+        }
+        public override Color VignetteColor()
+        {
+            return Color.red;
+        }
+        public override float VignetteIntensity()
+        {
+            return 1.0f;
         }
     }
     void SetHp(float hp)
@@ -357,11 +453,70 @@ public class Player : MonoBehaviour, ISavable
     {
         if(data.savePoint != Vector3.zero) 
             transform.position = data.savePoint;
+        if (data.rottingStarted)
+        {
+            rottingStarted = true;
+            ContinueRotting();
+        }
     }
 
     public void SaveData(ref Database data)
     {
-
+        data.rottingStarted = rottingStarted;
+    }
+    IEnumerator talking = null;
+    public void Talk(string content)
+    {
+        if (talking != null) StopCoroutine(talking);
+        talking = Talking(content);
+        StartCoroutine(talking);
+    }
+    IEnumerator Talking(string content)
+    {
+        talkText.text = "";
+        talkText.color = talkTextColor;
+        talkText.gameObject.SetActive(true);
+        for(int i = 0; i < content.Length; i++)
+        {
+            yield return new WaitForSeconds(0.075f);
+            talkText.text += content[i];
+        }
+        yield return new WaitForSeconds(2.0f);
+        Color tmp = talkTextColor;
+        float counter = 0.0f;
+        while(counter < 1.0f)
+        {
+            yield return null;
+            counter += Time.deltaTime;
+            tmp.a = talkTextColor.a * (1.0f - counter);
+            talkText.color = tmp;
+        }
+        talkText.gameObject.SetActive(false);
+        talking = null;
+    }
+}
+public abstract class VignetteQueue
+{
+    public readonly int priority;
+    public bool removed { get; private set; } = false;
+    public VignetteQueue(int priority)
+    {
+        this.priority = priority;
+    }
+    List<VignetteQueue> queue;
+    public void AddToQueue(List<VignetteQueue> queue)
+    {
+        this.queue = queue;
+        queue.Add(this);
+        queue.Sort((a, b) => b.priority.CompareTo(a.priority));
+    }
+    public virtual void OnQueueUpdate() { }
+    public abstract float VignetteIntensity();
+    public abstract Color VignetteColor();
+    public void RemoveFromQueue()
+    {
+        queue.Remove(this);
+        removed = true;
     }
 }
 /*[CustomEditor(typeof(Player))]

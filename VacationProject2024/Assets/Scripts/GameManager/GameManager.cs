@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 {
@@ -18,6 +19,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
     public Action onGameOver;
     public Volume globalVolume;
     public Image fadeImage;
+    [SerializeField] GameObject gameEnd;
 
     public bool ElectorcitySupply;
     public delegate void OnGeneratorOn();
@@ -58,15 +60,15 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
 
         SoundManager.Instance.PlayBGM("MainBGM", 0.4f, 55);
         fadeImage.gameObject.SetActive(true);
-        fadeImage.color = new Color(0, 0, 0, 0.9f);
+        fadeImage.color = new Color(0, 0, 0, 0.8f);
     }
 
     public IEnumerator StartGame()
     {
         fadeImage.gameObject.SetActive(true);
-        for (int i = 100; i > 0; i--)
+        for (int i = 204; i > 0; i--)
         {
-            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
+            fadeImage.color = new Color(0, 0, 0, i/255f);
             yield return null;
         }
         fadeImage.gameObject.SetActive(false);
@@ -98,12 +100,12 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
             }
         }
 
-        if(Mathf.Sqrt(Mathf.Pow(player.transform.position.x - endTransform.position.x, 2) + Mathf.Pow(player.transform.position.z - endTransform.position.z, 2)) < 1
+        /*if(Mathf.Sqrt(Mathf.Pow(player.transform.position.x - endTransform.position.x, 2) + Mathf.Pow(player.transform.position.z - endTransform.position.z, 2)) < 1
                 && Mathf.Abs(player.transform.position.y - endTransform.position.y) < 5)
         {
             DataManager.Instance.ResetData();
             SceneManager.LoadScene("InGameMap_RYU3");
-        }
+        }*/
     }
 
     public void LoadData(Database data)
@@ -145,7 +147,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
             yield return null;
         }
         yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("InGameMap_RYU3");
+        SceneManager.LoadScene("InGameMap");
     }
     public IEnumerator GameWin()
     {
@@ -154,10 +156,19 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         yield return new WaitForSeconds(1);
         for (int i = 0; i < 100; i++)
         {
-            fadeImage.color = new Color(1, 1, 1, 0.01f * i);
+            fadeImage.color = new Color(0, 0, 0, 0.01f * i);
             yield return null;
         }
-        yield return new WaitForSeconds(4);
+        gameEnd.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
     }
-    
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("InGameMap");
+        Destroy(gameObject);
+    }
 }

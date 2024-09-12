@@ -34,7 +34,7 @@ public class Injured : Debuff
         else
         {
             counter -= healthLossTick;
-            debuffed.GetDamage(healthLoss);
+            debuffed.GetDamage(healthLoss, false);
         }
     }
     public override void OnDebuffEnd()

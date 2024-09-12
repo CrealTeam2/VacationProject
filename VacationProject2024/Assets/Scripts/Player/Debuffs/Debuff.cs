@@ -6,13 +6,13 @@ using UnityEngine;
 public abstract class Debuff
 {
     protected Player debuffed { get; private set; }
-    readonly float duration;
+    public readonly float duration;
     public Debuff(float duration)
     {
         this.duration = duration;
         counter = duration;
     }
-    float counter;
+    public float counter { get; private set; }
     public void ResetDuration()
     {
         counter = duration;

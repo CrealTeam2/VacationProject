@@ -13,29 +13,31 @@ public class PlayerMovements_Moving_Running : State<Player>
     {
         base.OnStateEnter();
         SoundManager.Instance.PlaySound(origin.transform.Find("RunSoundRange").gameObject, "RunStep", 0.2f, 999);
-        SoundManager.Instance.PlaySound(origin.transform.Find("Rotator").Find("Main Camera").gameObject, "Breading", 1, 999);
     }
     public override void OnStateExit()
     {
         base.OnStateExit();
         SoundManager.Instance.StopSound(origin.transform.Find("RunSoundRange").gameObject, "RunStep");
-        SoundManager.Instance.StopSound(origin.transform.Find("Rotator").Find("Main Camera").gameObject, "Breading");
     }
 
     public override void OnStateFixedUpdate()
     {
         base.OnStateFixedUpdate();
         origin.Stamina = Mathf.Max(0, origin.Stamina - 10.0f * Time.fixedDeltaTime);
-        SoundManager.Instance.ChangeVolume(origin.transform.Find("Rotator").Find("Main Camera").gameObject, "Breading", 0.01f * (100 - origin.Stamina));
         origin.MovePos((origin.transform.forward * Input.GetAxisRaw("Vertical") + origin.transform.right * Input.GetAxisRaw("Horizontal")).normalized * Time.fixedDeltaTime * origin.runSpeed);
         foreach (var i in origin.runSoundRange.detected)
         {
             i.Activation += runActivationRate * Time.fixedDeltaTime;
         }
-        if (!Input.GetKey(KeyCode.LeftShift) || origin.Stamina <= 0.0f || !origin.canSprint)
+        if (!Input.GetKey(KeyCode.LeftShift) || !origin.canSprint)
         {
             parentLayer.ChangeState("Walking");
-            SoundManager.Instance.PlaySound(origin.transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading", 1, 999);
+            //SoundManager.Instance.PlaySound(origin.transform.Find("Rotator").Find("Main Camera").gameObject, "HeavyBreading", 1, 999);
+        }
+        if (origin.Stamina <= 0.0f && !origin.hastened)
+        {
+            origin.AddDebuff(new Exhausted(0.75f, 4.0f));
+            parentLayer.ChangeState("Walking");
         }
     }
 }

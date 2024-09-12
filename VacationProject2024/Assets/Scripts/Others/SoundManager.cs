@@ -178,13 +178,17 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-
+    List<(GameObject, AudioSource, int)> removeQueue = new();
     private void ManageActiveSound()
     {
         for(int i = 0; i < activeSounds.Count;)
         {
+            if (activeSounds[i].Item2 == null)
+            {
+                activeSounds.RemoveAt(i);
+                continue;
+            }
             var sound = activeSounds[i];
-            print(sound.Item2.isPlaying);
             if (!sound.Item2.isPlaying)
             {
                 if (sound.Item3 - 1 <= 0)
@@ -198,6 +202,8 @@ public class SoundManager : Singleton<SoundManager>
             }
             i++;
         }
+        if (removeQueue.Count > 0) activeSounds.RemoveAll((tmp) => removeQueue.Contains(tmp));
+        removeQueue.Clear();
     }
 
 /*    private IEnumerator PlaySoundRepeatedly(AudioSource source, AudioClip clip, float volume, int repeatCount)

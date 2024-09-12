@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,6 +7,7 @@ public class UIController : MonoBehaviour
 {
     private Button SettingButton;
     private Button ExitButton;
+    private Button BackGroundExit;
     private Button ProfileButton;
     private Button Cencel;
     private Button SceneSetting;
@@ -56,6 +58,8 @@ public class UIController : MonoBehaviour
     private bool isTabUIVisible = false;
     private bool isGamePaused = false;
 
+    List<VisualElement> Paperlists = new();
+
     private void Awake()
     {
         InitializeUIElements();
@@ -77,6 +81,7 @@ public class UIController : MonoBehaviour
 
         SettingButton = root.Q<Button>("SettingButton");
         ExitButton = root.Q<Button>("ExitButton");
+        BackGroundExit = root.Q<Button>("BackgroundOut");
         ProfileButton = root.Q<Button>("ProfileButton");
         Cencel = root.Q<Button>("Cencel");
         SceneSetting = root.Q<Button>("SceneSetting");
@@ -98,17 +103,33 @@ public class UIController : MonoBehaviour
         sensitivityLabel = root.Q<Label>("sensitivityLabel");
         TabUI = root.Q<VisualElement>("TabUI");
         Cencel2 = root.Q<Button>("Cencel2");
-        Paperlist = root.Q<VisualElement>("Paperlist");
+        for(int i = 1; i <= 4; i++)
+        {
+            Paperlists.Add(root.Q<VisualElement>("Paperlist" + i));
+        }
+        Paperlist = root.Q<VisualElement>("Paperlist1");
         Paperlist2 = root.Q<VisualElement>("Paperlist2");
         Paperlist3 = root.Q<VisualElement>("Paperlist3");
         Paperlist4 = root.Q<VisualElement>("Paperlist4");
-        Cencel3 = root.Q<Button>("Cencel3");
+        /*Cencel3 = root.Q<Button>("Cencel3");
         Cencel4 = root.Q<Button>("Cencel4");
-        Cencel5 = root.Q<Button>("Cencel5");
+        Cencel5 = root.Q<Button>("Cencel5");*/
         PaperText = root.Q<Label>("PaperText");
         PaperText2 = root.Q<Label>("PaperText2");
         PaperText2 = root.Q<Label>("PaperText3");
         PaperText2 = root.Q<Label>("PaperText4");
+        foreach(var i in root.Query<Button>("NextButton").ToList())
+        {
+            i.clicked += MemoNextPage;
+        }
+        foreach (var i in root.Query<Button>("PrevButton").ToList())
+        {
+            i.clicked += MemoPrevPage;
+        }
+        foreach(var i in root.Query<Button>("Cancel").ToList())
+        {
+            i.clicked += CloseMemo;
+        }
         weaponry = TabUI.Q<VisualElement>("Weaponry");
         items = TabUI.Q<VisualElement>("Item");
         gunImage = weaponry.Q<VisualElement>("Gun");
@@ -120,15 +141,12 @@ public class UIController : MonoBehaviour
         keyImage = items.Q<VisualElement>("Key");
 
         if (TabUI != null) TabUI.style.display = DisplayStyle.None;
-        if (Paperlist != null) Paperlist.style.display = DisplayStyle.None;
-        if (Cencel2 != null) Cencel2.clicked += () => OnCencelClicked(Paperlist);
+        /*if (Cencel2 != null) Cencel2.clicked += () => OnCencelClicked(Paperlist);
         if (Cencel3 != null) Cencel3.clicked += () => OnCencelClicked(Paperlist2);
         if (Cencel4 != null) Cencel4.clicked += () => OnCencelClicked(Paperlist3);
-        if (Cencel5 != null) Cencel5.clicked += () => OnCencelClicked(Paperlist4);
-        if (Paperlist2 != null) Paperlist2.style.display = DisplayStyle.None;
-        if (Paperlist3 != null) Paperlist3.style.display = DisplayStyle.None;
-        if (Paperlist4 != null) Paperlist4.style.display = DisplayStyle.None;
+        if (Cencel5 != null) Cencel5.clicked += () => OnCencelClicked(Paperlist4);*/
 
+        if (BackGroundExit != null) BackGroundExit.clicked += Quit;
         if (GameStart != null) GameStart.clicked += GameStartButton_Clicked;
         if (SettingButton != null) SettingButton.clicked += OnSettingButtonClicked;
         if (ExitButton != null) ExitButton.clicked += OnExitButtonClicked;
@@ -145,7 +163,7 @@ public class UIController : MonoBehaviour
         Controlview.style.display = DisplayStyle.None;
         EscView.style.display = DisplayStyle.None;
     }
-
+    public void Quit() => Application.Quit();
     private void InitializeSettings()
     {
         if (SceneControl != null)
@@ -236,13 +254,35 @@ public class UIController : MonoBehaviour
         SettingScene.style.display = DisplayStyle.Flex;
         ShowPanel1();
     }
-
+    int memoCurrentPage = 0;
+    public void OpenMemo()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        Paperlists[memoCurrentPage].style.display = DisplayStyle.Flex;
+    }
+    public void CloseMemo()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        Paperlists[memoCurrentPage].style.display = DisplayStyle.None;
+    }
+    public void MemoNextPage()
+    {
+        Paperlists[memoCurrentPage].style.display = DisplayStyle.None;
+        Paperlists[++memoCurrentPage].style.display = DisplayStyle.Flex;
+    }
+    public void MemoPrevPage()
+    {
+        Paperlists[memoCurrentPage].style.display = DisplayStyle.None;
+        Paperlists[--memoCurrentPage].style.display = DisplayStyle.Flex;
+    }
     public void ShowSpecificPaperlist(int paperNumber)
     {
         Paperlist.style.display = DisplayStyle.None;
         Paperlist2.style.display = DisplayStyle.None;
         Paperlist3.style.display = DisplayStyle.None;
         Paperlist4.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         switch (paperNumber)
         {
@@ -262,6 +302,7 @@ public class UIController : MonoBehaviour
                 Debug.LogWarning("Invalid Paperlist number.");
                 break;
         }
+        print(Paperlist.style.display);
     }
 
     private void OnCencel2Clicked()
@@ -485,6 +526,9 @@ public class UIController : MonoBehaviour
         if (paperlist != null)
         {
             paperlist.style.display = DisplayStyle.None;
+            InteractionManager.Instance.isreadingPaper = false;
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

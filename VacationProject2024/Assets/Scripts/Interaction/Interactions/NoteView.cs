@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class NoteView : LockedInteraction
 {
-    [SerializeField] int noteIndex = 0;
     UIController uiController;
     protected override void Awake()
     {
@@ -14,6 +13,7 @@ public class NoteView : LockedInteraction
     protected override void OnUnlockedInteraction()
     {
         base.OnUnlockedInteraction();
-        if (uiController != null) uiController.ShowSpecificPaperlist(noteIndex);
+        if (uiController != null) uiController.OpenMemo();
+        InteractionManager.Instance.isreadingPaper = true;
     }
 }
