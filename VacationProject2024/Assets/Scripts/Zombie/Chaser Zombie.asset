@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Chaser Zombie
   m_EditorClassIdentifier: 
   maxHealth: 150
-  maxSpeed: 3
+  maxSpeed: 3.5
   angularSpeed: 100
   acceleration: 3
   baseDetectRange: 8
