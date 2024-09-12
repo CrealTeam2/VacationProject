@@ -13,6 +13,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
     Dictionary<KeyCode, Icon> iconDict;
 
     InteractionAgent enabledInteraction;
+    public bool isreadingPaper;
 
     public void RegisterInteraction(InteractionAgent agent)
     {
@@ -118,7 +119,8 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
             screenPosition = Camera.main.WorldToScreenPoint(nearestInteraction.Value.feedbackTransform.position);
         
         if (nearestInteraction.Key == null 
-            || (screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600)
+            || (screenPosition - new Vector3(Screen.width / 2, Screen.height / 2)).magnitude > 600
+            ||isreadingPaper)
         {
             foreach (var ui in iconDict.Values)
             {
@@ -134,7 +136,7 @@ public class InteractionManager : Singleton<InteractionManager>, ISingletonStart
 
         iconDict[enabledInteraction.key].Enable();
         iconDict[enabledInteraction.key].SetPosition(screenPosition.x, screenPosition.y);
-        iconDict[enabledInteraction.key].SetText("[" + enabledInteraction.key.ToString() + enabledInteraction.feedbackText + "]");
+        iconDict[enabledInteraction.key].SetText("[" + enabledInteraction.key.ToString() + " : " + enabledInteraction.feedbackText + "]");
 
 
         if (Input.GetKeyDown(enabledInteraction.key))
