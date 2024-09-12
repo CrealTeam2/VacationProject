@@ -16,6 +16,7 @@ public class Exhausted : Debuff
         debuffed.breatheSFX.Stop();
         debuffed.heavyBreatheSFX.Play();
         debuffed.canSprint = false;
+        debuffed.AddVignetteQueue(new ExhaustedVignetteQueue(this));
     }
     public override void OnDebuffEnd()
     {
@@ -24,5 +25,23 @@ public class Exhausted : Debuff
         debuffed.breatheSFX.Play();
         debuffed.heavyBreatheSFX.Stop();
         debuffed.canSprint = true;
+    }
+    class ExhaustedVignetteQueue : VignetteQueue
+    {
+        readonly Exhausted debuff;
+        public ExhaustedVignetteQueue(Exhausted debuff) : base(3)
+        {
+            this.debuff = debuff;
+            debuff.onDebuffEnd += RemoveFromQueue;
+        }
+        public override Color VignetteColor()
+        {
+            float tmp = 1.0f - debuff.counter / debuff.duration;
+            return new Color(tmp, tmp, tmp);
+        }
+        public override float VignetteIntensity()
+        {
+            return 0.25f;
+        }
     }
 }

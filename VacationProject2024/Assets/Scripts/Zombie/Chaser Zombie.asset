@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e392288dc06d94696b73d8f488d668, type: 3}
   m_Name: Chaser Zombie
   m_EditorClassIdentifier: 
-  maxHealth: 150
-  maxSpeed: 3.5
+  maxHealth: 200
+  maxSpeed: 3.75
   angularSpeed: 100
   acceleration: 3
   baseDetectRange: 8

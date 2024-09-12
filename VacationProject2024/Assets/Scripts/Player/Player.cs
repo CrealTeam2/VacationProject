@@ -128,6 +128,13 @@ public class Player : MonoBehaviour, ISavable
     public int itemNum = 0;
     public bool reloadQueued = false;
 
+    [Header("Rotting")]
+    [SerializeField] float minRotCooldown = 60.0f;
+    [SerializeField] float maxRotCooldown = 180.0f;
+
+    [Header("UIs")]
+    [SerializeField] Text talkText;
+
     TopLayer<Player> topLayer;
     public const float focusSlowScale = 0.5f;
     #endregion
@@ -145,6 +152,7 @@ public class Player : MonoBehaviour, ISavable
     internal Vignette vignette;
 
     const float pistolActivation = 15.0f;
+    Color talkTextColor;
     void Awake()
     {
         hp = maxHp;
@@ -160,8 +168,9 @@ public class Player : MonoBehaviour, ISavable
         leftFistHitbox.onHit += FistHit;
         knifeHitbox.onHit += KnifeHit;
         //UnlockPistol();
-        UnlockKnife();
+        //UnlockKnife();
         //prevColor = hpIndicator.color;
+        talkTextColor = talkText.color;
     }
     void Start()
     {
@@ -176,6 +185,7 @@ public class Player : MonoBehaviour, ISavable
     {
         if (vignetteQueue.Count > 0)
         {
+            Debug.Log(vignetteQueue[0].GetType().ToString());
             vignette.active = true;
             vignette.color.value = vignetteQueue[0].VignetteColor();
             vignette.intensity.value = vignetteQueue[0].VignetteIntensity();
@@ -199,6 +209,23 @@ public class Player : MonoBehaviour, ISavable
         }
     }
 
+    public bool rottingStarted = false;
+    public void Rot()
+    {
+        rottingStarted = true;
+        Rotting tmp = new Rotting();
+        tmp.onDebuffEnd += ContinueRotting;
+        AddDebuff(tmp);
+    }
+    public void ContinueRotting()
+    {
+        StartCoroutine(RotWait());
+    }
+    IEnumerator RotWait()
+    {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(minRotCooldown, maxRotCooldown));
+        Rot();
+    }
     private void Move()
     {
         if (canMove) movementTopLayer.OnStateFixedUpdate();
@@ -280,7 +307,6 @@ public class Player : MonoBehaviour, ISavable
     {
         hasPistol = true;
         pistolMag = pistolMagSize;
-        bullets = pistolMagSize * 5;
     }
     public Action onClipFinish;
     public void ClipFinish() => onClipFinish?.Invoke();
@@ -319,7 +345,7 @@ public class Player : MonoBehaviour, ISavable
         lookSensitivity = newSensitivity;
     }
     DamageVignetteQueue dmgVignette;
-    public void GetDamage(float damage)
+    public void GetDamage(float damage, bool effect)
     {
         if (hp <= 0) return;
         SetHp(Mathf.Max(0, hp - damage));
@@ -330,7 +356,7 @@ public class Player : MonoBehaviour, ISavable
             StartCoroutine(GameManager.Instance.GameOver());
             new DeathVignetteQueue().AddToQueue(vignetteQueue);
         }
-        else
+        else if(effect)
         {
             if (dmgVignette == null || dmgVignette.removed == true)
             {
@@ -427,11 +453,46 @@ public class Player : MonoBehaviour, ISavable
     {
         if(data.savePoint != Vector3.zero) 
             transform.position = data.savePoint;
+        if (data.rottingStarted)
+        {
+            rottingStarted = true;
+            ContinueRotting();
+        }
     }
 
     public void SaveData(ref Database data)
     {
-
+        data.rottingStarted = rottingStarted;
+    }
+    IEnumerator talking = null;
+    public void Talk(string content)
+    {
+        if (talking != null) StopCoroutine(talking);
+        talking = Talking(content);
+        StartCoroutine(talking);
+    }
+    IEnumerator Talking(string content)
+    {
+        talkText.text = "";
+        talkText.color = talkTextColor;
+        talkText.gameObject.SetActive(true);
+        for(int i = 0; i < content.Length; i++)
+        {
+            yield return new WaitForSeconds(0.075f);
+            talkText.text += content[i];
+        }
+        yield return new WaitForSeconds(2.0f);
+        Color tmp = talkTextColor;
+        float counter = 0.0f;
+        while(counter < 1.0f)
+        {
+            yield return null;
+            counter += Time.deltaTime;
+            tmp.a = talkTextColor.a * (1.0f - counter);
+            talkText.color = tmp;
+        }
+        talkText.gameObject.SetActive(false);
+        talking = null;
     }
 }
 public abstract class VignetteQueue

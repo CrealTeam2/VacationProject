@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 using UnityEngine;
+using System.IO;
 
 public class Icon : Label
 {
@@ -12,6 +13,7 @@ public class Icon : Label
     {
         this.key = key;
         isUsing = false;
+        style.unityFontDefinition = new StyleFontDefinition(FontDefinition.FromFont(Resources.Load<Font>(Path.Combine("font", "InteractionFont"))));
     }
 
     public void Enable()    

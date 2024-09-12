@@ -10,6 +10,8 @@ public class Activated_ZombieActivator : Activated
     protected override void OnActivate()
     {
         base.OnActivate();
+        SoundManager.Instance.PlaySound(gameObject, "Scream", 1, 1);
+        SoundManager.Instance.PlaySound(Camera.main.gameObject, "Chase", 1, 1);
         foreach (var i in activatingZombie) i.AddActivation(activateAmount);
     }
 }

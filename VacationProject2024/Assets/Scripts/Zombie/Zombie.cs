@@ -272,7 +272,7 @@ class ZombieAttack : State<Zombie>
             if (grab.ended == false)
             {
                 grab.EndDebuff();
-                origin.player.GetDamage(GetDamage());
+                origin.player.GetDamage(GetDamage(), true);
             }
             ExitState();
         }

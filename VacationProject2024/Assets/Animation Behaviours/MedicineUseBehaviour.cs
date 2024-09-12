@@ -7,6 +7,7 @@ public class MedicineUseBehaviour : PlayerAnimationBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        player.medicines--;
         animator.SetBool("UseItem", false);
     }
 
