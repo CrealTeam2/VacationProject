@@ -28,8 +28,9 @@ public class Icon : Label
 
     public void SetPosition(float x, float y)
     {
-        style.left = x - (resolvedStyle.width / 2);
-        style.bottom = y - (resolvedStyle.height / 2);
+        Debug.Log(Screen.currentResolution.width + " " + Screen.currentResolution.height);
+        style.left = (x - (resolvedStyle.width / 2)) * (1920f / Screen.width);
+        style.bottom = (y - (resolvedStyle.height / 2)) * (1080f / Screen.height);
     }
     public void SetText(string str)
     {
