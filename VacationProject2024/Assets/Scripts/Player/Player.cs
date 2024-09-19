@@ -178,7 +178,7 @@ public class Player : MonoBehaviour, ISavable
         rb = GetComponent<Rigidbody>();
 
         //SoundManager.Instance.PlaySound("TestBGM", SoundManager.Instance.BGMVolume, 0);
-        GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp);
+        if(GameManager.Instance.globalVolume.profile.TryGet(out Vignette vignetteComp)) Debug.Log("Got Vignette");
         vignette = vignetteComp;
     }
     void Update()

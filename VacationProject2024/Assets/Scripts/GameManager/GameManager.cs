@@ -30,7 +30,6 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         Init();
         Application.targetFrameRate = 60;
     }
-
     void Init()
     {
         savePoints = new();
@@ -62,7 +61,6 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         fadeImage.gameObject.SetActive(true);
         fadeImage.color = new Color(0, 0, 0, 0.8f);
     }
-
     public IEnumerator StartGame()
     {
         fadeImage.gameObject.SetActive(true);
@@ -148,6 +146,7 @@ public class GameManager : Singleton<GameManager>, ISavable, ISingletonStart
         }
         yield return new WaitForSeconds(4);
         SceneManager.LoadScene("InGameMap");
+        Destroy(gameObject);
     }
     public IEnumerator GameWin()
     {
