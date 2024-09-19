@@ -12,6 +12,10 @@ public class Haste : Debuff
     public override void OnDebuffAdd(List<Debuff> debuffList, Player debuffed)
     {
         base.OnDebuffAdd(debuffList, debuffed);
+        foreach(var i in debuffList)
+        {
+            if (i is Exhausted) i.EndDebuff();
+        }
         debuffed.speedMultiplier *= speedMultiplier;
         debuffed.hastened = true;
     }
