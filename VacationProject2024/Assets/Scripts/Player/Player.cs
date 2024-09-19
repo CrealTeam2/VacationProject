@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using System;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
-using static UnityEngine.UI.Image;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class Player : MonoBehaviour, ISavable
 {
     [Header("Hp")]
