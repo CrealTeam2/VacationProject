@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Rotting : Debuff
 {
-    const float slowScale = 0.9f;
-    const float healthLoss = 0.5f, healthLossTick = 1.0f;
+    const float healthLoss = 0.25f, healthLossTick = 1.0f;
     public Rotting() : base(Mathf.Infinity)
     {
         
@@ -21,8 +20,6 @@ public class Rotting : Debuff
             }
         }
         base.OnDebuffAdd(debuffList, debuffed);
-        debuffed.speedMultiplier *= slowScale;
-        debuffed.canSprint = false;
         debuffed.onMedicineUse += EndDebuff;
         debuffed.AddVignetteQueue(new RottingVignetteQueue(this));
         debuffed.Talk("몸에서 썩는 듯한 냄새가 난다...");
@@ -41,8 +38,6 @@ public class Rotting : Debuff
     public override void OnDebuffEnd()
     {
         base.OnDebuffEnd();
-        debuffed.speedMultiplier /= slowScale;
-        debuffed.canSprint = true;
         debuffed.onMedicineUse -= EndDebuff;
     }
     class RottingVignetteQueue : VignetteQueue

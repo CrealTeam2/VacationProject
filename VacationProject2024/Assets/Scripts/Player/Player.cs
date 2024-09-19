@@ -68,7 +68,7 @@ public class Player : MonoBehaviour, ISavable
     [Header("Pistol")]
     [SerializeField] GameObject m_pistolModel;
     [SerializeField] float m_pistolDamage;
-    [SerializeField] float m_pistolFireRate, m_pistolFocusFireRate;
+    [SerializeField] float m_pistolFireRate, m_pistolFocusFireRate, pistolRecoil;
     [SerializeField] int m_pistolMagSize;
     [SerializeField] int m_pistolMag, m_bullets;
     [SerializeField] Transform m_firePoint;
@@ -236,6 +236,27 @@ public class Player : MonoBehaviour, ISavable
         rb.MovePosition(transform.position + translation * speedMultiplier);
     }
 
+    IEnumerator recoiling = null;
+    float currentRecoil = 0;
+    const float recoilReduction = 5.0f;
+    public void Recoil(float recoilAmount)
+    {
+        currentRecoil += recoilAmount;
+        if (recoiling == null)
+        {
+            recoiling = Recoiling();
+            StartCoroutine(recoiling);
+        }
+    }
+    IEnumerator Recoiling()
+    {
+        while(currentRecoil > 0)
+        {
+            currentRecoil = Mathf.Lerp(currentRecoil, 0.0f, 0.1f);
+            yield return null;
+        }
+        recoiling = null;
+    }
     private void CameraRotation()
     {
         float _xRotation = Input.GetAxisRaw("Mouse Y");
@@ -250,7 +271,7 @@ public class Player : MonoBehaviour, ISavable
             currentCameraRotationX = lowerCameraRotationLimit;
         }
 
-        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        rotator.transform.localEulerAngles = new Vector3(currentCameraRotationX - currentRecoil, 0f, 0f);
     }
 
     private void CharacterRotation()
@@ -334,6 +355,7 @@ public class Player : MonoBehaviour, ISavable
         {
             i.AddActivation(15.0f);
         }
+        Recoil(pistolRecoil);
     }
     public void SetMovementEnabled(bool isEnabled)
     {
@@ -519,7 +541,8 @@ public abstract class VignetteQueue
         removed = true;
     }
 }
-/*[CustomEditor(typeof(Player))]
+#if UNITY_EDITOR
+[CustomEditor(typeof(Player))]
 public class Player_Editor : Editor
 {
     public override void OnInspectorGUI()
@@ -527,5 +550,7 @@ public class Player_Editor : Editor
         base.OnInspectorGUI();
         if (GUILayout.Button("Give Rotting Debuff")) (target as Player).AddDebuff(new Rotting());
         if (GUILayout.Button("Give Injured Debuff")) (target as Player).AddDebuff(new Injured(10.0f));
+        if (GUILayout.Button("Unlock Pistol")) (target as Player).UnlockPistol();
     }
-}*/
+}
+#endif
