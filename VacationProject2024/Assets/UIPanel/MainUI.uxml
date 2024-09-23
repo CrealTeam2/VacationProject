@@ -22,7 +22,7 @@
             <ui:VisualElement name="Key" style="flex-grow: 1; position: relative; width: 100px; height: 100px; background-image: resource(&apos;Img/Key&apos;); top: auto; left: auto; flex-direction: row; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; background-color: rgba(0, 0, 0, 0); opacity: 0.25;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="StartScene" style="flex-grow: 1; display: flex;">
+    <ui:VisualElement name="StartScene" style="flex-grow: 1; display: none;">
         <ui:VisualElement name="VisualElement" style="flex-grow: 1; position: relative; width: 1920px; height: 1080px; display: flex;">
             <ui:Button text="게임 시작" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameStart" class="ReGameStart" style="top: 571px; position: absolute; -unity-font-definition: initial; left: 37px;" />
             <ui:Button text="이어 하기" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReGameStart" class="ReGameStart" style="top: 694px; position: relative; -unity-font-definition: initial; left: 35px;" />
@@ -111,5 +111,18 @@
             <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" text="2031년 1월 10일&#10;&#10;난 결국 감염되고 말았다. 나의 몸은 변화하고 있다.&#10;&#10;하지만 내 마음은 아직 멀쩡하다. 그래도,&#10;나는 여전히 내 아들을 다시 만나야 한다.&#10;&#10;그가 깨어날 때까지 나는 기다릴 것이다.&#10;&#10;내가 없어도 그는 다시 살아날 것이고,&#10;&#10;내 사랑이 그의 곁에 남아 있길 바란다.&#10;&#10;부디 살아남아, 나의 아들." name="PaperText4" style="position: absolute; top: 279px; left: 681px; font-size: 20px; height: 739px; -unity-font: resource(&apos;font/Pretendard-Regular&apos;); -unity-font-definition: resource(&apos;font/Pretendard-Regular SDF&apos;);" />
         </ui:VisualElement>
         <ui:Button text="이전&#10;페이지&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PrevButton" class="PageButton" style="padding-top: 100px; padding-bottom: 100px; height: 60%; -unity-font: resource(&apos;font/InteractionFont&apos;); width: 120px; background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-2236324273849735119&amp;guid=1a4a164c70fab1442bff6891d4d3135b&amp;type=3#arrow-left@2x&quot;); background-color: rgb(144, 144, 144); left: 0;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="InventoryUi" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); position: absolute; top: auto; right: 14px; bottom: 23px; width: 728px; height: 150px; flex-direction: row; display: none;">
+        <ui:VisualElement name="Punch" style="flex-grow: 1; height: 100px; width: 100px; background-image: resource(&apos;Img/white_punch&apos;); left: 50px; position: absolute; -unity-background-image-tint-color: rgba(255, 255, 255, 0.8); top: 30px;" />
+        <ui:VisualElement name="Line1" style="flex-grow: 1; height: 60%; position: absolute; width: 5px; background-color: rgba(255, 255, 255, 0.78); left: 200px; top: 25%;" />
+        <ui:VisualElement name="Item1" style="flex-grow: 1; height: 80px; width: 80px; background-image: resource(&apos;Img/white_medicine&apos;); left: 640px; position: absolute; top: 45px; -unity-background-image-tint-color: rgba(255, 255, 255, 0.8);">
+            <ui:Label tabindex="-1" text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Amount" style="position: absolute; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; top: -40px; bottom: auto; right: auto; width: 70px; height: 30px; font-size: 30px; -unity-text-align: middle-center; color: rgba(255, 255, 255, 0.8); left: -10px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Knife" style="flex-grow: 1; height: 120px; width: 120px; background-image: resource(&apos;Img/white_knife&apos;); left: 440px; position: absolute; -unity-background-image-tint-color: rgba(255, 255, 255, 0.22); top: 25px;" />
+        <ui:VisualElement name="Line1" style="flex-grow: 1; height: 60%; position: absolute; width: 5px; background-color: rgba(255, 255, 255, 0.78); left: 400px; top: 25%;" />
+        <ui:VisualElement name="Gun" style="flex-grow: 1; height: 150px; width: 150px; background-image: resource(&apos;Img/white_revolver&apos;); left: 230px; position: absolute; -unity-background-image-tint-color: rgba(255, 255, 255, 0.22);">
+            <ui:Label tabindex="-1" text="6/6" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Ammo" style="position: absolute; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; top: auto; bottom: 40px; right: 0; width: 70px; height: 30px; font-size: 30px; -unity-text-align: middle-center; color: rgba(255, 255, 255, 0.8); display: none;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Line1" style="flex-grow: 1; height: 60%; position: absolute; width: 5px; background-color: rgba(255, 255, 255, 0.78); left: 600px; top: 25%;" />
     </ui:VisualElement>
 </ui:UXML>

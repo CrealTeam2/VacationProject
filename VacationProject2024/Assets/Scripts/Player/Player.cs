@@ -9,6 +9,8 @@ using UnityEditor;
 #endif
 public class Player : MonoBehaviour, ISavable
 {
+    [SerializeField] UIController ui;
+
     [Header("Hp")]
     [SerializeField] Image hpIndicator;
     [SerializeField] Transform m_deathCameraAnchor;
@@ -323,11 +325,13 @@ public class Player : MonoBehaviour, ISavable
     public void UnlockKnife()
     {
         hasKnife = true;
+        ui.GetKnife();
     }
     public void UnlockPistol()
     {
         hasPistol = true;
         pistolMag = pistolMagSize;
+        ui.GetPistol();
     }
     public Action onClipFinish;
     public void ClipFinish() => onClipFinish?.Invoke();

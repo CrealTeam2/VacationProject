@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,6 +14,7 @@ public class UIController : MonoBehaviour
     private Button ControlSetting;
     private Button SoundSetting;
     private Button GameStart;
+    private Button ReGameStart1;
     private Button ReGameStart2;
     private Button GameSetting;
     private Button GameOut;
@@ -48,6 +50,15 @@ public class UIController : MonoBehaviour
     private VisualElement bandageImage;
     private Label bandageAmount;
     private VisualElement keyImage;
+
+    private VisualElement inventory;
+    private VisualElement gunSlot;
+    private VisualElement knifeSlot;
+    private VisualElement punchSlot;
+    private Label ammo;
+    private VisualElement item1Slot;
+    private Label item1Amount;
+
 
     private float defaultSensitivity = 1.0f;
     private float currentSensitivity;
@@ -87,13 +98,14 @@ public class UIController : MonoBehaviour
         ControlSetting = root.Q<Button>("ControlSetting");
         SoundSetting = root.Q<Button>("SoundSetting");
         GameStart = root.Q<Button>("GameStart");
-        ReGameStart2 = root.Q<Button>("ReGameStart");
+        ReGameStart1 = root.Q<Button>("ReGameStart");
         GameSetting = root.Q<Button>("GameSetting");
         GameOut = root.Q<Button>("GameOut");
         StartScene = root.Q<VisualElement>("StartScene");
         SettingScene = root.Q<VisualElement>("SettingScene");
         Controlview = root.Q<VisualElement>("Controlview");
         EscView = root.Q<VisualElement>("EscView");
+        ReGameStart2 = EscView.Q<Button>("ReGameStart2");
         Panel1 = root.Q<VisualElement>("Panel1");
         Panel2 = root.Q<VisualElement>("Panel2");
         Panel3 = root.Q<VisualElement>("Panel3");
@@ -154,13 +166,24 @@ public class UIController : MonoBehaviour
         if (SoundSetting != null) SoundSetting.clicked += ShowPanel3;
         if (ProfileButton != null) ProfileButton.clicked += OnProfileButtonClicked;
         if (Cencel != null) Cencel.clicked += OnCencelClicked;
-        if (ReGameStart2 != null) ReGameStart2.clicked += OnReGameStart2Clicked;
+        if (ReGameStart1 != null) ReGameStart1.clicked += OnReGameStart1Clicked;
         if (GameSetting != null) GameSetting.clicked += OnGameSettingClicked;
         if (GameOut != null) GameOut.clicked += OnGameOutClicked;
+        ReGameStart2.clicked += OnReGameStart2Clicked;
 
         ShowStartScene();
         Controlview.style.display = DisplayStyle.None;
         EscView.style.display = DisplayStyle.None;
+
+        inventory = root.Q<VisualElement>("InventoryUi");
+        gunSlot = inventory.Q<VisualElement>("Gun");
+        punchSlot = inventory.Q<VisualElement>("Punch");
+        knifeSlot = inventory.Q<VisualElement>("Knife");
+        ammo = gunSlot.Q<Label>("Ammo");
+        item1Slot = inventory.Q<VisualElement>("Item1");
+        item1Amount = item1Slot.Q<Label>("Amount");
+
+
     }
     public void Quit() => Application.Quit();
     private void InitializeSettings()
@@ -206,6 +229,23 @@ public class UIController : MonoBehaviour
         playerController = FindObjectOfType<Player>();
     }
 
+    private void FixedUpdate()
+    {
+        item1Amount.text = playerController.medicines.ToString();
+        ammo.text = playerController.bullets.ToString();
+    }
+
+    public void GetPistol()
+    {
+        gunSlot.style.unityBackgroundImageTintColor = new Color(1, 1, 1, 0.8f);
+/*        ammo.style.display = DisplayStyle.Flex;*/
+    }
+
+    public void GetKnife()
+    {
+        knifeSlot.style.unityBackgroundImageTintColor = new Color(1, 1, 1, 0.8f);
+    }
+
     private void ChangeResolution(string resolution)
     {
         switch (resolution)
@@ -237,6 +277,8 @@ public class UIController : MonoBehaviour
         StartScene.style.display = DisplayStyle.None;
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
+        inventory.style.display = DisplayStyle.Flex;
 
         StartCoroutine(GameManager.Instance.StartGame());
     }
@@ -378,7 +420,7 @@ public class UIController : MonoBehaviour
             UnityEngine.Cursor.lockState = CursorLockMode.None;
         }
     }
-    private void OnReGameStart2Clicked() {
+    private void OnReGameStart1Clicked() {
         if (playerController != null)
         {
             playerController.SetMovementEnabled(true);
@@ -390,7 +432,18 @@ public class UIController : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         DataManager.Instance.LoadGame();
         isGamePaused = false;
+        inventory.style.display = DisplayStyle.Flex;
         StartCoroutine(GameManager.Instance.StartGame());
+
+    }
+
+    private void OnReGameStart2Clicked()
+    {
+        ResumeGame();
+        EscView.style.display = DisplayStyle.None;
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
 
     }
     private void OnGameSettingClicked() {
@@ -508,6 +561,8 @@ public class UIController : MonoBehaviour
             if (EscView != null)
             {
                 EscView.style.display = DisplayStyle.None;
+                UnityEngine.Cursor.visible = false;
+                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             }
             ResumeGame();
         }
@@ -516,6 +571,8 @@ public class UIController : MonoBehaviour
             if (EscView != null)
             {
                 EscView.style.display = DisplayStyle.Flex;
+                UnityEngine.Cursor.visible = true;
+                UnityEngine.Cursor.lockState = CursorLockMode.None;
             }
             PauseGame();
         }
