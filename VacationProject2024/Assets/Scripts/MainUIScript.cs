@@ -305,6 +305,7 @@ public class UIController : MonoBehaviour
     {
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         Paperlists[memoCurrentPage].style.display = DisplayStyle.None;
+        InteractionManager.Instance.isreadingPaper = false;
     }
     public void MemoNextPage()
     {

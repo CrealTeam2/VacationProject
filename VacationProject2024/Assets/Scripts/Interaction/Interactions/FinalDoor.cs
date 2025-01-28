@@ -17,6 +17,11 @@ public class FinalDoor : LockedInteraction
     {
         
     }
+    protected override void OnUnlock()
+    {
+        base.OnUnlock();
+        Debug.Log("FinalDoorUnlocked");
+    }
     protected override void OnUnlockedInteraction()
     {
         base.OnUnlockedInteraction();

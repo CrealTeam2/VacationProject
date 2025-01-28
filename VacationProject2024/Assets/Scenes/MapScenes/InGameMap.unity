@@ -51054,7 +51054,7 @@ MonoBehaviour:
   key: 102
   detectDistance: 2
   lockedFeedback: "\uBA3C\uC800 \uC800 \uC880\uBE44\uB97C \uCC98\uCE58\uD558\uC790."
-  unlocked: {fileID: 0}
+  unlocked: {fileID: 988972524}
 --- !u!4 &321009422
 Transform:
   m_ObjectHideFlags: 0
